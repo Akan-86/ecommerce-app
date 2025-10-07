@@ -3,23 +3,36 @@ import type { Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:shadow">
+    <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 bg-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={product.thumbnail}
         alt={product.title}
-        className="w-full h-40 object-cover rounded-md"
+        className="w-full h-48 object-cover"
       />
-      <div className="flex justify-between mt-3">
-        <span className="font-medium">{product.title}</span>
-        <span className="font-semibold">{product.price} $</span>
+
+      <div className="p-4 flex flex-col justify-between h-full">
+        <div>
+          <h3 className="font-semibold text-lg text-gray-800 truncate">
+            {product.title}
+          </h3>
+          <p className="text-sm text-gray-500 line-clamp-2 mt-1">
+            {product.description}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between mt-4">
+          <span className="text-lg font-bold text-green-600">
+            {product.price} $
+          </span>
+          <Link
+            href={`/products/${product.id}`}
+            className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            Details
+          </Link>
+        </div>
       </div>
-      <Link
-        href={`/products/${product.id}`}
-        className="inline-block mt-3 text-blue-600 hover:underline"
-      >
-        Go to Details
-      </Link>
     </div>
   );
 }
