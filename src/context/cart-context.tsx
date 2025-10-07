@@ -11,9 +11,7 @@ import type { Product } from "@/lib/types";
 
 type CartItem = { product: Product; quantity: number };
 
-type State = {
-  items: CartItem[];
-};
+type State = { items: CartItem[] };
 
 type Action =
   | { type: "ADD"; payload: Product }
@@ -58,11 +56,10 @@ function reducer(state: State, action: Action): State {
         items: state.items.filter((i) => i.product.id !== action.payload),
       };
     }
-    case "REMOVE_ALL": {
+    case "REMOVE_ALL":
       return {
         items: state.items.filter((i) => i.product.id !== action.payload),
       };
-    }
     case "CLEAR":
       return { items: [] };
     default:
@@ -78,6 +75,7 @@ type CartContextValue = {
   clear: () => void;
   count: number;
   total: number;
+  getStripeItems: () => { price_data: any; quantity: number }[];
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -85,17 +83,13 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Load from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem("cart");
       if (raw) {
         const parsed: State = JSON.parse(raw);
-
         if (Array.isArray(parsed.items)) {
-          (parsed.items as any[]).forEach((i) => {
-            if (typeof i.quantity !== "number") throw new Error("bad data");
-          });
-
           dispatch({ type: "CLEAR" });
           parsed.items.forEach((i) => {
             for (let k = 0; k < i.quantity; k++) {
@@ -107,6 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, []);
 
+  // Persist to localStorage
   useEffect(() => {
     try {
       localStorage.setItem("cart", JSON.stringify(state));
@@ -119,6 +114,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       (sum, i) => sum + i.quantity * i.product.price,
       0
     );
+
     return {
       items: state.items,
       add: (p) => dispatch({ type: "ADD", payload: p }),
@@ -127,6 +123,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       clear: () => dispatch({ type: "CLEAR" }),
       count,
       total,
+      getStripeItems: () =>
+        state.items.map((i) => ({
+          price_data: {
+            currency: "usd",
+            product_data: { name: i.product.title },
+            unit_amount: i.product.price * 100, // Stripe expects cents
+          },
+          quantity: i.quantity,
+        })),
     };
   }, [state]);
 
