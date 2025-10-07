@@ -1,12 +1,7 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { CartProvider } from "@/context/cart-context";
 import { Navbar } from "@/components/navbar";
-
-export const metadata: Metadata = {
-  title: "E-commerce Store",
-  description: "Demo store with Next.js + DummyJSON",
-};
+import { Footer } from "@/components/footer";
+import { CartProvider } from "@/context/cart-context";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -14,11 +9,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr">
+    <html lang="en">
       <body>
         <CartProvider>
           <Navbar />
-          <main className="max-w-[1000px] mx-auto py-6 px-4">{children}</main>
+          <main className="min-h-screen max-w-6xl mx-auto px-4 py-6">
+            {children}
+          </main>
+          <Footer />
         </CartProvider>
       </body>
     </html>
