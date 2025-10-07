@@ -1,16 +1,35 @@
-import type { Product, ProductsResponse } from "./types";
+import { initializeApp, getApps } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import type { Product } from "./types";
 
-const BASE = "https://dummyjson.com";
+// Firebase config is loaded from .env.local
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+};
+
+// Initialize Firebase only once
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+const db = getFirestore(app);
 
 export async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch(`${BASE}/products`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch products");
-  const data: ProductsResponse = await res.json();
-  return data.products;
+  const snapshot = await getDocs(collection(db, "products"));
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Product);
 }
 
 export async function fetchProduct(id: string | number): Promise<Product> {
-  const res = await fetch(`${BASE}/products/${id}`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch product");
-  return res.json();
+  const ref = doc(db, "products", String(id));
+  const snap = await getDoc(ref);
+  if (!snap.exists()) throw new Error("Product not found");
+  return { id: snap.id, ...snap.data() } as Product;
 }
