@@ -6,7 +6,7 @@ export function ProductCard({ product }: { product: Product }) {
     <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 bg-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={product.thumbnail}
+        src={product.imageUrl || product.thumbnail}
         alt={product.title}
         className="w-full h-48 object-cover"
       />
@@ -16,14 +16,16 @@ export function ProductCard({ product }: { product: Product }) {
           <h3 className="font-semibold text-lg text-gray-800 truncate">
             {product.title}
           </h3>
-          <p className="text-sm text-gray-500 line-clamp-2 mt-1">
-            {product.description}
-          </p>
+          {product.description && (
+            <p className="text-sm text-gray-500 line-clamp-2 mt-1">
+              {product.description}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center justify-between mt-4">
           <span className="text-lg font-bold text-green-600">
-            {product.price} $
+            ${product.price}
           </span>
           <Link
             href={`/products/${product.id}`}
