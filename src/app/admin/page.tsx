@@ -1,80 +1,186 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  title: string;
+  price: number;
+  category: string;
+  image: FileList;
+};
+
+type Product = {
+  id: string;
+  title: string;
+  price: number;
+  category: string;
+  thumbnail?: string;
+};
 
 export default function AdminPage() {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState<number | "">("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    setValue,
+  } = useForm<FormValues>();
+
+  const fetchProducts = async () => {
+    const res = await fetch("/api/products");
+    const data = await res.json();
+    setProducts(data);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const onSubmit = async (data: FormValues) => {
+    const file = data.image?.[0];
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("price", data.price.toString());
+    formData.append("category", data.category);
+    if (file) formData.append("image", file);
+
+    const res = await fetch(
+      editingId ? `/api/products?id=${editingId}` : "/api/products",
+      {
+        method: editingId ? "PUT" : "POST",
+        body: formData,
+      }
+    );
+
+    if (res.ok) {
+      reset();
+      setPreview(null);
+      setEditingId(null);
+      fetchProducts();
+      alert(editingId ? "Product updated!" : "Product added!");
+    } else {
+      alert("Failed to save product.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this product?")) return;
+    const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+    if (res.ok) {
+      fetchProducts();
+      alert("Product deleted!");
+    } else {
+      alert("Failed to delete product.");
+    }
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingId(product.id);
+    setValue("title", product.title);
+    setValue("price", product.price);
+    setValue("category", product.category);
+    setPreview(product.thumbnail || null);
+  };
+
+  const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
       setPreview(URL.createObjectURL(e.target.files[0]));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title || !price || !category || !image) return;
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("price", price.toString());
-    formData.append("category", category);
-    formData.append("image", image);
-
-    await fetch("/api/products", {
-      method: "POST",
-      body: formData,
-    });
-
-    setTitle("");
-    setPrice("");
-    setCategory("");
-    setImage(null);
-    setPreview(null);
-  };
-
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow rounded">
-      <h1 className="text-2xl font-bold mb-4">Add Product</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded">
+      <h1 className="text-2xl font-bold mb-4">
+        {editingId ? "Edit Product" : "Add Product"}
+      </h1>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-8">
         <input
           type="text"
           placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register("title", { required: "Title is required" })}
           className="w-full border rounded px-3 py-2"
         />
+        {errors.title && <p className="text-red-600">{errors.title.message}</p>}
+
         <input
           type="number"
           placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          {...register("price", { required: "Price is required", min: 1 })}
           className="w-full border rounded px-3 py-2"
         />
+        {errors.price && <p className="text-red-600">{errors.price.message}</p>}
+
         <input
           type="text"
           placeholder="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          {...register("category", { required: "Category is required" })}
           className="w-full border rounded px-3 py-2"
         />
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {preview && (
-          <img src={preview} alt="Preview" className="w-32 h-32 object-cover" />
+        {errors.category && (
+          <p className="text-red-600">{errors.category.message}</p>
         )}
+
+        <input
+          type="file"
+          accept="image/*"
+          {...register("image")}
+          onChange={handleImagePreview}
+        />
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-32 h-32 object-cover mt-2"
+          />
+        )}
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          disabled={isSubmitting}
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          Save Product
+          {isSubmitting
+            ? "Saving..."
+            : editingId
+              ? "Update Product"
+              : "Save Product"}
         </button>
       </form>
+
+      {/*Product List */}
+      <h2 className="text-xl font-semibold mb-4">Products</h2>
+      <ul className="divide-y divide-gray-200">
+        {products.map((p) => (
+          <li key={p.id} className="flex justify-between items-center py-2">
+            <div>
+              <p className="font-medium">{p.title}</p>
+              <p className="text-sm text-gray-600">${p.price}</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleEdit(p)}
+                className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(p.id)}
+                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
