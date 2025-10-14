@@ -127,8 +127,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         state.items.map((i) => ({
           price_data: {
             currency: "usd",
-            product_data: { name: i.product.title },
-            unit_amount: i.product.price * 100, // Stripe expects cents
+            product_data: {
+              name: i.product.title,
+              description: i.product.description || "",
+              images: [i.product.imageUrl || i.product.thumbnail || ""],
+            },
+            unit_amount: Math.round(i.product.price * 100), // Stripe expects cents
           },
           quantity: i.quantity,
         })),
