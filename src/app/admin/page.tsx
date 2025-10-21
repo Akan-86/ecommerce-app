@@ -2,20 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import type { Product } from "@/lib/types";
 
 type FormValues = {
   title: string;
+  description: string;
   price: number;
   category: string;
+  stock: number;
   image: FileList;
-};
-
-type Product = {
-  id: string;
-  title: string;
-  price: number;
-  category: string;
-  thumbnail?: string;
 };
 
 export default function AdminPage() {
@@ -43,11 +38,12 @@ export default function AdminPage() {
 
   const onSubmit = async (data: FormValues) => {
     const file = data.image?.[0];
-
     const formData = new FormData();
     formData.append("title", data.title);
+    formData.append("description", data.description);
     formData.append("price", data.price.toString());
     formData.append("category", data.category);
+    formData.append("stock", data.stock.toString());
     if (file) formData.append("image", file);
 
     const res = await fetch(
@@ -83,8 +79,10 @@ export default function AdminPage() {
   const handleEdit = (product: Product) => {
     setEditingId(product.id);
     setValue("title", product.title);
+    setValue("description", product.description);
     setValue("price", product.price);
-    setValue("category", product.category);
+    setValue("category", product.category || "");
+    setValue("stock", product.stock || 0);
     setPreview(product.thumbnail || null);
   };
 
@@ -110,6 +108,15 @@ export default function AdminPage() {
         />
         {errors.title && <p className="text-red-600">{errors.title.message}</p>}
 
+        <textarea
+          placeholder="Description"
+          {...register("description", { required: "Description is required" })}
+          className="w-full border rounded px-3 py-2"
+        />
+        {errors.description && (
+          <p className="text-red-600">{errors.description.message}</p>
+        )}
+
         <input
           type="number"
           placeholder="Price"
@@ -127,6 +134,14 @@ export default function AdminPage() {
         {errors.category && (
           <p className="text-red-600">{errors.category.message}</p>
         )}
+
+        <input
+          type="number"
+          placeholder="Stock"
+          {...register("stock", { required: "Stock is required", min: 0 })}
+          className="w-full border rounded px-3 py-2"
+        />
+        {errors.stock && <p className="text-red-600">{errors.stock.message}</p>}
 
         <input
           type="file"
@@ -162,7 +177,9 @@ export default function AdminPage() {
           <li key={p.id} className="flex justify-between items-center py-2">
             <div>
               <p className="font-medium">{p.title}</p>
-              <p className="text-sm text-gray-600">${p.price}</p>
+              <p className="text-sm text-gray-600">
+                ${p.price} | Stock: {p.stock ?? 0}
+              </p>
             </div>
             <div className="flex gap-2">
               <button
