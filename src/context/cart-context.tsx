@@ -15,8 +15,8 @@ type State = { items: CartItem[] };
 
 type Action =
   | { type: "ADD"; payload: Product }
-  | { type: "REMOVE_ONE"; payload: number }
-  | { type: "REMOVE_ALL"; payload: number }
+  | { type: "REMOVE_ONE"; payload: string }
+  | { type: "REMOVE_ALL"; payload: string }
   | { type: "CLEAR" };
 
 const initialState: State = { items: [] };
@@ -70,12 +70,24 @@ function reducer(state: State, action: Action): State {
 type CartContextValue = {
   items: CartItem[];
   add: (p: Product) => void;
-  removeOne: (id: number) => void;
-  removeAll: (id: number) => void;
+  removeOne: (id: string) => void;
+  removeAll: (id: string) => void;
   clear: () => void;
   count: number;
   total: number;
-  getStripeItems: () => { price_data: any; quantity: number }[];
+  getStripeItems: () => {
+    price_data: {
+      currency: string;
+      product_data: {
+        name: string;
+        description: string;
+        images: string[];
+        metadata: { productId: string };
+      };
+      unit_amount: number;
+    };
+    quantity: number;
+  }[];
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -131,8 +143,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               name: i.product.title,
               description: i.product.description || "",
               images: [i.product.imageUrl || i.product.thumbnail || ""],
+              metadata: {
+                productId: i.product.id, // 🔑 Firestore’daki ürün ID’si
+              },
             },
-            unit_amount: Math.round(i.product.price * 100), // Stripe expects cents
+            unit_amount: Math.round(i.product.price * 100),
           },
           quantity: i.quantity,
         })),
