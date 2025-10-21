@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context"; // 🔑 kullanıcı bilgisi
 
 export function Navbar() {
   const { count } = useCart();
+  const { user, logout } = useAuth(); // 🔑 user.uid varsa giriş yapılmış demektir
   const pathname = usePathname();
 
   const linkClasses = (path: string) =>
@@ -41,13 +43,30 @@ export function Navbar() {
             )}
           </Link>
 
-          <Link href="/admin" className={linkClasses("/admin")}>
-            Admin
-          </Link>
+          {user?.role === "admin" && (
+            <Link href="/admin" className={linkClasses("/admin")}>
+              Admin
+            </Link>
+          )}
 
-          <Link href="/login" className={linkClasses("/login")}>
-            Login
-          </Link>
+          {user && (
+            <Link href="/orders" className={linkClasses("/orders")}>
+              Orders
+            </Link>
+          )}
+
+          {user ? (
+            <button
+              onClick={logout}
+              className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link href="/login" className={linkClasses("/login")}>
+              Login
+            </Link>
+          )}
         </div>
       </nav>
     </header>
