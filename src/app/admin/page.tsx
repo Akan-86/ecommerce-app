@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Product } from "@/lib/types";
+import { uploadImageToStorage } from "@/lib/upload"; // ✅ görsel yükleme fonksiyonu
 
 type FormValues = {
   title: string;
@@ -38,19 +39,33 @@ export default function AdminPage() {
 
   const onSubmit = async (data: FormValues) => {
     const file = data.image?.[0];
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("price", data.price.toString());
-    formData.append("category", data.category);
-    formData.append("stock", data.stock.toString());
-    if (file) formData.append("image", file);
+    let thumbnail = "";
+
+    if (file) {
+      try {
+        thumbnail = await uploadImageToStorage(file); // ✅ görseli yükle ve URL al
+      } catch (err) {
+        console.error("Image upload failed:", err);
+        alert("Image upload failed.");
+        return;
+      }
+    }
+
+    const payload = {
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      category: data.category,
+      stock: data.stock,
+      thumbnail,
+    };
 
     const res = await fetch(
       editingId ? `/api/products?id=${editingId}` : "/api/products",
       {
         method: editingId ? "PUT" : "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       }
     );
 
