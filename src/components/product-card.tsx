@@ -2,13 +2,18 @@ import Link from "next/link";
 import type { Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
+  const imageSrc = product.thumbnail?.trim()
+    ? product.thumbnail
+    : "/placeholder.png"; // ✅ Bonus: fallback görsel
+
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 bg-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={product.imageUrl || product.thumbnail}
+        src={imageSrc}
         alt={product.title}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-cover bg-gray-100"
+        loading="lazy"
       />
 
       <div className="p-4 flex flex-col justify-between h-full">
