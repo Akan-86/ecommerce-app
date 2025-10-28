@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import {
   collection,
   addDoc,
@@ -8,7 +8,6 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export async function GET() {
   const snapshot = await getDocs(collection(db, "products"));
@@ -21,13 +20,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const price = Number(formData.get("price"));
-    const category = formData.get("category") as string;
-    const stock = Number(formData.get("stock"));
-    const image = formData.get("image") as File;
+    const body = await req.json();
+    const { title, description, price, category, stock, thumbnail } = body;
 
     if (!title || title.length < 3) {
       return NextResponse.json(
@@ -59,29 +53,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (!image || !(image instanceof File)) {
-      return NextResponse.json(
-        { error: "Image file is required." },
-        { status: 400 }
-      );
-    }
-    if (!image.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "Only image files are allowed." },
-        { status: 400 }
-      );
-    }
-    if (image.size > 2 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "Image must be < 2MB." },
-        { status: 400 }
-      );
-    }
-
-    const storageRef = ref(storage, `products/${Date.now()}-${image.name}`);
-    const bytes = await image.arrayBuffer();
-    await uploadBytes(storageRef, new Uint8Array(bytes));
-    const imageUrl = await getDownloadURL(storageRef);
 
     const docRef = await addDoc(collection(db, "products"), {
       title,
@@ -89,8 +60,8 @@ export async function POST(req: NextRequest) {
       price,
       category,
       stock,
-      thumbnail: imageUrl,
-      images: [imageUrl],
+      thumbnail: thumbnail || "",
+      images: thumbnail ? [thumbnail] : [],
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -102,8 +73,8 @@ export async function POST(req: NextRequest) {
       price,
       category,
       stock,
-      thumbnail: imageUrl,
-      images: [imageUrl],
+      thumbnail,
+      images: thumbnail ? [thumbnail] : [],
     });
   } catch (err) {
     console.error("Product creation error:", err);
@@ -124,17 +95,12 @@ export async function PUT(req: NextRequest) {
         { status: 400 }
       );
 
-    const formData = await req.formData();
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const price = Number(formData.get("price"));
-    const category = formData.get("category") as string;
-    const stock = Number(formData.get("stock"));
-    const image = formData.get("image") as File | null;
+    const body = await req.json();
+    const { title, description, price, category, stock, thumbnail } = body;
 
     const productRef = doc(db, "products", id);
 
-    let updateData: any = {
+    const updateData: any = {
       title,
       description,
       price,
@@ -143,13 +109,9 @@ export async function PUT(req: NextRequest) {
       updatedAt: Date.now(),
     };
 
-    if (image && image instanceof File) {
-      const storageRef = ref(storage, `products/${Date.now()}-${image.name}`);
-      const bytes = await image.arrayBuffer();
-      await uploadBytes(storageRef, new Uint8Array(bytes));
-      const imageUrl = await getDownloadURL(storageRef);
-      updateData.thumbnail = imageUrl;
-      updateData.images = [imageUrl];
+    if (thumbnail) {
+      updateData.thumbnail = thumbnail;
+      updateData.images = [thumbnail];
     }
 
     await updateDoc(productRef, updateData);
