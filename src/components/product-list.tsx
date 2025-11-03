@@ -3,13 +3,15 @@
 import { useState, useMemo } from "react";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
+import Spinner from "@/components/Spinner";
 
 export function ProductList({ products }: { products: Product[] }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  // Derived filtered products
+  const isLoading = products.length === 0;
+
   const filtered = useMemo(() => {
     return products.filter((p) => {
       const matchesSearch = p.title
@@ -25,7 +27,6 @@ export function ProductList({ products }: { products: Product[] }) {
     });
   }, [products, search, category, maxPrice]);
 
-  // Collect unique categories
   const categories = Array.from(new Set(products.map((p) => p.category)));
 
   return (
@@ -64,8 +65,12 @@ export function ProductList({ products }: { products: Product[] }) {
         />
       </div>
 
-      {/* Product Grid */}
-      {filtered.length === 0 ? (
+      {/* Spinner or Product Grid */}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-32">
+          <Spinner />
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
           <p className="text-lg font-medium">No products found 🛒</p>
           <p className="text-sm">

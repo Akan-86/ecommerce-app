@@ -1,0 +1,13 @@
+{
+    "Navbar": {
+      "brand": "Mağaza",
+      "home": "Ana Sayfa",
+      "cart": "Sepet",
+      "admin": "Yönetici",
+      "orders": "Siparişler",
+      "login": "Giriş",
+      "logout": "Çıkış",
+      "dark": "Koyu",
+      "light": "Açık"
+    }
+  }

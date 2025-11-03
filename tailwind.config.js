@@ -6,6 +6,7 @@ module.exports = {
     "./context/**/*.{js,ts,jsx,tsx}",
     "./lib/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class", // ✅ Dark mode
   theme: {
     extend: {},
   },
