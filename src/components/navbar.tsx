@@ -16,15 +16,16 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
 
   const linkClasses = (path: string) =>
-    `relative font-medium transition ${
+    `relative font-medium transition-colors duration-300 ${
       pathname === path
         ? "text-blue-600 dark:text-blue-400 font-semibold"
         : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
     }`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
-      <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
+      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Brand / Logo */}
         <Link
           href="/"
           className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-tight hover:text-blue-700 dark:hover:text-blue-500 transition"
@@ -32,32 +33,51 @@ export function Navbar() {
           {t("brand")}
         </Link>
 
-        <div className="flex gap-4 items-center">
-          <Link href="/" className={linkClasses("/")}>
-            {t("home")}
+        {/* Kategori Menüsü */}
+        <div className="hidden md:flex gap-6">
+          <Link href="/products" className={linkClasses("/products")}>
+            {t("products")}
           </Link>
+          <Link href="/about" className={linkClasses("/about")}>
+            {t("about")}
+          </Link>
+          <Link href="/contact" className={linkClasses("/contact")}>
+            {t("contact")}
+          </Link>
+        </div>
 
-          <Link href="/cart" className={linkClasses("/cart")}>
-            {t("cart")}
+        {/* Sağ taraf */}
+        <div className="flex gap-4 items-center">
+          {/* Arama ikonu */}
+          <button className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            🔍
+          </button>
+
+          {/* Sepet */}
+          <Link href="/cart" className={linkClasses("/cart") + " relative"}>
+            🛒
             {count > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-semibold rounded-full px-2 py-0.5 shadow">
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full px-2 py-0.5 shadow">
                 {count}
               </span>
             )}
           </Link>
 
+          {/* Admin linki */}
           {user?.role === "admin" && (
             <Link href="/admin" className={linkClasses("/admin")}>
               {t("admin")}
             </Link>
           )}
 
+          {/* Siparişler */}
           {user && (
             <Link href="/orders" className={linkClasses("/orders")}>
               {t("orders")}
             </Link>
           )}
 
+          {/* Login / Logout */}
           {user ? (
             <button
               onClick={logout}
