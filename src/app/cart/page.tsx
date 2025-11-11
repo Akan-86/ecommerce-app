@@ -78,7 +78,9 @@ export default function CartPage() {
         <p className="text-lg font-semibold">Total: ${total.toFixed(2)}</p>
         <button
           onClick={clear}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="px-4 py-2 bg-blue-600 text-white rounded 
+             transition-transform duration-300 
+             hover:scale-105 hover:bg-blue-700"
         >
           Clear Cart
         </button>
@@ -87,7 +89,9 @@ export default function CartPage() {
       <button
         onClick={handleCheckout}
         disabled={isLoading}
-        className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        className="px-4 py-2 bg-blue-600 text-white rounded 
+             transition-transform duration-300 
+             hover:scale-105 hover:bg-blue-700"
       >
         {isLoading && <Spinner />}
         <span>{isLoading ? "Redirecting..." : "Checkout"}</span>
