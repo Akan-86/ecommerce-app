@@ -65,13 +65,17 @@ export default function AdminProductsPage() {
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={() => handleEdit(product.id)}
-                  className="flex-1 bg-yellow-500 text-white py-1 rounded hover:bg-yellow-600"
+                  className="px-4 py-2 bg-blue-600 text-white rounded 
+             transition-transform duration-300 
+             hover:scale-105 hover:bg-blue-700"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(product.id, product.imageUrl)}
-                  className="flex-1 bg-red-600 text-white py-1 rounded hover:bg-red-700"
+                  className="px-4 py-2 bg-blue-600 text-white rounded 
+             transition-transform duration-300 
+             hover:scale-105 hover:bg-blue-700"
                 >
                   Delete
                 </button>
