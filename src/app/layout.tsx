@@ -1,10 +1,13 @@
+"use client";
+
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
-import { notFound } from "next/navigation";
+import { notFound, usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import "./globals.css";
 
 // 🌍 Desteklenen diller ve varsayılan dil
@@ -15,8 +18,18 @@ const defaultLocale = "en";
 const messages = {
   en: {
     Navbar: {
+      brand: "MyShop",
       home: "Home",
       cart: "Cart",
+      products: "Products",
+      about: "About Us",
+      contact: "Contact",
+      admin: "Admin",
+      orders: "Orders",
+      logout: "Logout",
+      login: "Login",
+      light: "Light Mode",
+      dark: "Dark Mode",
     },
     Footer: {
       copyright: "All rights reserved.",
@@ -24,8 +37,18 @@ const messages = {
   },
   tr: {
     Navbar: {
+      brand: "Mağazam",
       home: "Ana Sayfa",
       cart: "Sepet",
+      products: "Ürünler", // ✅ eklendi
+      about: "Hakkımızda", // ✅ eklendi
+      contact: "İletişim", // ✅ eklendi
+      admin: "Yönetim",
+      orders: "Siparişler",
+      logout: "Çıkış",
+      login: "Giriş",
+      light: "Açık Tema",
+      dark: "Koyu Tema",
     },
     Footer: {
       copyright: "Tüm hakları saklıdır.",
@@ -47,9 +70,19 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
     notFound();
   }
 
+  const pathname = usePathname();
+  const [fadeClass, setFadeClass] = useState("opacity-0");
+
+  useEffect(() => {
+    // Sayfa değiştiğinde fade-in uygula
+    setFadeClass("opacity-100 transition-opacity duration-500");
+  }, [pathname]);
+
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className="bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300">
+      <body
+        className={`bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300 ${fadeClass}`}
+      >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <NextIntlClientProvider locale={locale} messages={messages[locale]}>
             <CartProvider>
