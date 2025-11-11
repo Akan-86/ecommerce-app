@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next-intl/link";
+import Link from "next/link";
 import { useLocale } from "next-intl";
 
 const locales = [
@@ -17,8 +17,7 @@ export function LanguageSwitcher() {
       {locales.map(({ code, label, flag }) => (
         <Link
           key={code}
-          href="/"
-          locale={code}
+          href={`/${code}`}
           className={`flex items-center gap-1 px-2 py-1 rounded border text-sm ${
             currentLocale === code
               ? "border-blue-600 font-semibold"
