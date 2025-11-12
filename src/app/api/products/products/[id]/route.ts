@@ -7,25 +7,48 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const data = await req.json();
-  const productRef = doc(db, "products", params.id);
-  await updateDoc(productRef, data);
-  return NextResponse.json({ success: true });
+  try {
+    const data = await req.json();
+
+    if (!params.id) {
+      return NextResponse.json({ error: "Ürün ID eksik" }, { status: 400 });
+    }
+
+    const productRef = doc(db, "products", params.id);
+    await updateDoc(productRef, data);
+
+    return NextResponse.json({ success: true, message: "Ürün güncellendi" });
+  } catch (err) {
+    console.error("Ürün güncelleme hatası:", err);
+    return NextResponse.json({ error: "Ürün güncellenemedi" }, { status: 500 });
+  }
 }
 
+// Ürün silme
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { searchParams } = new URL(req.url);
-  const imagePath = searchParams.get("imagePath"); // storage path
+  try {
+    if (!params.id) {
+      return NextResponse.json({ error: "Ürün ID eksik" }, { status: 400 });
+    }
 
-  await deleteDoc(doc(db, "products", params.id));
+    const { searchParams } = new URL(req.url);
+    const imagePath = searchParams.get("imagePath"); // storage path
 
-  if (imagePath) {
-    const storageRef = ref(storage, imagePath);
-    await deleteObject(storageRef);
+    // Firestore'dan ürünü sil
+    await deleteDoc(doc(db, "products", params.id));
+
+    // Storage'dan görseli sil (varsa)
+    if (imagePath) {
+      const storageRef = ref(storage, imagePath);
+      await deleteObject(storageRef);
+    }
+
+    return NextResponse.json({ success: true, message: "Ürün silindi" });
+  } catch (err) {
+    console.error("Ürün silme hatası:", err);
+    return NextResponse.json({ error: "Ürün silinemedi" }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }
