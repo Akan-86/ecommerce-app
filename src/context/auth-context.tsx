@@ -7,13 +7,15 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  role: string | null;
   isAdmin: boolean;
 };
 
@@ -22,16 +24,35 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   login: async () => {},
   logout: async () => {},
+  role: null,
   isAdmin: false,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
+      if (firebaseUser) {
+        try {
+          const userRef = doc(db, "users", firebaseUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            setRole(data.role ?? null);
+          } else {
+            setRole(null);
+          }
+        } catch (err) {
+          console.error("Error fetching user role:", err);
+          setRole(null);
+        }
+      } else {
+        setRole(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -45,11 +66,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signOut(auth);
   };
 
-  // simple admin check based on email
-  const isAdmin = user?.email === "admin@myshop.com";
+  const isAdmin = role === "admin";
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, logout, role, isAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );
