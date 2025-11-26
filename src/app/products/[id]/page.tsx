@@ -37,6 +37,5 @@ export default async function ProductDetail({ params }: Props) {
 
         <AddToCartButton product={product} />
       </div>
-    </div>
   );
 }
