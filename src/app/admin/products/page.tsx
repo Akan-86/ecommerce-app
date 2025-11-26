@@ -10,8 +10,14 @@ type Product = {
   imageUrl: string;
 };
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
     title: "",
@@ -21,28 +27,31 @@ export default function AdminProductsPage() {
   });
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // Fetch products from API
+  // Fetch products and categories
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/products");
-        const data = await res.json();
-        setProducts(data);
+        const [prodRes, catRes] = await Promise.all([
+          fetch("/api/products"),
+          fetch("/api/categories"),
+        ]);
+        const prodData = await prodRes.json();
+        const catData = await catRes.json();
+        setProducts(prodData);
+        setCategories(catData);
       } catch (err) {
-        console.error("Error fetching products:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
 
   const handleDelete = async (id: string, imageUrl: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
-
     const url = `/api/products/${id}?imagePath=${encodeURIComponent(imageUrl)}`;
     await fetch(url, { method: "DELETE" });
-
     setProducts((prev) => prev.filter((p) => p.id !== id));
     alert("Product deleted successfully");
   };
@@ -114,15 +123,21 @@ export default function AdminProductsPage() {
             }
             className="border p-2 rounded"
           />
-          <input
-            type="text"
-            placeholder="Category"
+          {/* Category Dropdown */}
+          <select
             value={newProduct.category}
             onChange={(e) =>
               setNewProduct({ ...newProduct, category: e.target.value })
             }
             className="border p-2 rounded"
-          />
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             placeholder="Image URL"
@@ -203,8 +218,8 @@ export default function AdminProductsPage() {
               }
               className="border p-2 rounded w-full mb-2"
             />
-            <input
-              type="text"
+            {/* Category Dropdown */}
+            <select
               value={editingProduct.category}
               onChange={(e) =>
                 setEditingProduct({
@@ -213,7 +228,14 @@ export default function AdminProductsPage() {
                 })
               }
               className="border p-2 rounded w-full mb-2"
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               value={editingProduct.imageUrl}
