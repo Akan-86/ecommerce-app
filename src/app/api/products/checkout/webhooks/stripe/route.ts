@@ -1,5 +1,3 @@
-// app/api/stripe/webhook/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/lib/firebase";
@@ -10,15 +8,17 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  query,
+  where,
+  getDocs,
+  increment,
 } from "firebase/firestore";
 
-// Ensure Node.js runtime for raw body access (required for Stripe signature verification)
 export const runtime = "nodejs";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
-// Fail-fast in production if envs are missing; warn in development
 function requireEnv(key: string, value: string | undefined) {
   if (!value) {
     const msg = `Missing environment variable: ${key}`;
@@ -38,7 +38,6 @@ const stripe = new Stripe(STRIPE_SECRET_KEY || "", {
 });
 
 export async function POST(req: NextRequest) {
-  // Stripe webhook needs the raw body, so use req.text()
   const sig = req.headers.get("stripe-signature") || "";
   const body = await req.text();
 
@@ -58,17 +57,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  // Handle only the events we expect
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
     try {
-      // Fetch line items for the session
+      const ordersRef = collection(db, "orders");
+      const existingQuery = query(
+        ordersRef,
+        where("sessionId", "==", session.id)
+      );
+      const existingSnap = await getDocs(existingQuery);
+      if (!existingSnap.empty) {
+        // Already processed
+        return NextResponse.json({ received: true }, { status: 200 });
+      }
+
       const lineItems = await stripe.checkout.sessions.listLineItems(
         session.id
       );
 
-      // Adjust stock for each item
       for (const item of lineItems.data) {
         const productId =
           typeof item.price?.product === "string" ? item.price.product : null;
@@ -94,25 +101,49 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Persist order data if we have a userId in metadata
-      const userId = session.metadata?.userId ?? null;
-      if (userId) {
-        await addDoc(collection(db, "orders"), {
-          userId,
-          items: lineItems.data.map((item) => ({
-            name: item.description ?? "",
-            quantity: item.quantity ?? 1,
-            amount: item.amount_total ?? 0, // amount in smallest currency unit
-          })),
-          total: session.amount_total ?? 0, // amount in smallest currency unit
-          createdAt: serverTimestamp(),
-          status: "paid",
-          sessionId: session.id,
-        });
-      } else {
-        console.warn(
-          "⚠️ session.metadata.userId missing; order not linked to a user."
-        );
+      const metadata = session.metadata || {};
+      const userId = metadata.userId ?? null;
+      const appliedCouponId = metadata.appliedCouponId ?? null;
+      const discountAmount = metadata.discountAmount
+        ? Number(metadata.discountAmount)
+        : 0;
+      const subtotal = metadata.subtotal ? Number(metadata.subtotal) : 0;
+      const total =
+        typeof session.amount_total === "number"
+          ? Number(session.amount_total)
+          : Math.max(0, subtotal - discountAmount);
+
+      const orderDoc = {
+        userId,
+        items: lineItems.data.map((item) => ({
+          name: item.description ?? "",
+          quantity: item.quantity ?? 1,
+          amount: item.amount_total ?? 0,
+          price: item.price?.unit_amount ?? null,
+          productId:
+            typeof item.price?.product === "string" ? item.price.product : null,
+        })),
+        total,
+        subtotal,
+        discount: discountAmount,
+        appliedCouponId: appliedCouponId || null,
+        createdAt: serverTimestamp(),
+        status: "paid",
+        sessionId: session.id,
+      };
+
+      await addDoc(collection(db, "orders"), orderDoc);
+
+      if (appliedCouponId) {
+        try {
+          const couponRef = doc(db, "coupons", appliedCouponId);
+          await updateDoc(couponRef, {
+            usageCount: increment(1),
+            updatedAt: serverTimestamp(),
+          });
+        } catch (couponErr) {
+          console.error("❌ Failed to increment coupon usageCount:", couponErr);
+        }
       }
     } catch (err) {
       console.error("❌ Error handling checkout.session.completed:", err);
