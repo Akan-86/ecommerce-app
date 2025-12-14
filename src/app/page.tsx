@@ -1,5 +1,6 @@
 import { ProductList } from "@/components/product-list";
 
+console.log("🔥 ENV FROM NEXT:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 async function fetchProducts() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`, {
