@@ -12,7 +12,7 @@ export function ProductList({ products }: { products: Product[] }) {
 
   const isLoading = products.length === 0;
 
-  const filtered = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const matchesSearch = p.title
         .toLowerCase()
@@ -27,63 +27,75 @@ export function ProductList({ products }: { products: Product[] }) {
     });
   }, [products, search, category, maxPrice]);
 
-  const categories = Array.from(new Set(products.map((p) => p.category)));
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((p) => p.category))),
+    [products]
+  );
 
   return (
-    <div className="mt-6">
+    <section className="mt-8">
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6 items-center bg-gray-50 p-4 rounded-md shadow-sm">
-        <input
-          type="text"
-          placeholder="🔍 Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <div className="mb-8 flex flex-wrap items-end gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">Search</label>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-56 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          />
+        </div>
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Categories</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">Category</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          >
+            <option value="all">All categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="number"
-          placeholder="Max price"
-          value={maxPrice ?? ""}
-          onChange={(e) =>
-            setMaxPrice(e.target.value ? Number(e.target.value) : null)
-          }
-          className="border border-gray-300 rounded px-3 py-2 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">Max price</label>
+          <input
+            type="number"
+            placeholder="∞"
+            value={maxPrice ?? ""}
+            onChange={(e) =>
+              setMaxPrice(e.target.value ? Number(e.target.value) : null)
+            }
+            className="w-32 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          />
+        </div>
       </div>
 
-      {/* Spinner or Product Grid */}
+      {/* Content */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-32">
+        <div className="flex h-48 items-center justify-center">
           <Spinner />
         </div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <p className="text-lg font-medium">No products found 🛒</p>
-          <p className="text-sm">
-            Try adjusting your filters or check back later.
+      ) : filteredProducts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
+          <p className="text-lg font-semibold">No products found</p>
+          <p className="mt-1 text-sm">
+            Try adjusting your filters or come back later.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
