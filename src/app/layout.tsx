@@ -3,6 +3,7 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
+import { AuthProvider } from "@/context/auth-context";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound, usePathname } from "next/navigation";
@@ -83,17 +84,19 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
       <body
         className={`bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300 ${fadeClass}`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <NextIntlClientProvider locale={locale} messages={messages[locale]}>
-            <CartProvider>
-              <Navbar />
-              <main className="min-h-screen max-w-6xl mx-auto px-4 py-6">
-                {children}
-              </main>
-              <Footer />
-            </CartProvider>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <NextIntlClientProvider locale={locale} messages={messages[locale]}>
+              <CartProvider>
+                <Navbar />
+                <main className="min-h-screen max-w-6xl mx-auto px-4 py-6">
+                  {children}
+                </main>
+                <Footer />
+              </CartProvider>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

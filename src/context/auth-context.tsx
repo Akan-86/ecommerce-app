@@ -1,14 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-} from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import type { User } from "firebase/auth";
 
 type AuthContextType = {
   user: User | null;
@@ -19,14 +12,7 @@ type AuthContextType = {
   isAdmin: boolean;
 };
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
-  login: async () => {},
-  logout: async () => {},
-  role: null,
-  isAdmin: false,
-});
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -34,35 +20,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser) {
-        try {
-          const userRef = doc(db, "users", firebaseUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            const data = userSnap.data();
-            setRole(data.role ?? null);
-          } else {
+    let unsubscribe: (() => void) | undefined;
+
+    (async () => {
+      const { auth } = await import("@/lib/firebase");
+      const { onAuthStateChanged } = await import("firebase/auth");
+      const { doc, getDoc } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+
+      unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        setUser(firebaseUser);
+
+        if (firebaseUser) {
+          try {
+            const userRef = doc(db, "users", firebaseUser.uid);
+            const userSnap = await getDoc(userRef);
+            setRole(userSnap.exists() ? (userSnap.data().role ?? null) : null);
+          } catch (err) {
+            console.error("Error fetching user role:", err);
             setRole(null);
           }
-        } catch (err) {
-          console.error("Error fetching user role:", err);
+        } else {
           setRole(null);
         }
-      } else {
-        setRole(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
+
+        setLoading(false);
+      });
+    })();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
+    const { signInWithEmailAndPassword } = await import("firebase/auth");
+    const { auth } = await import("@/lib/firebase");
     await signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
+    const { signOut } = await import("firebase/auth");
+    const { auth } = await import("@/lib/firebase");
     await signOut(auth);
   };
 
