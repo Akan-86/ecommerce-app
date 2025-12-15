@@ -1,14 +1,10 @@
-"use client";
-
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
-import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
-import { notFound, usePathname } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
 import "./globals.css";
 
 // 🌍 Desteklenen diller ve varsayılan dil
@@ -31,6 +27,7 @@ const messages = {
       login: "Login",
       light: "Light Mode",
       dark: "Dark Mode",
+      search: "Search products",
     },
     Footer: {
       copyright: "All rights reserved.",
@@ -50,6 +47,7 @@ const messages = {
       login: "Giriş",
       light: "Açık Tema",
       dark: "Koyu Tema",
+      search: "Ürün ara",
     },
     Footer: {
       copyright: "Tüm hakları saklıdır.",
@@ -71,31 +69,21 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
     notFound();
   }
 
-  const pathname = usePathname();
-  const [fadeClass, setFadeClass] = useState("opacity-0");
-
-  useEffect(() => {
-    // Sayfa değiştiğinde fade-in uygula
-    setFadeClass("opacity-100 transition-opacity duration-500");
-  }, [pathname]);
-
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body
-        className={`bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300 ${fadeClass}`}
-      >
+      <body className="bg-gray-50 text-gray-900 antialiased">
         <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <NextIntlClientProvider locale={locale} messages={messages[locale]}>
-              <CartProvider>
-                <Navbar />
-                <main className="min-h-screen max-w-6xl mx-auto px-4 py-6">
+          <NextIntlClientProvider locale={locale} messages={messages[locale]}>
+            <CartProvider>
+              <Navbar />
+              <main className="min-h-screen max-w-7xl mx-auto px-4 py-8">
+                <div className="rounded-2xl bg-white p-6 shadow-sm">
                   {children}
-                </main>
-                <Footer />
-              </CartProvider>
-            </NextIntlClientProvider>
-          </ThemeProvider>
+                </div>
+              </main>
+              <Footer />
+            </CartProvider>
+          </NextIntlClientProvider>
         </AuthProvider>
       </body>
     </html>
