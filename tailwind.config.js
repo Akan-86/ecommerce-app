@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}", // App Router ve src dizini için
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/context/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -9,8 +13,11 @@ module.exports = {
         primary: "#1e40af",
         secondary: "#f59e0b",
       },
+      boxShadow: {
+        soft: "0 4px 12px rgba(0,0,0,0.08)",
+      },
     },
   },
-  darkMode: "class", // 🌗 Tema geçişi için ThemeProvider ile uyumlu
+  darkMode: "class",
   plugins: [],
 };
