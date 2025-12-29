@@ -33,9 +33,9 @@ export function ProductList({ products }: { products: Product[] }) {
   );
 
   return (
-    <section className="mt-8">
+    <section className="mt-12 space-y-10">
       {/* Filters */}
-      <div className="mb-8 flex flex-wrap items-end gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-end gap-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500">Search</label>
           <input
@@ -79,18 +79,18 @@ export function ProductList({ products }: { products: Product[] }) {
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex h-48 items-center justify-center">
+        <div className="flex h-64 items-center justify-center">
           <Spinner />
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white py-24 text-center text-gray-500">
           <p className="text-lg font-semibold">No products found</p>
           <p className="mt-1 text-sm">
             Try adjusting your filters or come back later.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
