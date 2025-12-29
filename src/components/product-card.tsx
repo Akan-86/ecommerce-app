@@ -3,15 +3,32 @@ import Image from "next/image";
 import type { Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
+  const isOnSale =
+    product.originalPrice && product.originalPrice > product.price;
+  const isNew = product.createdAt
+    ? Date.now() - new Date(product.createdAt).getTime() <
+      1000 * 60 * 60 * 24 * 14
+    : false;
+
   const imageSrc =
     product.thumbnail && product.thumbnail.trim().length > 0
       ? product.thumbnail
       : "/placeholder.png";
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-lg">
       {/* Image */}
       <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+        {isOnSale && (
+          <span className="absolute left-3 top-3 z-10 rounded bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
+            Sale
+          </span>
+        )}
+        {!isOnSale && isNew && (
+          <span className="absolute left-3 top-3 z-10 rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white">
+            New
+          </span>
+        )}
         <Image
           src={imageSrc}
           alt={product.title}
@@ -24,12 +41,12 @@ export function ProductCard({ product }: { product: Product }) {
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-4">
         <div>
-          <h3 className="truncate text-base font-semibold text-gray-900">
+          <h3 className="line-clamp-2 text-sm font-medium text-gray-900 hover:underline">
             {product.title}
           </h3>
 
           {product.description && (
-            <p className="mt-1 line-clamp-2 text-sm text-gray-500">
+            <p className="mt-1 line-clamp-2 text-xs text-gray-500">
               {product.description}
             </p>
           )}
@@ -37,15 +54,22 @@ export function ProductCard({ product }: { product: Product }) {
 
         {/* Price + CTA */}
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-lg font-bold text-emerald-600">
-            ${product.price}
-          </span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-lg font-semibold text-gray-900">
+              ${product.price}
+            </span>
+            {isOnSale && (
+              <span className="text-sm text-gray-400 line-through">
+                ${product.originalPrice}
+              </span>
+            )}
+          </div>
 
           <Link
             href={`/products/${product.id}`}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-100"
           >
-            View
+            View details
           </Link>
         </div>
       </div>
