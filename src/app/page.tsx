@@ -1,3 +1,4 @@
+import { Sidebar } from "@/components/sidebar";
 import Link from "next/link";
 import { ProductList } from "@/components/product-list";
 
@@ -87,8 +88,7 @@ export default async function Page() {
       </section>
 
       <div className="page-container section-spacing">
-        {/* Products header */}
-        <section className="mb-8 flex items-end justify-between">
+        <section className="mb-10 flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Best sellers</h2>
             <p className="mt-1 text-sm text-gray-500">
@@ -99,8 +99,15 @@ export default async function Page() {
           </div>
         </section>
 
-        {/* Product list */}
-        <ProductList products={products} />
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[260px_1fr]">
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Products */}
+          <div>
+            <ProductList products={products} />
+          </div>
+        </div>
       </div>
     </main>
   );
