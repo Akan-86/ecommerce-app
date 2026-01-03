@@ -35,7 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      console.warn("⚠️ Firebase auth is not initialized yet.");
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser ?? null);
 
@@ -46,6 +53,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
+        if (!db) {
+          console.warn("⚠️ Firestore is not initialized.");
+          setRole(null);
+          setLoading(false);
+          return;
+        }
+
         const userRef = doc(db, "users", firebaseUser.uid);
         const snap = await getDoc(userRef);
         setRole(snap.exists() ? (snap.data().role ?? null) : null);
