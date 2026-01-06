@@ -2,17 +2,23 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
+import { useRef } from "react";
 
 export function Navbar() {
   const { count } = useCart();
   const { user, logout, loading, isAdmin } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
 
   const [scrolled, setScrolled] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -21,20 +27,47 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      const controller = new AbortController();
+
+      fetch(`/api/products?q=${query}`, { signal: controller.signal })
+        .then((res) => (res.ok ? res.json() : []))
+        .then((data) => {
+          setSuggestions(data.map((p: any) => p.name));
+        })
+        .catch(() => {});
+
+      return () => controller.abort();
+    }, 250);
+  }, [query]);
+
+  useEffect(() => {
     setAccountOpen(false);
+    setMobileOpen(false);
   }, [pathname]);
 
   const isActive = (path: string) =>
     pathname === path
-      ? "text-gray-900 font-semibold"
-      : "text-gray-600 hover:text-gray-900";
+      ? "text-gray-900 font-semibold relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:transition-all after:duration-300"
+      : "text-gray-600 hover:text-gray-900 relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-yellow-400 hover:after:w-full after:transition-all after:duration-300";
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-white transition-shadow ${scrolled ? "shadow-md" : "shadow-sm"}`}
+      className={`sticky top-0 z-50 w-full backdrop-blur-md transition-all ${
+        scrolled
+          ? "bg-white/85 shadow-md"
+          : "bg-gradient-to-b from-yellow-100/90 via-white/80 to-transparent"
+      }`}
     >
-      {/* Top announcement bar */}
-      <div className="bg-gray-900 text-white text-xs">
+      {/* Top bar */}
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
         <div className="mx-auto max-w-7xl px-4 py-1 flex justify-between">
           <span>Free shipping over €50</span>
           <span className="hidden sm:block">
@@ -45,28 +78,66 @@ export function Navbar() {
 
       {/* Main navbar */}
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-18 items-center justify-between gap-6">
+        <div className="flex h-16 items-center gap-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-yellow-400 text-xl font-bold text-gray-900">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-300 text-lg font-extrabold text-gray-900 shadow-sm">
               A
             </div>
-            <span className="hidden md:block text-xl font-semibold text-gray-900">
+            <span className="hidden md:block text-lg font-semibold text-gray-900">
               MyShop
             </span>
           </Link>
+          <button
+            className="md:hidden rounded-md p-2 hover:bg-gray-100"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
 
           {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-xl">
+          <div className="relative hidden md:flex flex-1">
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search products"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-gray-900 focus:outline-none"
+              className="w-full max-w-2xl rounded-full border border-gray-300 bg-white/80 px-5 py-2.5 text-sm shadow-sm backdrop-blur focus:border-gray-900 focus:bg-white focus:outline-none"
             />
+            {query && (
+              <div className="absolute top-full mt-2 w-full max-w-2xl rounded-lg border border-gray-200 bg-white shadow-lg z-50">
+                {suggestions
+                  .filter((s) => s.toLowerCase().includes(query.toLowerCase()))
+                  .map((item) => (
+                    <button
+                      key={item}
+                      className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+                      onClick={() => {
+                        setQuery("");
+                        router.push(`/products?search=${item}`);
+                      }}
+                    >
+                      {item}
+                    </button>
+                  ))}
+              </div>
+            )}
           </div>
 
           {/* Right actions */}
-          <div className="flex items-center gap-5 shrink-0">
+          <div className="ml-auto flex items-center gap-3 shrink-0">
             <Link
               href="/products"
               className={`text-sm font-medium ${isActive("/products")}`}
@@ -86,7 +157,7 @@ export function Navbar() {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="relative flex items-center gap-1 rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
               <svg
                 className="h-5 w-5"
@@ -101,7 +172,6 @@ export function Navbar() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4"
                 />
               </svg>
-              <span className="hidden sm:inline">Cart</span>
               {count > 0 && (
                 <span className="absolute -top-1 -right-2 rounded-full bg-red-600 px-1.5 text-[10px] font-semibold text-white">
                   {count}
@@ -109,14 +179,14 @@ export function Navbar() {
               )}
             </Link>
 
-            {/* Account / Auth */}
+            {/* Auth */}
             {!loading &&
               (user ? (
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setAccountOpen((v) => !v)}
-                    className="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    className="flex items-center gap-2 rounded-full border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   >
                     <svg
                       className="h-5 w-5"
@@ -137,7 +207,7 @@ export function Navbar() {
                   </button>
 
                   {accountOpen && (
-                    <div className="absolute right-0 mt-2 w-44 rounded-md border border-gray-200 bg-white shadow-lg">
+                    <div className="absolute right-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
                       <Link
                         href="/account"
                         className="block px-4 py-2 text-sm hover:bg-gray-100"
@@ -163,19 +233,67 @@ export function Navbar() {
                 <div className="flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    className="inline-flex items-center rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+                    className="inline-flex items-center rounded-full bg-gradient-to-r from-yellow-400 to-yellow-300 px-5 py-2 text-sm font-semibold text-gray-900 shadow hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   >
                     Register
                   </Link>
                 </div>
               ))}
           </div>
+        </div>
+      </div>
+      <div
+        className={`md:hidden overflow-hidden border-t border-gray-200 bg-white transition-all duration-300 ease-out ${
+          mobileOpen
+            ? "max-h-96 opacity-100 translate-y-0"
+            : "max-h-0 opacity-0 -translate-y-3"
+        }`}
+      >
+        <div className="px-4 py-4 space-y-3">
+          <input
+            type="text"
+            placeholder="Search products"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-2"></div>
+          <Link href="/products" className="block text-sm font-medium">
+            Products
+          </Link>
+
+          <Link href="/cart" className="block text-sm font-medium">
+            Cart ({count})
+          </Link>
+
+          {user ? (
+            <>
+              <Link href="/account" className="block text-sm font-medium">
+                Account
+              </Link>
+              <button
+                onClick={logout}
+                className="block w-full text-left text-sm font-medium"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="block text-sm font-medium">
+                Login
+              </Link>
+              <Link href="/register" className="block text-sm font-medium">
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
