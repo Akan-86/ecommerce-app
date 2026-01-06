@@ -33,17 +33,17 @@ export function ProductList({ products }: { products: Product[] }) {
   );
 
   return (
-    <section className="mt-12 space-y-10">
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       {/* Filters */}
-      <div className="flex flex-wrap items-end gap-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-12 flex flex-wrap items-end gap-6 rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm backdrop-blur">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500">Search</label>
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search products…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-56 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            className="w-56 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -52,7 +52,7 @@ export function ProductList({ products }: { products: Product[] }) {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">All categories</option>
             {categories.map((c) => (
@@ -64,7 +64,9 @@ export function ProductList({ products }: { products: Product[] }) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Max price</label>
+          <label className="text-xs font-medium text-gray-500">
+            Max price (€)
+          </label>
           <input
             type="number"
             placeholder="∞"
@@ -72,21 +74,21 @@ export function ProductList({ products }: { products: Product[] }) {
             onChange={(e) =>
               setMaxPrice(e.target.value ? Number(e.target.value) : null)
             }
-            className="w-32 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            className="w-32 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex h-64 items-center justify-center">
+        <div className="flex h-80 items-center justify-center">
           <Spinner />
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white py-24 text-center text-gray-500">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 py-32 text-center text-gray-500">
           <p className="text-lg font-semibold">No products found</p>
           <p className="mt-1 text-sm">
-            Try adjusting your filters or come back later.
+            Try adjusting your filters or check back later.
           </p>
         </div>
       ) : (
