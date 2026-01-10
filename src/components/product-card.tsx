@@ -1,3 +1,10 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { Product } from "@/types";
+
 export function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
 
@@ -22,14 +29,14 @@ export function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = async () => {
     setAdding(true);
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 600));
     setAdding(false);
   };
 
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-2xl">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
         {isOnSale && (
           <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow">
             Sale
@@ -40,19 +47,20 @@ export function ProductCard({ product }: { product: Product }) {
             New
           </span>
         )}
+
         <Image
           src={imageSrc}
           alt={product.title}
           fill
           sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 100vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <h3 className="line-clamp-2 text-sm font-semibold tracking-tight text-gray-900">
+          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">
             {product.title}
           </h3>
 
@@ -85,7 +93,7 @@ export function ProductCard({ product }: { product: Product }) {
             {adding ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                Adding
+                Adding…
               </span>
             ) : (
               "Add to cart"
