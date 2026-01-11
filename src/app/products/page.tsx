@@ -23,7 +23,6 @@ export default function ProductsPage() {
         const data = await res.json();
         setProducts(data);
 
-        // extract unique categories
         const uniqueCategories = Array.from(
           new Set(data.map((p: Product) => p.category))
         );
@@ -34,6 +33,7 @@ export default function ProductsPage() {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -43,51 +43,77 @@ export default function ProductsPage() {
       : products.filter((p) => p.category === selectedCategory);
 
   if (loading) {
-    return <div className="p-6 text-center">Loading products...</div>;
+    return (
+      <div className="p-10 text-center text-gray-500">Loading products…</div>
+    );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Products</h1>
+    <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
+      {/* Sidebar */}
+      <aside className="border rounded-lg p-4 bg-white h-fit">
+        <h2 className="font-semibold text-lg mb-4">Filter by Category</h2>
 
-      {/* Category Filter */}
-      <div className="mb-6">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="all">All Categories</option>
+        <ul className="space-y-2">
+          <li>
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`w-full text-left px-3 py-2 rounded ${
+                selectedCategory === "all"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              All Products
+            </button>
+          </li>
+
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <li key={cat}>
+              <button
+                onClick={() => setSelectedCategory(cat)}
+                className={`w-full text-left px-3 py-2 rounded ${
+                  selectedCategory === cat
+                    ? "bg-black text-white"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                {cat}
+              </button>
+            </li>
           ))}
-        </select>
-      </div>
+        </ul>
+      </aside>
 
       {/* Product Grid */}
-      {filteredProducts.length === 0 ? (
-        <p>No products found for this category.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="border rounded p-4 shadow-sm bg-white"
-            >
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="w-full h-40 object-cover rounded mb-3"
-              />
-              <h2 className="font-semibold text-lg">{product.title}</h2>
-              <p className="text-gray-500">${product.price}</p>
-              <p className="text-sm text-gray-400">{product.category}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <section>
+        <h1 className="text-3xl font-bold mb-6">Products</h1>
+
+        {filteredProducts.length === 0 ? (
+          <p className="text-gray-500">No products found.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="border rounded-xl bg-white hover:shadow-lg transition-shadow"
+              >
+                <img
+                  src={product.thumbnail}
+                  alt={product.title}
+                  className="w-full h-48 object-cover rounded-t-xl"
+                />
+
+                <div className="p-4 space-y-1">
+                  <h2 className="font-semibold text-lg">{product.title}</h2>
+                  <p className="text-sm text-gray-400">{product.category}</p>
+                  <p className="text-lg font-bold">€{product.price}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

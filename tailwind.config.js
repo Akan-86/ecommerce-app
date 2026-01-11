@@ -1,23 +1,11 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+@type {import('tailwindcss').Config}
+module.exports = {
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/context/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        primary: "#1e40af",
-        secondary: "#f59e0b",
-      },
-      boxShadow: {
-        soft: "0 4px 12px rgba(0,0,0,0.08)",
-      },
-    },
+    extend: {},
   },
-  darkMode: "class",
   plugins: [],
-};
+}

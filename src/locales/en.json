@@ -1,13 +1,12 @@
 {
-    "Navbar": {
-      "brand": "Store",
-      "home": "Home",
-      "cart": "Cart",
-      "admin": "Admin",
-      "orders": "Orders",
-      "login": "Login",
-      "logout": "Logout",
-      "dark": "Dark",
-      "light": "Light"
-    }
+  "Navbar": {
+    "brand": "MyShop",
+    "products": "Products",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin",
+    "search": "Search products",
+    "light": "Light Mode",
+    "dark": "Dark Mode"
   }
+}
