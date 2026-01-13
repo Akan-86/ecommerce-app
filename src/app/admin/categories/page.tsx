@@ -5,91 +5,123 @@ import { useEffect, useState } from "react";
 type Category = {
   id: string;
   name: string;
+  slug: string;
 };
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [newCategory, setNewCategory] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("/api/admin/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
         setCategories(data);
-      } catch (err) {
-        console.error("Error fetching categories:", err);
+      } catch (error) {
+        console.error("Fetch categories error:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchCategories();
   }, []);
 
-  const handleAdd = async () => {
-    if (!newCategory.trim()) return;
+  // Add category
+  const handleAddCategory = async () => {
+    if (!name.trim()) return;
+
+    setSubmitting(true);
     try {
-      const res = await fetch("/api/categories", {
+      const res = await fetch("/api/admin/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newCategory }),
+        body: JSON.stringify({ name }),
       });
+
+      if (!res.ok) throw new Error("Failed to create category");
+
       const created = await res.json();
       setCategories((prev) => [...prev, created]);
-      setNewCategory("");
-    } catch (err) {
-      console.error("Error adding category:", err);
+      setName("");
+    } catch (error) {
+      console.error("Add category error:", error);
+      alert("Category could not be created");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+  // Delete category
+  const handleDeleteCategory = async (id: string) => {
+    const ok = confirm("Are you sure you want to delete this category?");
+    if (!ok) return;
+
     try {
-      await fetch(`/api/categories/${id}`, { method: "DELETE" });
+      const res = await fetch("/api/admin/categories", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) throw new Error("Failed to delete category");
+
       setCategories((prev) => prev.filter((c) => c.id !== id));
-    } catch (err) {
-      console.error("Error deleting category:", err);
+    } catch (error) {
+      console.error("Delete category error:", error);
+      alert("Category could not be deleted");
     }
   };
 
-  if (loading) return <p className="p-6">Loading categories...</p>;
+  if (loading) {
+    return <div className="p-6">Loading categories...</div>;
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Manage Categories</h1>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-semibold mb-6">Admin · Categories</h1>
 
-      {/* Add Category Form */}
-      <div className="mb-6 flex gap-2">
+      {/* Create */}
+      <div className="flex gap-2 mb-6">
         <input
           type="text"
-          placeholder="New category name"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
-          className="border p-2 rounded flex-1"
+          placeholder="Category name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="flex-1 border rounded px-3 py-2"
         />
         <button
-          onClick={handleAdd}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          onClick={handleAddCategory}
+          disabled={submitting}
+          className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
         >
-          Add
+          {submitting ? "Adding..." : "Add"}
         </button>
       </div>
 
-      {/* Categories List */}
+      {/* List */}
       {categories.length === 0 ? (
-        <p>No categories found.</p>
+        <p className="text-gray-500">No categories yet.</p>
       ) : (
         <ul className="space-y-2">
           {categories.map((cat) => (
             <li
               key={cat.id}
-              className="flex justify-between items-center border p-2 rounded"
+              className="flex items-center justify-between border rounded px-3 py-2"
             >
-              <span>{cat.name}</span>
+              <div>
+                <p className="font-medium">{cat.name}</p>
+                <p className="text-xs text-gray-500">{cat.slug}</p>
+              </div>
+
               <button
-                onClick={() => handleDelete(cat.id)}
-                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={() => handleDeleteCategory(cat.id)}
+                className="text-sm text-red-600 hover:underline"
               >
                 Delete
               </button>
