@@ -9,7 +9,7 @@ if (
   throw new Error("Missing Firebase Admin environment variables");
 }
 
-const app =
+const adminApp =
   getApps().length === 0
     ? initializeApp({
         credential: cert({
@@ -20,4 +20,5 @@ const app =
       })
     : getApps()[0];
 
-export const db = getFirestore(app);
+export const adminDb = getFirestore(adminApp);
+export { adminApp };
