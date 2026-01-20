@@ -7,9 +7,11 @@ import { Product } from "@/types";
 
 export function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const isOnSale =
-    product.originalPrice && product.originalPrice > product.price;
+    typeof product.originalPrice === "number" &&
+    product.originalPrice > product.price;
 
   const isNew = product.createdAt
     ? Date.now() - new Date(product.createdAt).getTime() <
@@ -17,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
     : false;
 
   const imageSrc =
-    product.thumbnail && product.thumbnail.trim().length > 0
+    !imgError && product.thumbnail && product.thumbnail.trim().length > 0
       ? product.thumbnail
       : "/placeholder.png";
 
@@ -29,15 +31,17 @@ export function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = async () => {
     setAdding(true);
-    // fake latency for micro-interaction
     await new Promise((r) => setTimeout(r, 600));
     setAdding(false);
   };
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl focus-within:ring-2 focus-within:ring-gray-900/10">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-gray-900/10">
       {/* Image */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+      <Link
+        href={`/products/${product.id}`}
+        className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100"
+      >
         {/* Badges */}
         {isOnSale && (
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-red-600/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
@@ -55,13 +59,14 @@ export function ProductCard({ product }: { product: Product }) {
           alt={product.title}
           fill
           sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 100vw"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          onError={() => setImgError(true)}
           priority={false}
         />
 
         {/* Hover gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      </Link>
 
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-5">
@@ -78,24 +83,29 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Price */}
-        <div className="mt-4 flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">
-            {formatPrice(product.price)}
-          </span>
-          {isOnSale && (
-            <span className="text-sm text-gray-400 line-through">
-              {formatPrice(product.originalPrice!)}
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold text-gray-900">
+              {formatPrice(product.price)}
             </span>
-          )}
+            {isOnSale && (
+              <span className="text-sm text-gray-400 line-through">
+                {formatPrice(product.originalPrice!)}
+              </span>
+            )}
+          </div>
+          <span className="text-xs text-gray-500">
+            {product.stock && product.stock > 0 ? "In stock" : "Out of stock"}
+          </span>
         </div>
 
         {/* Actions */}
-        <div className="mt-5 grid grid-cols-2 gap-2">
+        <div className="mt-5 flex gap-2">
           <button
             onClick={handleAddToCart}
             disabled={adding}
             aria-busy={adding}
-            className="relative inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex-1 inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -124,7 +134,7 @@ export function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-900 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-900 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
           >
             View
           </Link>
