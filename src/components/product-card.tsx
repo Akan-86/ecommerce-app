@@ -29,21 +29,23 @@ export function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = async () => {
     setAdding(true);
+    // fake latency for micro-interaction
     await new Promise((r) => setTimeout(r, 600));
     setAdding(false);
   };
 
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl focus-within:ring-2 focus-within:ring-gray-900/10">
       {/* Image */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+        {/* Badges */}
         {isOnSale && (
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow">
+          <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-red-600/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
             Sale
           </span>
         )}
         {!isOnSale && isNew && (
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow">
+          <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-blue-600/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
             New
           </span>
         )}
@@ -52,20 +54,24 @@ export function ProductCard({ product }: { product: Product }) {
           src={imageSrc}
           alt={product.title}
           fill
-          sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 100vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 100vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          priority={false}
         />
+
+        {/* Hover gradient overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">
+          <h3 className="line-clamp-2 text-sm font-semibold tracking-tight text-gray-900">
             {product.title}
           </h3>
 
           {product.description && (
-            <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-500">
               {product.description}
             </p>
           )}
@@ -84,11 +90,12 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Actions */}
-        <div className="mt-5 flex gap-2">
+        <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             onClick={handleAddToCart}
             disabled={adding}
-            className="relative flex flex-1 items-center justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-black active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
+            aria-busy={adding}
+            className="relative inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -96,18 +103,33 @@ export function ProductCard({ product }: { product: Product }) {
                 Adding…
               </span>
             ) : (
-              "Add to cart"
+              <span className="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path d="M7.5 6.75a.75.75 0 000 1.5h9a.75.75 0 000-1.5h-9z" />
+                  <path
+                    fillRule="evenodd"
+                    d="M6.75 3a.75.75 0 00-.75.75v.75H4.5a.75.75 0 000 1.5h.193l.8 9.21A3 3 0 007.685 18h8.63a3 3 0 002.992-2.79l.8-9.21H21a.75.75 0 000-1.5h-1.5v-.75A.75.75 0 0018.75 3H6.75zm1.5 3h7.5l-.72 8.28a1.5 1.5 0 01-1.496 1.395H8.466a1.5 1.5 0 01-1.496-1.395L6.25 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add to cart
+              </span>
             )}
           </button>
 
           <Link
             href={`/products/${product.id}`}
-            className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:border-gray-900 hover:text-gray-900"
+            className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-900 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
           >
             View
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
