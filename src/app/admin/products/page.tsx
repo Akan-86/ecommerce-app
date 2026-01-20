@@ -15,6 +15,12 @@ type Category = {
   name: string;
 };
 
+type UnsplashPhoto = {
+  id: string;
+  urls: { small: string; regular: string };
+  alt_description: string | null;
+};
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -27,6 +33,13 @@ export default function AdminProductsPage() {
   const [price, setPrice] = useState<string>("");
   const [categoryId, setCategoryId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+
+  // Image picker state
+  const [activeTab, setActiveTab] = useState<"upload" | "unsplash">("upload");
+  const [uploading, setUploading] = useState(false);
+  const [unsplashQuery, setUnsplashQuery] = useState("");
+  const [unsplashLoading, setUnsplashLoading] = useState(false);
+  const [unsplashResults, setUnsplashResults] = useState<UnsplashPhoto[]>([]);
 
   const canSubmit = useMemo(() => {
     return Boolean(title.trim() && price && categoryId && imageUrl);
@@ -84,11 +97,50 @@ export default function AdminProductsPage() {
       setPrice("");
       setCategoryId("");
       setImageUrl("");
+      setUnsplashQuery("");
+      setUnsplashResults([]);
     } catch (e) {
       console.error(e);
       setError("Product could not be created");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleUploadFile = async (file: File) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      if (!data?.url) throw new Error("No URL returned");
+      setImageUrl(data.url);
+    } catch (e) {
+      console.error(e);
+      alert("Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const searchUnsplash = async () => {
+    if (!unsplashQuery.trim()) return;
+    setUnsplashLoading(true);
+    try {
+      const res = await fetch(
+        `/api/unsplash?q=${encodeURIComponent(unsplashQuery)}`
+      );
+      if (!res.ok) throw new Error("Unsplash search failed");
+      const data = await res.json();
+      setUnsplashResults(data.results || []);
+    } catch (e) {
+      console.error(e);
+      alert("Unsplash search failed");
+    } finally {
+      setUnsplashLoading(false);
     }
   };
 
@@ -131,17 +183,83 @@ export default function AdminProductsPage() {
               </option>
             ))}
           </select>
+        </div>
 
-          <input
-            className="rounded border px-3 py-2"
-            placeholder="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
+        {/* Image Picker */}
+        <div className="mt-4 space-y-3">
+          <div className="flex gap-2 text-sm">
+            <button
+              type="button"
+              onClick={() => setActiveTab("upload")}
+              className={`px-3 py-1 rounded border ${activeTab === "upload" ? "bg-black text-white" : ""}`}
+            >
+              Upload
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("unsplash")}
+              className={`px-3 py-1 rounded border ${activeTab === "unsplash" ? "bg-black text-white" : ""}`}
+            >
+              Unsplash
+            </button>
+          </div>
+
+          {activeTab === "upload" && (
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  e.target.files && handleUploadFile(e.target.files[0])
+                }
+              />
+              {uploading && <p className="text-xs text-gray-500">Uploading…</p>}
+            </div>
+          )}
+
+          {activeTab === "unsplash" && (
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <input
+                  className="flex-1 rounded border px-3 py-2"
+                  placeholder="Search photos (e.g. sneakers, chair, laptop)"
+                  value={unsplashQuery}
+                  onChange={(e) => setUnsplashQuery(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={searchUnsplash}
+                  disabled={unsplashLoading || !unsplashQuery.trim()}
+                  className="rounded bg-black px-3 py-2 text-white disabled:opacity-40"
+                >
+                  {unsplashLoading ? "Searching…" : "Search"}
+                </button>
+              </div>
+
+              {unsplashResults.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {unsplashResults.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setImageUrl(p.urls.regular)}
+                      className={`relative rounded overflow-hidden border ${imageUrl === p.urls.regular ? "ring-2 ring-black" : ""}`}
+                    >
+                      <img
+                        src={p.urls.small}
+                        alt={p.alt_description || "Unsplash photo"}
+                        className="h-24 w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {imageUrl && (
-          <div className="mt-2">
+          <div className="mt-3">
             <p className="text-xs text-gray-500 mb-1">Image preview:</p>
             <img
               src={imageUrl}
