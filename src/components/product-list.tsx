@@ -9,7 +9,7 @@ export function ProductList({ products }: { products: Product[] }) {
   const [category, setCategory] = useState("all");
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  const isLoading = products.length === 0;
+  const isLoading = !products || products.length === 0;
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -26,19 +26,36 @@ export function ProductList({ products }: { products: Product[] }) {
     });
   }, [products, search, category, maxPrice]);
 
-  const categories = useMemo(
-    () => Array.from(new Set(products.map((p) => p.category))),
-    [products]
-  );
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => p.category && set.add(p.category));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [products]);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
+      {/* Section header */}
+      <div className="mb-10 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Featured Products
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Browse our latest additions and best sellers.
+          </p>
+        </div>
+        <div className="text-sm text-gray-400">
+          {filteredProducts.length} items
+        </div>
+      </div>
+
       {/* Filters */}
-      <div className="mb-14 grid grid-cols-1 gap-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-14 grid grid-cols-1 gap-6 rounded-2xl border border-gray-200 bg-white/80 p-6 shadow-sm backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500">Search</label>
           <input
             type="text"
+            aria-label="Search products"
             placeholder="Search products…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -68,6 +85,7 @@ export function ProductList({ products }: { products: Product[] }) {
           </label>
           <input
             type="number"
+            aria-label="Maximum price"
             placeholder="∞"
             value={maxPrice ?? ""}
             onChange={(e) =>
@@ -79,15 +97,15 @@ export function ProductList({ products }: { products: Product[] }) {
 
         <div className="flex items-end">
           <p className="text-xs text-gray-400">
-            {filteredProducts.length} products
+            Tip: Use filters to narrow results
           </p>
         </div>
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {Array.from({ length: 10 }).map((_, i) => (
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
               className="animate-pulse rounded-2xl border border-gray-200 bg-white"
@@ -109,9 +127,19 @@ export function ProductList({ products }: { products: Product[] }) {
           <p className="mt-1 text-sm text-gray-500">
             Try adjusting your filters or check back later.
           </p>
+          <button
+            onClick={() => {
+              setSearch("");
+              setCategory("all");
+              setMaxPrice(null);
+            }}
+            className="mt-4 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            Reset filters
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
