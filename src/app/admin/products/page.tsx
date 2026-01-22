@@ -17,8 +17,9 @@ type Category = {
 
 type UnsplashPhoto = {
   id: string;
-  urls: { small: string; regular: string };
-  alt_description: string | null;
+  alt?: string | null;
+  thumb?: string;
+  small?: string;
 };
 
 export default function AdminProductsPage() {
@@ -118,6 +119,7 @@ export default function AdminProductsPage() {
       const data = await res.json();
       if (!data?.url) throw new Error("No URL returned");
       setImageUrl(data.url);
+      setActiveTab("upload");
     } catch (e) {
       console.error(e);
       alert("Upload failed");
@@ -135,10 +137,13 @@ export default function AdminProductsPage() {
       );
       if (!res.ok) throw new Error("Unsplash search failed");
       const data = await res.json();
-      setUnsplashResults(data.results || []);
+      const results = Array.isArray(data) ? data : data?.results || [];
+      console.log("Unsplash results:", results);
+      setUnsplashResults(results);
     } catch (e) {
       console.error(e);
       alert("Unsplash search failed");
+      setUnsplashResults([]);
     } finally {
       setUnsplashLoading(false);
     }
@@ -225,6 +230,12 @@ export default function AdminProductsPage() {
                   placeholder="Search photos (e.g. sneakers, chair, laptop)"
                   value={unsplashQuery}
                   onChange={(e) => setUnsplashQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      searchUnsplash();
+                    }
+                  }}
                 />
                 <button
                   type="button"
@@ -236,22 +247,39 @@ export default function AdminProductsPage() {
                 </button>
               </div>
 
+              {unsplashLoading && (
+                <p className="text-xs text-gray-500">Searching Unsplash…</p>
+              )}
+
+              {!unsplashLoading &&
+                unsplashResults.length === 0 &&
+                unsplashQuery.trim() && (
+                  <p className="text-xs text-gray-500">No results found.</p>
+                )}
+
               {unsplashResults.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {unsplashResults.map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setImageUrl(p.urls.regular)}
-                      className={`relative rounded overflow-hidden border ${imageUrl === p.urls.regular ? "ring-2 ring-black" : ""}`}
-                    >
-                      <img
-                        src={p.urls.small}
-                        alt={p.alt_description || "Unsplash photo"}
-                        className="h-24 w-full object-cover"
-                      />
-                    </button>
-                  ))}
+                  {unsplashResults
+                    .filter((p) => p && (p.small || p.thumb))
+                    .map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          const url = p.small || p.thumb;
+                          if (!url) return;
+                          setImageUrl(url);
+                          setActiveTab("unsplash");
+                        }}
+                        className={`relative rounded overflow-hidden border ${imageUrl === (p.small || p.thumb) ? "ring-2 ring-black" : ""}`}
+                      >
+                        <img
+                          src={p.small || p.thumb || "/placeholder.png"}
+                          alt={p.alt || "Unsplash photo"}
+                          className="h-24 w-full object-cover"
+                        />
+                      </button>
+                    ))}
                 </div>
               )}
             </div>
@@ -264,6 +292,7 @@ export default function AdminProductsPage() {
             <img
               src={imageUrl}
               alt="Preview"
+              loading="lazy"
               className="h-40 w-40 object-cover rounded border"
             />
           </div>
