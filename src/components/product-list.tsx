@@ -9,7 +9,7 @@ export function ProductList({ products }: { products: Product[] }) {
   const [category, setCategory] = useState("all");
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  const isLoading = !products || products.length === 0;
+  const isLoading = !products;
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -45,7 +45,7 @@ export function ProductList({ products }: { products: Product[] }) {
           </p>
         </div>
         <div className="text-sm text-gray-400">
-          {filteredProducts.length} items
+          {isLoading ? "Loading…" : `${filteredProducts.length} items`}
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export function ProductList({ products }: { products: Product[] }) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid animate-fadeIn grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
