@@ -19,8 +19,10 @@ export function ProductCard({ product }: { product: Product }) {
     : false;
 
   const imageSrc =
-    !imgError && product.thumbnail && product.thumbnail.trim().length > 0
-      ? product.thumbnail
+    !imgError &&
+    (product.thumbnail || product.image) &&
+    (product.thumbnail || product.image)!.trim().length > 0
+      ? (product.thumbnail || product.image)!
       : "/placeholder.png";
 
   const formatPrice = (value: number) =>
@@ -62,6 +64,8 @@ export function ProductCard({ product }: { product: Product }) {
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           onError={() => setImgError(true)}
           priority={false}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2VlZWVlZSIvPjwvc3ZnPg=="
         />
 
         {/* Hover gradient overlay */}
@@ -71,7 +75,7 @@ export function ProductCard({ product }: { product: Product }) {
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <h3 className="line-clamp-2 text-sm font-semibold tracking-tight text-gray-900">
+          <h3 className="line-clamp-2 text-sm font-semibold tracking-tight text-gray-900 group-hover:underline">
             {product.title}
           </h3>
 
@@ -94,7 +98,13 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             )}
           </div>
-          <span className="text-xs text-gray-500">
+          <span
+            className={`text-xs font-medium ${
+              product.stock && product.stock > 0
+                ? "text-green-600"
+                : "text-red-500"
+            }`}
+          >
             {product.stock && product.stock > 0 ? "In stock" : "Out of stock"}
           </span>
         </div>
