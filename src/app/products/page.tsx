@@ -7,7 +7,9 @@ type Product = {
   title: string;
   price: number;
   category: string;
-  thumbnail: string;
+  thumbnail?: string;
+  image?: string;
+  imageUrl?: string;
 };
 
 export default function ProductsPage() {
@@ -55,7 +57,7 @@ export default function ProductsPage() {
         <h2 className="font-semibold text-lg mb-4">Filter by Category</h2>
 
         <ul className="space-y-2">
-          <li>
+          <li key="all">
             <button
               onClick={() => setSelectedCategory("all")}
               className={`w-full text-left px-3 py-2 rounded ${
@@ -93,24 +95,34 @@ export default function ProductsPage() {
           <p className="text-gray-500">No products found.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="border rounded-xl bg-white hover:shadow-lg transition-shadow"
-              >
-                <img
-                  src={product.thumbnail}
-                  alt={product.title}
-                  className="w-full h-48 object-cover rounded-t-xl"
-                />
+            {filteredProducts.map((product) => {
+              const rawImage =
+                product.thumbnail || product.image || product.imageUrl || "";
 
-                <div className="p-4 space-y-1">
-                  <h2 className="font-semibold text-lg">{product.title}</h2>
-                  <p className="text-sm text-gray-400">{product.category}</p>
-                  <p className="text-lg font-bold">€{product.price}</p>
+              const imageSrc =
+                typeof rawImage === "string" && rawImage.trim().length > 0
+                  ? rawImage
+                  : "/placeholder.png";
+
+              return (
+                <div
+                  key={product.id}
+                  className="border rounded-xl bg-white hover:shadow-lg transition-shadow"
+                >
+                  <img
+                    src={imageSrc}
+                    alt={product.title}
+                    className="w-full h-48 object-cover rounded-t-xl"
+                  />
+
+                  <div className="p-4 space-y-1">
+                    <h2 className="font-semibold text-lg">{product.title}</h2>
+                    <p className="text-sm text-gray-400">{product.category}</p>
+                    <p className="text-lg font-bold">€{product.price}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
