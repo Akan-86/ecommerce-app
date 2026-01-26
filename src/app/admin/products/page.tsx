@@ -20,6 +20,8 @@ type UnsplashPhoto = {
   alt?: string | null;
   thumb?: string;
   small?: string;
+  regular?: string;
+  full?: string;
 };
 
 export default function AdminProductsPage() {
@@ -137,7 +139,7 @@ export default function AdminProductsPage() {
       );
       if (!res.ok) throw new Error("Unsplash search failed");
       const data = await res.json();
-      const results = Array.isArray(data) ? data : data?.results || [];
+      const results = data?.results || [];
       console.log("Unsplash results:", results);
       setUnsplashResults(results);
     } catch (e) {
@@ -260,26 +262,28 @@ export default function AdminProductsPage() {
               {unsplashResults.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {unsplashResults
-                    .filter((p) => p && (p.small || p.thumb))
-                    .map((p) => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => {
-                          const url = p.small || p.thumb;
-                          if (!url) return;
-                          setImageUrl(url);
-                          setActiveTab("unsplash");
-                        }}
-                        className={`relative rounded overflow-hidden border ${imageUrl === (p.small || p.thumb) ? "ring-2 ring-black" : ""}`}
-                      >
-                        <img
-                          src={p.small || p.thumb || "/placeholder.png"}
-                          alt={p.alt || "Unsplash photo"}
-                          className="h-24 w-full object-cover"
-                        />
-                      </button>
-                    ))}
+                    .filter((p) => p && (p.small || p.thumb || p.regular))
+                    .map((p) => {
+                      const url = p.small || p.thumb || p.regular || "";
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => {
+                            if (!url) return;
+                            setImageUrl(url);
+                            setActiveTab("unsplash");
+                          }}
+                          className={`relative rounded overflow-hidden border ${imageUrl === url ? "ring-2 ring-black" : ""}`}
+                        >
+                          <img
+                            src={url || "/placeholder.png"}
+                            alt={p.alt || "Unsplash photo"}
+                            className="h-24 w-full object-cover"
+                          />
+                        </button>
+                      );
+                    })}
                 </div>
               )}
             </div>
@@ -291,7 +295,7 @@ export default function AdminProductsPage() {
             <p className="text-xs text-gray-500 mb-1">Image preview:</p>
             <img
               src={imageUrl}
-              alt="Preview"
+              alt={title || "Preview"}
               loading="lazy"
               className="h-40 w-40 object-cover rounded border"
             />
