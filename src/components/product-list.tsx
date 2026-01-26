@@ -4,12 +4,12 @@ import { useState, useMemo } from "react";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
-export function ProductList({ products }: { products: Product[] }) {
+export function ProductList({ products = [] }: { products?: Product[] }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  const isLoading = !products;
+  const isLoading = !products || products.length === 0;
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {

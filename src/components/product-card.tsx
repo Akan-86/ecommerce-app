@@ -18,11 +18,12 @@ export function ProductCard({ product }: { product: Product }) {
       1000 * 60 * 60 * 24 * 14
     : false;
 
+  const rawImage =
+    product.thumbnail || product.image || (product as any).imageUrl || "";
+
   const imageSrc =
-    !imgError &&
-    (product.thumbnail || product.image) &&
-    (product.thumbnail || product.image)!.trim().length > 0
-      ? (product.thumbnail || product.image)!
+    !imgError && typeof rawImage === "string" && rawImage.trim().length > 0
+      ? rawImage
       : "/placeholder.png";
 
   const formatPrice = (value: number) =>
