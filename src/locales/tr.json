@@ -1,0 +1,12 @@
+{
+  "Navbar": {
+    "brand": "MyShop",
+    "products": "Ürünler",
+    "login": "Giriş",
+    "logout": "Çıkış",
+    "admin": "Yönetim",
+    "search": "Ürün ara",
+    "light": "Açık Mod",
+    "dark": "Koyu Mod"
+  }
+}

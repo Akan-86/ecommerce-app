@@ -1,0 +1,12 @@
+{
+  "Navbar": {
+    "brand": "MyShop",
+    "products": "Products",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin",
+    "search": "Search products",
+    "light": "Light Mode",
+    "dark": "Dark Mode"
+  }
+}
