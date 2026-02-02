@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
