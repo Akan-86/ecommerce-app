@@ -7,7 +7,7 @@ import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
 import { useRef } from "react";
 
-export function Navbar() {
+export default function Navbar() {
   const { count } = useCart();
   const { user, logout, loading, isAdmin } = useAuth();
   const pathname = usePathname();
