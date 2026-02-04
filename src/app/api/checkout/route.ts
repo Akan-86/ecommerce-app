@@ -38,6 +38,9 @@ type IncomingItem = {
 };
 
 export async function POST(req: NextRequest) {
+  if (req.method && req.method !== "POST") {
+    return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+  }
   try {
     const body = await req.json();
     const items: IncomingItem[] = Array.isArray(body.items) ? body.items : [];
@@ -55,13 +58,21 @@ export async function POST(req: NextRequest) {
     let subtotalCents = 0;
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
       items.map((item: any) => {
-        const quantity = item.quantity ?? 1;
+        const quantity =
+          typeof item.quantity === "number" && item.quantity > 0
+            ? item.quantity
+            : 1;
+
         const unit_amount_cents =
-          typeof item.unit_amount === "number"
+          typeof item.unit_amount === "number" && item.unit_amount > 0
             ? item.unit_amount
             : item.price
               ? Math.round(Number(item.price) * 100)
               : 0;
+
+        if (!unit_amount_cents || unit_amount_cents <= 0) {
+          throw new Error("Invalid price for item");
+        }
 
         subtotalCents += unit_amount_cents * quantity;
 
@@ -109,20 +120,26 @@ export async function POST(req: NextRequest) {
       discountsParam = [{ coupon: coupon.id }];
     }
 
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items,
-      discounts: discountsParam,
-      success_url: `${APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/cancel`,
-      metadata: {
-        userId: userId || "",
-        appliedCouponId: appliedCouponId || "",
-        discountAmount: String(discountCents / 100),
-        subtotal: String(subtotalCents / 100),
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items,
+        discounts: discountsParam,
+        success_url: `${APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${APP_URL}/cancel`,
+        customer_email: body.email || undefined,
+        metadata: {
+          userId: userId || "",
+          appliedCouponId: appliedCouponId || "",
+          discountAmount: String(discountCents / 100),
+          subtotal: String(subtotalCents / 100),
+        },
       },
-    });
+      {
+        idempotencyKey: req.headers.get("x-idempotency-key") || undefined,
+      }
+    );
 
     return NextResponse.json({ sessionId: session.id });
   } catch (err: any) {
