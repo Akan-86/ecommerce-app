@@ -71,8 +71,8 @@ export default function ProductsPage() {
             </button>
           </li>
 
-          {categories.map((cat) => (
-            <li key={cat}>
+          {categories.map((cat, i) => (
+            <li key={`${cat}-${i}`}>
               <button
                 onClick={() => setSelectedCategory(cat)}
                 className={`w-full text-left px-3 py-2 rounded ${
