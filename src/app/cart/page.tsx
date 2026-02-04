@@ -8,9 +8,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "@/context/auth-context";
 import Spinner from "@/components/Spinner";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 export default function CartPage() {
   const { items, total, clear, getStripeItems, updateQuantity, lastAction } =
@@ -40,20 +39,33 @@ export default function CartPage() {
       return;
     }
     setIsLoading(true);
+    if (!stripePromise) {
+      alert("Stripe is not configured. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
     try {
       const stripe = await stripePromise;
       if (!stripe) throw new Error("Stripe failed to load");
 
+      const idempotencyKey = crypto.randomUUID();
       const res = await fetch("/api/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-idempotency-key": idempotencyKey,
+        },
         body: JSON.stringify({
           items: getStripeItems(),
           userId: user?.uid || "",
+          email: user?.email || undefined,
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to create checkout session");
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Failed to create checkout session");
+      }
 
       const { sessionId } = await res.json();
       await stripe.redirectToCheckout({ sessionId });
@@ -143,9 +155,8 @@ export default function CartPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center rounded-full border border-gray-300 bg-white shadow-sm">
                   <button
-                    onClick={() =>
-                      updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                    }
+                    disabled={item.quantity <= 1}
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="flex h-9 w-9 items-center justify-center rounded-l-full text-gray-600 transition hover:bg-gray-100 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     −
