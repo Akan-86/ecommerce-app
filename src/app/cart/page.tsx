@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/context/cart-context";
 import { RemoveFromCartButton } from "@/components/remove-from-cart-button";
 import { loadStripe } from "@stripe/stripe-js";
@@ -12,8 +14,14 @@ const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 export default function CartPage() {
-  const { items, total, clear, getStripeItems, updateQuantity, lastAction } =
-    useCart();
+  const {
+    displayItems: items,
+    total,
+    clear,
+    getStripeItems,
+    updateQuantity,
+    lastAction,
+  } = useCart();
   const { user, loading } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -95,12 +103,12 @@ export default function CartPage() {
         <p className="mt-2 text-sm text-gray-500">
           Looks like you haven’t added anything yet.
         </p>
-        <a
+        <Link
           href="/"
           className="mt-6 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
         >
           Continue shopping
-        </a>
+        </Link>
       </div>
     );
   }
@@ -128,23 +136,18 @@ export default function CartPage() {
               className="flex flex-col gap-6 border-b border-gray-100 py-6 last:border-b-0 sm:flex-row sm:items-center sm:justify-between animate-fadeIn"
             >
               <div className="flex items-center gap-4">
-                <div className="h-20 w-20 overflow-hidden rounded-xl bg-gray-100">
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-                      No image
-                    </div>
-                  )}
+                <div className="relative h-20 w-20 overflow-hidden rounded-xl bg-gray-100">
+                  <Image
+                    src={item.image || "/placeholder.png"}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
 
                 <div>
                   <p className="text-base font-semibold text-gray-900">
-                    {item.title}
+                    {item.name}
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
                     {formatEUR(item.price)} · each
