@@ -39,9 +39,9 @@ export default function ProductCard({ product }: { product: Product }) {
     setAdding(true);
     add({
       id: product.id,
-      title: product.title,
+      name: product.title,
       price: product.price,
-      thumbnail: imageSrc,
+      imageUrl: imageSrc,
     });
     // small UX delay for the spinner
     await new Promise((r) => setTimeout(r, 300));
