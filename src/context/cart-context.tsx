@@ -115,6 +115,13 @@ type CartContextValue = {
   updateQuantity: (id: string, quantity: number) => void;
   formatPrice: (price: number) => string;
   lastAction?: { type: string; productId?: string };
+  displayItems: {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+  }[];
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -154,6 +161,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       0
     );
 
+    const displayItems = state.items.map((i) => ({
+      id: i.product.id,
+      name: i.product.title || i.product.name || "",
+      price: i.product.price,
+      image: i.product.imageUrl || i.product.thumbnail || "/placeholder.png",
+      quantity: i.quantity,
+    }));
+
     function formatPrice(price: number) {
       return new Intl.NumberFormat("de-DE", {
         style: "currency",
@@ -189,6 +204,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: "SET_QTY", payload: { id, quantity } }),
       formatPrice,
       lastAction: state.lastAction,
+      displayItems,
     };
   }, [state]);
 
