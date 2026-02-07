@@ -18,11 +18,25 @@ export default function Navbar() {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const accountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(e.target as Node)
+      ) {
+        setAccountOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
   useEffect(() => {
@@ -46,6 +60,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all ${scrolled ? "bg-white shadow" : "bg-white/80 backdrop-blur"}`}
     >
+      {/* Top Info Bar */}
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
         <div className="mx-auto max-w-7xl px-4 py-1 flex justify-between">
           <span>🚚 Free shipping over €50</span>
@@ -55,8 +70,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-16 items-center gap-6">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex h-16 items-center gap-4">
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-300 text-lg font-extrabold text-gray-900 shadow">
               A
@@ -66,6 +82,7 @@ export default function Navbar() {
             </span>
           </Link>
 
+          {/* Search (Desktop) */}
           <div className="relative hidden md:flex flex-1">
             <input
               type="text"
@@ -92,7 +109,8 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="ml-auto flex items-center gap-4">
+          {/* Right Actions */}
+          <div className="ml-auto flex items-center gap-3">
             <Link href="/products" className={isActive("/products")}>
               Products
             </Link>
@@ -103,8 +121,9 @@ export default function Navbar() {
               </Link>
             )}
 
+            {/* Cart */}
             <Link href="/cart" className="relative flex items-center">
-              🛒
+              <span className="text-xl">🛒</span>
               {count > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 rounded-full">
                   {count}
@@ -112,9 +131,10 @@ export default function Navbar() {
               )}
             </Link>
 
+            {/* Account */}
             {!loading &&
               (user ? (
-                <div className="relative">
+                <div ref={accountRef} className="relative">
                   <button
                     onClick={() => setAccountOpen((v) => !v)}
                     className="flex items-center gap-2 px-3 py-2 border rounded-full hover:bg-gray-100"
@@ -125,7 +145,7 @@ export default function Navbar() {
                     </span>
                   </button>
                   {accountOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow">
+                    <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow">
                       <Link
                         href="/account"
                         className="block px-4 py-2 hover:bg-gray-100"
@@ -160,8 +180,40 @@ export default function Navbar() {
                   </Link>
                 </div>
               ))}
+
+            {/* Mobile Toggle */}
+            <button
+              onClick={() => setMobileOpen((v) => !v)}
+              className="md:hidden p-2"
+            >
+              ☰
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <div className="md:hidden border-t py-4 space-y-3">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products"
+              className="w-full rounded-full border px-4 py-2"
+            />
+            <Link href="/products" className="block">
+              Products
+            </Link>
+            {isAdmin && (
+              <Link href="/admin" className="block">
+                Admin
+              </Link>
+            )}
+            <Link href="/cart" className="block">
+              Cart
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );
