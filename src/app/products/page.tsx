@@ -1,103 +1,119 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import ProductList from "@/components/product-list";
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 type Product = {
   id: string;
   title: string;
   price: number;
-  category: string;
-  thumbnail?: string;
-  image?: string;
   imageUrl?: string;
+  thumbnail?: string;
 };
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/products");
-        const data = await res.json();
-        setProducts(data);
-
-        const uniqueCategories = Array.from(
-          new Set(data.map((p: Product) => p.category))
-        );
-        setCategories(uniqueCategories);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((data) => setProducts(data));
   }, []);
 
-  const filteredProducts =
-    selectedCategory === "all"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
-
-  if (loading) {
-    return (
-      <div className="p-10 text-center text-gray-500">Loading products…</div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
-      {/* Sidebar */}
-      <aside className="border rounded-lg p-4 bg-white h-fit">
-        <h2 className="font-semibold text-lg mb-4">Filter by Category</h2>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="text-xl font-bold tracking-tight">
+              AkanShop
+            </Link>
+            <nav className="hidden md:flex gap-4 text-sm text-gray-600">
+              <Link href="/products" className="hover:text-black">
+                Products
+              </Link>
+              <Link href="/categories" className="hover:text-black">
+                Categories
+              </Link>
+              <Link href="/about" className="hover:text-black">
+                About
+              </Link>
+            </nav>
+          </div>
+          <div className="flex items-center gap-4">
+            <input
+              placeholder="Search products…"
+              className="hidden md:block px-3 py-1.5 rounded-md border text-sm"
+            />
+            <Link href="/cart" className="relative text-lg">
+              🛒
+            </Link>
+            <Link href="/login" className="text-sm">
+              Account
+            </Link>
+          </div>
+        </div>
+      </header>
 
-        <ul className="space-y-2">
-          <li key="all">
-            <button
-              onClick={() => setSelectedCategory("all")}
-              className={`w-full text-left px-3 py-2 rounded ${
-                selectedCategory === "all"
-                  ? "bg-black text-white"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              All Products
-            </button>
-          </li>
-
-          {categories.map((cat, i) => (
-            <li key={`${cat}-${i}`}>
-              <button
-                onClick={() => setSelectedCategory(cat)}
-                className={`w-full text-left px-3 py-2 rounded ${
-                  selectedCategory === cat
-                    ? "bg-black text-white"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                {cat}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </aside>
-
-      {/* Product Grid */}
-      <section>
-        <h1 className="text-3xl font-bold mb-6">Products</h1>
-
-        {filteredProducts.length === 0 ? (
-          <p className="text-gray-500">No products found.</p>
-        ) : (
-          <ProductList products={filteredProducts} />
-        )}
+      {/* Hero */}
+      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <h1 className="text-4xl font-bold mb-4">All Products</h1>
+          <p className="text-white/80">
+            Browse our full collection of premium items.
+          </p>
+        </div>
       </section>
+
+      {/* Grid */}
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden"
+            >
+              <div className="relative h-56 bg-gray-100">
+                {(() => {
+                  const img = p.imageUrl || p.thumbnail;
+                  return img ? (
+                    <Image
+                      src={img}
+                      alt={p.title}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                    />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-gray-400">
+                      No image
+                    </div>
+                  );
+                })()}
+              </div>
+              <div className="p-4">
+                <h3 className="font-semibold text-sm mb-1">{p.title}</h3>
+                <p className="text-indigo-600 font-bold mb-3">
+                  €{p.price.toFixed(2)}
+                </p>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/products/${p.id}`}
+                    className="flex-1 text-center text-sm border rounded-md py-1.5 hover:bg-gray-100"
+                  >
+                    View
+                  </Link>
+                  <button className="flex-1 text-sm bg-indigo-600 text-white rounded-md py-1.5 hover:bg-indigo-700">
+                    Add to cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 }
