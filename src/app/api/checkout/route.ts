@@ -20,7 +20,7 @@ requireEnv("STRIPE_SECRET_KEY", STRIPE_SECRET_KEY);
 requireEnv("NEXT_PUBLIC_APP_URL", APP_URL);
 
 const stripe = new Stripe(STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-11-20",
+  apiVersion: "2023-10-16",
 });
 
 type IncomingItem = {
@@ -63,14 +63,21 @@ export async function POST(req: NextRequest) {
             ? item.quantity
             : 1;
 
-        const unit_amount_cents =
-          typeof item.unit_amount === "number" && item.unit_amount > 0
-            ? item.unit_amount
-            : item.price
-              ? Math.round(Number(item.price) * 100)
-              : 0;
+        // Support both raw cart items and already-built Stripe price_data items
+        let unit_amount_cents = 0;
 
-        if (!unit_amount_cents || unit_amount_cents <= 0) {
+        if ((item as any).price_data?.unit_amount) {
+          // Stripe-style payload already in cents
+          unit_amount_cents = Number((item as any).price_data.unit_amount);
+        } else {
+          const parsedPrice = Number(item.unit_amount ?? item.price);
+          unit_amount_cents = Number.isFinite(parsedPrice)
+            ? Math.round(parsedPrice * (item.unit_amount ? 1 : 100))
+            : 0;
+        }
+
+        if (!Number.isInteger(unit_amount_cents) || unit_amount_cents <= 0) {
+          console.error("Invalid item payload:", item);
           throw new Error("Invalid price for item");
         }
 
@@ -81,8 +88,13 @@ export async function POST(req: NextRequest) {
             currency,
             product_data: {
               name: item.product_data?.name || item.title || "Unnamed product",
-              description: item.product_data?.description || "",
-              images: item.product_data?.images || [],
+              ...(item.product_data?.description
+                ? { description: item.product_data.description }
+                : {}),
+              ...(Array.isArray(item.product_data?.images) &&
+              item.product_data!.images!.length > 0
+                ? { images: item.product_data!.images! }
+                : {}),
               metadata: {
                 productId:
                   item.product_data?.metadata?.productId || item.id || "",
@@ -141,7 +153,7 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (err: any) {
     console.error("❌ Stripe checkout error:", err?.message ?? err);
     return NextResponse.json(
