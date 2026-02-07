@@ -6,12 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/cart-context";
 import { RemoveFromCartButton } from "@/components/remove-from-cart-button";
-import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "@/context/auth-context";
 import Spinner from "@/components/Spinner";
-
-const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 export default function CartPage() {
   const {
@@ -43,40 +39,28 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     if (!user) {
-      router.push("/login?redirect=/checkout");
+      router.push("/login?redirect=/cart");
       return;
     }
-    setIsLoading(true);
-    if (!stripePromise) {
-      alert("Stripe is not configured. Please try again later.");
-      setIsLoading(false);
-      return;
-    }
-    try {
-      const stripe = await stripePromise;
-      if (!stripe) throw new Error("Stripe failed to load");
 
-      const idempotencyKey = crypto.randomUUID();
+    setIsLoading(true);
+    try {
       const res = await fetch("/api/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-idempotency-key": idempotencyKey,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: getStripeItems(),
-          userId: user?.uid || "",
-          email: user?.email || undefined,
+          userId: user.uid,
+          email: user.email,
         }),
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || "Failed to create checkout session");
+      const data = await res.json();
+      if (!res.ok || !data?.url) {
+        throw new Error(data?.error || "Failed to create checkout session");
       }
 
-      const { sessionId } = await res.json();
-      await stripe.redirectToCheckout({ sessionId });
+      router.push(data.url);
     } catch (err) {
       console.error("Checkout error:", err);
       alert("Something went wrong during checkout.");
