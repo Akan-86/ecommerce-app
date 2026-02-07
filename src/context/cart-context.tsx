@@ -97,6 +97,7 @@ type CartContextValue = {
   removeOne: (id: string) => void;
   removeAll: (id: string) => void;
   clear: () => void;
+  clearCart: () => void;
   count: number;
   total: number;
   getStripeItems: () => {
@@ -182,6 +183,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeOne: (id) => dispatch({ type: "REMOVE_ONE", payload: id }),
       removeAll: (id) => dispatch({ type: "REMOVE_ALL", payload: id }),
       clear: () => dispatch({ type: "CLEAR" }),
+      clearCart: () => dispatch({ type: "CLEAR" }),
       count,
       total,
       getStripeItems: () =>
@@ -190,8 +192,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             currency: "eur",
             product_data: {
               name: i.product.title,
-              description: i.product.description || "",
-              images: [i.product.imageUrl || i.product.thumbnail || ""],
+              description:
+                i.product.description || i.product.title || "Product",
+              images: [
+                i.product.imageUrl ||
+                  i.product.thumbnail ||
+                  "https://via.placeholder.com/400x400.png?text=Product",
+              ],
               metadata: {
                 productId: i.product.id, // 🔑 Firestore’daki ürün ID’si
               },
