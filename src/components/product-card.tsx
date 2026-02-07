@@ -49,11 +49,11 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="group flex w-full max-w-[260px] flex-col rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <article className="group flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
       <Link
         href={`/products/${product.id}`}
-        className="relative w-full overflow-hidden bg-gray-100"
+        className="relative block w-full overflow-hidden bg-gray-100"
       >
         {/* Badges */}
         {isOnSale && (
@@ -67,7 +67,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         )}
 
-        <div className="relative w-full aspect-[4/5] bg-gray-100">
+        <div className="relative w-full aspect-[3/4] bg-gray-100">
           <Image
             src={imageSrc}
             alt={product.title}
@@ -88,7 +88,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Content */}
       <div className="flex flex-col gap-2 p-3">
         <div>
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900">
+          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900">
             {product.title}
           </h3>
 
@@ -105,7 +105,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-black"
+            className="flex-1 inline-flex items-center justify-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-black"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:border-gray-900 hover:text-gray-900"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:border-gray-900 hover:text-gray-900"
           >
             View
           </Link>
@@ -143,7 +143,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price */}
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-base font-bold text-gray-900">
               {formatPrice(product.price)}
             </span>
             {isOnSale && (
