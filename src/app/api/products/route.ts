@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
@@ -15,13 +15,45 @@ const adminApp =
 
 const db = getFirestore(adminApp);
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const category = searchParams.get("category");
+    const minPrice = Number(searchParams.get("minPrice") || 0);
+    const maxPrice = Number(
+      searchParams.get("maxPrice") || Number.MAX_SAFE_INTEGER
+    );
+    const sort = searchParams.get("sort"); // 'price-asc' | 'price-desc' | 'new'
+
     const snapshot = await db.collection("products").get();
-    const products = snapshot.docs.map((doc) => ({
+    let products = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }));
+    })) as any[];
+
+    // Filter by category
+    if (category && category !== "all") {
+      products = products.filter((p) => p.category === category);
+    }
+
+    // Filter by price range
+    products = products.filter((p) => {
+      const price = Number(p.price || 0);
+      return price >= minPrice && price <= maxPrice;
+    });
+
+    // Sort
+    if (sort === "price-asc") {
+      products = products.sort((a, b) => Number(a.price) - Number(b.price));
+    }
+    if (sort === "price-desc") {
+      products = products.sort((a, b) => Number(b.price) - Number(a.price));
+    }
+    if (sort === "new") {
+      products = products.sort(
+        (a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0)
+      );
+    }
 
     return NextResponse.json(products);
   } catch (error) {
