@@ -1,6 +1,5 @@
 import "./globals.css";
 import Navbar from "@/components/navbar";
-import { Sidebar } from "@/components/sidebar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
@@ -13,7 +12,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
+      <body className="min-h-screen bg-white text-gray-900 antialiased">
         <AuthProvider>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
@@ -30,16 +29,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
 
               {/* Navbar */}
-              <header className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-                <Navbar />
-              </header>
+              <Navbar />
 
               {/* Main */}
-              <main className="flex-1">
-                <div className="mx-auto max-w-7xl px-6 py-10 lg:py-14">
-                  {/* Page content */}
-                  <section className="min-w-0">{children}</section>
-                </div>
+              <main className="flex-1 pt-20">
+                {/* Page content wrapper */}
+                <section className="mx-auto max-w-7xl px-6 py-10 lg:py-14 min-w-0">
+                  {children}
+                </section>
               </main>
 
               {/* Footer */}
