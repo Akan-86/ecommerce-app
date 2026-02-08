@@ -9,7 +9,7 @@ export default async function Page() {
   const products = await res.json();
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main>
       {/* HERO */}
       <section className="relative isolate overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <Image
@@ -20,14 +20,14 @@ export default async function Page() {
           priority
         />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_40%_at_50%_0%,rgba(255,255,255,0.15),transparent_60%)]" />
-        <div className="mx-auto max-w-7xl px-6 py-24 lg:py-32">
+        <div className="mx-auto max-w-7xl px-6 py-28 lg:py-36">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
                 ✨ New Season <span className="text-white/60">·</span> Free
                 shipping over €100
               </span>
-              <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Shop smarter.
                 <span className="block bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-transparent">
                   Discover better.
@@ -40,13 +40,13 @@ export default async function Page() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300"
+                  className="inline-flex items-center justify-center rounded-full bg-yellow-400 px-7 py-3.5 text-sm font-extrabold text-gray-900 shadow-lg hover:bg-yellow-300 hover:shadow-xl hover:scale-[1.02] transition"
                 >
                   Browse Products
                 </Link>
                 <Link
                   href="/products?sort=new"
-                  className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-full border-2 border-white/40 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10 hover:scale-[1.02] transition"
                 >
                   New Arrivals
                 </Link>
@@ -95,7 +95,7 @@ export default async function Page() {
       {/* PROMO CARDS */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-lg">
+          <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
             <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-yellow-200/40 blur-2xl" />
             <p className="text-xs font-semibold text-yellow-600">DEALS</p>
             <h3 className="mt-2 text-lg font-bold">Big spend, big save</h3>
@@ -109,7 +109,7 @@ export default async function Page() {
               Shop deals →
             </Link>
           </div>
-          <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-lg">
+          <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
             <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-200/40 blur-2xl" />
             <p className="text-xs font-semibold text-yellow-600">RECOMMENDED</p>
             <h3 className="mt-2 text-lg font-bold">Continue shopping</h3>
@@ -123,7 +123,7 @@ export default async function Page() {
               View items →
             </Link>
           </div>
-          <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-lg">
+          <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
             <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-green-200/40 blur-2xl" />
             <p className="text-xs font-semibold text-yellow-600">DAILY</p>
             <h3 className="mt-2 text-lg font-bold">Daily essentials</h3>
@@ -151,7 +151,7 @@ export default async function Page() {
             View all
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
           {(products || []).slice(0, 10).map((p: any) => (
             <ProductCard key={p.id} product={p} />
           ))}
