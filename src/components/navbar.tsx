@@ -2,218 +2,101 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
-import { useAuth } from "@/context/auth-context";
 
 export default function Navbar() {
-  const { count } = useCart();
-  const { user, logout, loading, isAdmin } = useAuth();
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const [scrolled, setScrolled] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  const accountRef = useRef<HTMLDivElement | null>(null);
+  const { items } = useCart();
+  const cartCount = items.reduce((acc, i) => acc + i.quantity, 0);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (
-        accountRef.current &&
-        !accountRef.current.contains(e.target as Node)
-      ) {
-        setAccountOpen(false);
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
       }
-    };
+    }
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (!query) return setSuggestions([]);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    debounceRef.current = setTimeout(() => {
-      fetch(`/api/products?q=${query}`)
-        .then((res) => (res.ok ? res.json() : []))
-        .then((data) => setSuggestions(data.map((p: any) => p.name)))
-        .catch(() => {});
-    }, 250);
-  }, [query]);
-
-  const isActive = (path: string) =>
-    pathname === path
-      ? "text-gray-900 font-semibold border-b-2 border-yellow-400"
-      : "text-gray-600 hover:text-gray-900";
-
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all ${scrolled ? "bg-white shadow" : "bg-white/80 backdrop-blur"}`}
-    >
-      {/* Top Info Bar */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
-        <div className="mx-auto max-w-7xl px-4 py-1 flex justify-between">
-          <span>🚚 Free shipping over €50</span>
-          <span className="hidden sm:block">
-            🔒 Secure checkout • Easy returns
-          </span>
-        </div>
-      </div>
+    <header className="sticky top-0 z-50 bg-brand text-white shadow">
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="font-black tracking-tight text-xl">
+          VentoShop
+        </Link>
 
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="flex h-16 items-center gap-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-300 text-lg font-extrabold text-gray-900 shadow">
-              A
-            </div>
-            <span className="hidden md:block text-lg font-semibold text-gray-900">
-              MyShop
-            </span>
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+          <Link href="/products" className="hover:text-brand-accent">
+            Products
           </Link>
+          <Link href="/about" className="hover:text-brand-accent">
+            About
+          </Link>
+          <Link href="/contact" className="hover:text-brand-accent">
+            Contact
+          </Link>
+        </nav>
 
-          {/* Search (Desktop) */}
-          <div className="relative hidden md:flex flex-1">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products"
-              className="w-full max-w-2xl rounded-full border px-5 py-2.5 text-sm shadow focus:border-gray-900 focus:outline-none"
-            />
-            {query && suggestions.length > 0 && (
-              <div className="absolute top-full mt-2 w-full max-w-2xl rounded-lg border bg-white shadow-lg">
-                {suggestions.map((item) => (
-                  <button
-                    key={item}
-                    className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
-                    onClick={() => {
-                      setQuery("");
-                      router.push(`/products?search=${item}`);
-                    }}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
+        <div className="flex items-center gap-3" ref={ref}>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="relative inline-flex items-center gap-2 rounded-xl bg-white text-slate-900 px-4 py-2 text-sm font-extrabold shadow-lg hover:shadow-xl hover:scale-[1.03] transition"
+            aria-label="Toggle cart"
+          >
+            🛒 <span className="hidden sm:inline">Cart</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                {cartCount}
+              </span>
             )}
-          </div>
+          </button>
 
-          {/* Right Actions */}
-          <div className="ml-auto flex items-center gap-3">
-            <Link href="/products" className={isActive("/products")}>
-              Products
-            </Link>
-
-            {isAdmin && (
-              <Link href="/admin" className={isActive("/admin")}>
-                Admin
-              </Link>
-            )}
-
-            {/* Cart */}
-            <Link href="/cart" className="relative flex items-center">
-              <span className="text-xl">🛒</span>
-              {count > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 rounded-full">
-                  {count}
-                </span>
-              )}
-            </Link>
-
-            {/* Account */}
-            {!loading &&
-              (user ? (
-                <div ref={accountRef} className="relative">
-                  <button
-                    onClick={() => setAccountOpen((v) => !v)}
-                    className="flex items-center gap-2 px-3 py-2 border rounded-full hover:bg-gray-100"
-                  >
-                    👤{" "}
-                    <span className="hidden sm:inline">
-                      {user.email?.split("@")[0]}
-                    </span>
-                  </button>
-                  {accountOpen && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow">
-                      <Link
-                        href="/account"
-                        className="block px-4 py-2 hover:bg-gray-100"
-                      >
-                        Profile
-                      </Link>
-                      <Link
-                        href="/orders"
-                        className="block px-4 py-2 hover:bg-gray-100"
-                      >
-                        Orders
-                      </Link>
-                      <button
-                        onClick={logout}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
+          {open && (
+            <div className="absolute right-6 top-16 w-80 rounded-2xl bg-white text-slate-900 shadow-2xl z-50 overflow-hidden">
+              <div className="p-4 max-h-80 overflow-y-auto">
+                {items.length === 0 ? (
+                  <p className="text-sm text-gray-600">Your cart is empty.</p>
+                ) : (
+                  items.map((i) => (
+                    <div
+                      key={i.product.id}
+                      className="flex items-center justify-between py-3 border-b last:border-b-0"
+                    >
+                      <div className="pr-2">
+                        <p className="text-sm font-semibold leading-tight">
+                          {i.product.title}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Qty: {i.quantity}
+                        </p>
+                      </div>
+                      <p className="text-sm font-semibold">
+                        €{(Number(i.product.price) * i.quantity).toFixed(2)}
+                      </p>
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex gap-2">
-                  <Link href="/login" className="px-4 py-2 border rounded-full">
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-4 py-2 bg-yellow-400 rounded-full font-semibold"
-                  >
-                    Register
-                  </Link>
-                </div>
-              ))}
-
-            {/* Mobile Toggle */}
-            <button
-              onClick={() => setMobileOpen((v) => !v)}
-              className="md:hidden p-2"
-            >
-              ☰
-            </button>
-          </div>
+                  ))
+                )}
+              </div>
+              <div className="p-4 border-t flex items-center justify-between">
+                <Link
+                  href="/cart"
+                  onClick={() => setOpen(false)}
+                  className="text-sm font-bold text-brand-accent hover:underline"
+                >
+                  View Cart
+                </Link>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-sm font-semibold text-gray-600 hover:text-gray-900"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t py-4 space-y-3">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products"
-              className="w-full rounded-full border px-4 py-2"
-            />
-            <Link href="/products" className="block">
-              Products
-            </Link>
-            {isAdmin && (
-              <Link href="/admin" className="block">
-                Admin
-              </Link>
-            )}
-            <Link href="/cart" className="block">
-              Cart
-            </Link>
-          </div>
-        )}
       </div>
     </header>
   );
