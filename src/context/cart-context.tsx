@@ -21,12 +21,16 @@ type Action =
   | { type: "REMOVE_ONE"; payload: string }
   | { type: "REMOVE_ALL"; payload: string }
   | { type: "CLEAR" }
-  | { type: "SET_QTY"; payload: { id: string; quantity: number } };
+  | { type: "SET_QTY"; payload: { id: string; quantity: number } }
+  | { type: "HYDRATE"; payload: CartItem[] };
 
 const initialState: State = { items: [], lastAction: undefined };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case "HYDRATE": {
+      return { items: action.payload || [], lastAction: { type: "HYDRATE" } };
+    }
     case "ADD": {
       const exists = state.items.find(
         (i) => i.product.id === action.payload.id
@@ -137,12 +141,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed: { items: CartItem[] } = JSON.parse(raw);
         if (Array.isArray(parsed.items)) {
-          dispatch({ type: "CLEAR" });
-          parsed.items.forEach((i) => {
-            for (let k = 0; k < i.quantity; k++) {
-              dispatch({ type: "ADD", payload: i.product });
-            }
-          });
+          dispatch({ type: "HYDRATE", payload: parsed.items });
         }
       }
     } catch {}
@@ -191,9 +190,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           price_data: {
             currency: "eur",
             product_data: {
-              name: i.product.title,
+              name: i.product.title || i.product.name || "Product",
               description:
-                i.product.description || i.product.title || "Product",
+                i.product.description ||
+                i.product.title ||
+                i.product.name ||
+                "Product",
               images: [
                 i.product.imageUrl ||
                   i.product.thumbnail ||
@@ -203,7 +205,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 productId: i.product.id, // 🔑 Firestore’daki ürün ID’si
               },
             },
-            unit_amount: Math.round(i.product.price * 100),
+            unit_amount: Math.round((Number(i.product.price) || 0) * 100),
           },
           quantity: i.quantity,
         })),
