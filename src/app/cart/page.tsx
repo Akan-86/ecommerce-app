@@ -88,10 +88,10 @@ export default function CartPage() {
           Looks like you haven’t added anything yet.
         </p>
         <Link
-          href="/"
+          href="/products"
           className="mt-6 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
         >
-          Continue shopping
+          Browse products
         </Link>
       </div>
     );
@@ -107,9 +107,12 @@ export default function CartPage() {
           {lastAction.type === "clear" && "Cart cleared"}
         </div>
       )}
-      <h1 className="mb-10 text-3xl font-bold tracking-tight text-gray-900">
+      <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
         Shopping Cart
       </h1>
+      <p className="mb-8 text-sm text-gray-500">
+        {items.length} items in your cart
+      </p>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
         {/* Cart items */}
@@ -125,6 +128,7 @@ export default function CartPage() {
                     src={item.image || "/placeholder.png"}
                     alt={item.name}
                     fill
+                    sizes="80px"
                     className="object-cover"
                   />
                 </div>
@@ -200,7 +204,11 @@ export default function CartPage() {
             disabled={isLoading}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-3 text-sm font-semibold text-gray-900 shadow-md transition hover:from-yellow-500 hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-60"
           >
-            {isLoading && <Spinner />}
+            {isLoading && (
+              <span className="pointer-events-none">
+                <Spinner />
+              </span>
+            )}
             <span>{isLoading ? "Redirecting…" : "Proceed to Checkout"}</span>
           </button>
 
