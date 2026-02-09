@@ -18,6 +18,12 @@ export default function SuccessPage() {
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
+    if (!sessionId) {
+      router.replace("/");
+    }
+  }, [sessionId, router]);
+
+  useEffect(() => {
     if (!sessionId || hasProcessed.current) return;
     hasProcessed.current = true;
 
@@ -48,15 +54,19 @@ export default function SuccessPage() {
     };
 
     saveOrderAndClearCart();
-  }, [sessionId, clearCart]);
+  }, [sessionId, clearCart, router]);
 
   return (
     <main className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-lg bg-white border rounded-2xl shadow-lg p-8 text-center">
+      <div
+        className={`w-full max-w-lg bg-white border rounded-2xl shadow-lg p-8 text-center ${loading ? "opacity-90" : ""}`}
+      >
         {loading ? (
           <>
             <div className="animate-pulse text-4xl mb-4">⏳</div>
-            <p className="text-gray-600">Processing your order...</p>
+            <p className="text-gray-600" aria-live="polite">
+              Processing your order...
+            </p>
           </>
         ) : error ? (
           <>
