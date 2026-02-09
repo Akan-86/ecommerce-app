@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 
 export default function LoginPage() {
@@ -36,7 +37,10 @@ export default function LoginPage() {
         </h1>
 
         {error && (
-          <p className="mb-4 rounded bg-red-100 px-3 py-2 text-sm text-red-600">
+          <p
+            aria-live="polite"
+            className="mb-4 rounded bg-red-100 px-3 py-2 text-sm text-red-600"
+          >
             {error}
           </p>
         )}
@@ -46,6 +50,7 @@ export default function LoginPage() {
             type="email"
             placeholder="Email"
             required
+            autoFocus
             className="w-full rounded border px-3 py-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -60,20 +65,35 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <input
+              id="remember"
+              type="checkbox"
+              className="h-4 w-4 rounded border"
+            />
+            <label htmlFor="remember">Remember me</label>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-black py-2 text-white hover:bg-gray-900 disabled:opacity-50"
+            className="w-full rounded bg-black py-2 text-white hover:bg-gray-900 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading && (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            )}
+            <span>{loading ? "Signing in..." : "Sign In"}</span>
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don’t have an account?{" "}
-          <a href="/register" className="font-medium text-black">
+          <Link
+            href="/register"
+            className="font-medium text-black hover:underline"
+          >
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>
