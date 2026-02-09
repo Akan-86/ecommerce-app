@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { items, total } = useCart();
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -27,7 +28,7 @@ export default function CheckoutPage() {
     return (
       <div className="mt-40 flex flex-col items-center gap-4 text-sm text-gray-500">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
-        <span>Preparing secure checkout…</span>
+        <span aria-live="polite">Preparing secure checkout…</span>
       </div>
     );
   }
@@ -54,7 +55,15 @@ export default function CheckoutPage() {
 
   /* ---------------- Checkout Layout ---------------- */
   return (
-    <div className="mx-auto max-w-6xl px-4 py-20">
+    <div className="relative mx-auto max-w-6xl px-4 py-20">
+      {processing && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3 text-sm text-gray-700">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
+            <span>Redirecting to secure payment…</span>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="mb-16 text-center">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -68,7 +77,11 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
         {/* Checkout Form */}
         <section className="lg:col-span-2 rounded-2xl border bg-white p-8 shadow-sm">
-          <CheckoutForm items={items} userId={user.uid} />
+          <CheckoutForm
+            items={items}
+            userId={user.uid}
+            onProcessing={setProcessing}
+          />
 
           <div className="mt-10 flex items-center gap-2 text-xs text-gray-500">
             <span>🔒</span>
