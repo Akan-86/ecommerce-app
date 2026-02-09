@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -36,7 +37,10 @@ export default function RegisterPage() {
         </h1>
 
         {error && (
-          <p className="mb-4 rounded bg-red-100 px-3 py-2 text-sm text-red-600">
+          <p
+            aria-live="polite"
+            className="mb-4 rounded bg-red-100 px-3 py-2 text-sm text-red-600"
+          >
             {error}
           </p>
         )}
@@ -46,6 +50,7 @@ export default function RegisterPage() {
             type="email"
             placeholder="Email"
             required
+            autoFocus
             className="w-full rounded border px-3 py-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -63,17 +68,23 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-black py-2 text-white hover:bg-gray-900 disabled:opacity-50"
+            className="w-full rounded bg-black py-2 text-white hover:bg-gray-900 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {loading ? "Creating..." : "Register"}
+            {loading && (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            )}
+            <span>{loading ? "Creating..." : "Register"}</span>
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="font-medium text-black">
+          <Link
+            href="/login"
+            className="font-medium text-black hover:underline"
+          >
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>
