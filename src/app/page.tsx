@@ -9,9 +9,9 @@ export default async function Page() {
   const products = await res.json();
 
   return (
-    <main>
+    <main className="relative z-0">
       {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <section className="relative isolate overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 z-0">
         <Image
           src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2000&auto=format&fit=crop"
           alt="Shop hero"
