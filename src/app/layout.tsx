@@ -17,7 +17,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <CartProvider>
             <div className="flex min-h-screen flex-col">
               {/* Top info bar */}
-              <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
+              <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs relative z-50">
                 <div className="mx-auto max-w-7xl px-6 py-2 flex items-center justify-between">
                   <span className="font-medium">
                     🚚 Free shipping on orders over €100
@@ -29,10 +29,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
 
               {/* Navbar */}
-              <Navbar />
+              <div className="relative z-50">
+                <Navbar />
+              </div>
 
               {/* Main */}
-              <main className="flex-1 pt-20">
+              <main className="flex-1 pt-24">
                 {/* Page content wrapper */}
                 <section className="mx-auto max-w-7xl px-6 py-10 lg:py-14 min-w-0">
                   {children}
