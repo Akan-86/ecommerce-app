@@ -13,6 +13,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -25,6 +26,10 @@ type AuthContextType = {
   register: (email: string, password: string) => Promise<void>;
   role: string | null;
   isAdmin: boolean;
+  updateUserProfile: (data: {
+    displayName?: string;
+    photoURL?: string;
+  }) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -98,6 +103,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut(auth);
   };
 
+  const updateUserProfile = async (data: {
+    displayName?: string;
+    photoURL?: string;
+  }) => {
+    if (!auth.currentUser) return;
+
+    await updateProfile(auth.currentUser, {
+      displayName: data.displayName ?? auth.currentUser.displayName,
+      photoURL: data.photoURL ?? auth.currentUser.photoURL,
+    });
+
+    // Force refresh local user state
+    setUser({ ...auth.currentUser });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -108,6 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         role,
         isAdmin: role === "admin",
+        updateUserProfile,
       }}
     >
       {children}
