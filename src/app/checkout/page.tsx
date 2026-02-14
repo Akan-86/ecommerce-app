@@ -6,11 +6,13 @@ import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import Link from "next/link";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { items, total } = useCart();
+  const { items, total, clearCart } = useCart();
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -22,6 +24,29 @@ export default function CheckoutPage() {
       }
     }
   }, [user, loading, router, items.length]);
+
+  const handleOrderSuccess = async () => {
+    if (!user) return;
+
+    try {
+      setProcessing(true);
+
+      await addDoc(collection(db, "orders"), {
+        userId: user.uid,
+        email: user.email,
+        items,
+        total,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+
+      clearCart();
+      router.push("/success");
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      setProcessing(false);
+    }
+  };
 
   /* ---------------- Loading State ---------------- */
   if (loading || !user) {
@@ -81,6 +106,7 @@ export default function CheckoutPage() {
             items={items}
             userId={user.uid}
             onProcessing={setProcessing}
+            onSuccess={handleOrderSuccess}
           />
 
           <div className="mt-10 flex items-center gap-2 text-xs text-gray-500">
