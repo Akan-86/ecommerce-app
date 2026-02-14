@@ -11,9 +11,16 @@ const stripePromise = loadStripe(
 type CheckoutFormProps = {
   items: any[];
   userId: string;
+  onProcessing?: (state: boolean) => void;
+  onSuccess?: () => Promise<void> | void;
 };
 
-function CheckoutForm({ items, userId }: CheckoutFormProps) {
+function CheckoutForm({
+  items,
+  userId,
+  onProcessing,
+  onSuccess,
+}: CheckoutFormProps) {
   const stripe = useStripe();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +31,7 @@ function CheckoutForm({ items, userId }: CheckoutFormProps) {
 
     setIsSubmitting(true);
     setError(null);
+    onProcessing?.(true);
 
     try {
       const res = await fetch("/api/checkout", {
@@ -38,6 +46,11 @@ function CheckoutForm({ items, userId }: CheckoutFormProps) {
 
       const { sessionId } = await res.json();
 
+      // Create order in Firestore before redirect
+      if (onSuccess) {
+        await onSuccess();
+      }
+
       const { error } = await stripe.redirectToCheckout({ sessionId });
       if (error) {
         throw new Error(error.message);
@@ -45,6 +58,7 @@ function CheckoutForm({ items, userId }: CheckoutFormProps) {
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please retry.");
       setIsSubmitting(false);
+      onProcessing?.(false);
     }
   };
 
