@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Product } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
 
 async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
@@ -40,6 +42,8 @@ type FormValues = {
 };
 
 export default function AdminProductsPage() {
+  const router = useRouter();
+  const { user, loading, isAdmin } = useAuth();
   const [preview, setPreview] = useState<string>("");
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -77,6 +81,16 @@ export default function AdminProductsPage() {
       setLoadingCats(false);
     }
   };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push("/login");
+      } else if (!isAdmin) {
+        router.push("/");
+      }
+    }
+  }, [user, loading, isAdmin, router]);
 
   useEffect(() => {
     fetchProducts();
@@ -175,6 +189,10 @@ export default function AdminProductsPage() {
   };
 
   const imageUrl = watch("imageUrl");
+
+  if (loading || !user || !isAdmin) {
+    return null;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded">
