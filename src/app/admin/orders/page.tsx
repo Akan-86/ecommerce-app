@@ -10,6 +10,8 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
 
 type OrderItem = {
   name: string;
@@ -29,6 +31,19 @@ type Order = {
 };
 
 export default function AdminOrdersPage() {
+  const router = useRouter();
+  const { user, loading: authLoading, isAdmin } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading) {
+      if (!user) {
+        router.push("/login");
+      } else if (!isAdmin) {
+        router.push("/");
+      }
+    }
+  }, [user, authLoading, isAdmin, router]);
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +78,23 @@ export default function AdminOrdersPage() {
     }
   };
 
-  if (loading) return <div className="p-6 text-center">Loading orders...</div>;
+  if (authLoading || loading || !user || !isAdmin)
+    return <div className="p-6 text-center">Loading orders...</div>;
+
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "paid":
+        return "bg-blue-100 text-blue-700";
+      case "shipped":
+        return "bg-purple-100 text-purple-700";
+      case "delivered":
+        return "bg-green-100 text-green-700";
+      case "cancelled":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -81,7 +112,14 @@ export default function AdminOrdersPage() {
             </div>
             <p>User: {order.userId}</p>
             <p>
-              Status: <span className="font-medium">{order.status}</span>
+              Status:
+              <span
+                className={`ml-2 px-2 py-1 text-xs rounded-full font-medium ${getStatusStyle(
+                  order.status
+                )}`}
+              >
+                {order.status}
+              </span>
             </p>
             <div className="flex gap-2 my-2">
               {["paid", "shipped", "delivered", "cancelled"].map((status) => (
