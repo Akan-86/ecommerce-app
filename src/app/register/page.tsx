@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
+import { db } from "@/lib/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -20,7 +22,16 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await register(email, password);
+      const userCredential = await register(email, password);
+
+      if (userCredential?.user) {
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          email: userCredential.user.email,
+          role: "user",
+          createdAt: serverTimestamp(),
+        });
+      }
+
       router.push("/");
     } catch (err: any) {
       setError("Failed to create account");
