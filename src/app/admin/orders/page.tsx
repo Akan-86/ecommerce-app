@@ -46,6 +46,10 @@ export default function AdminOrdersPage() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [searchUserId, setSearchUserId] = useState<string>("");
+  const [searchOrderId, setSearchOrderId] = useState<string>("");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -67,19 +71,41 @@ export default function AdminOrdersPage() {
   }, []);
 
   const updateStatus = async (orderId: string, newStatus: string) => {
+    const currentOrder = orders.find((o) => o.id === orderId);
+    if (!currentOrder || currentOrder.status === newStatus) return;
+
     try {
+      setUpdatingOrderId(orderId);
       const orderRef = doc(db, "orders", orderId);
       await updateDoc(orderRef, { status: newStatus });
+
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
       );
     } catch (err) {
       console.error("Error updating status:", err);
+    } finally {
+      setUpdatingOrderId(null);
     }
   };
 
   if (authLoading || loading || !user || !isAdmin)
     return <div className="p-6 text-center">Loading orders...</div>;
+
+  const filteredOrders = orders.filter((order) => {
+    const matchesStatus =
+      statusFilter === "all" ? true : order.status === statusFilter;
+
+    const matchesUser = searchUserId
+      ? order.userId.toLowerCase().includes(searchUserId.toLowerCase())
+      : true;
+
+    const matchesOrder = searchOrderId
+      ? order.id.toLowerCase().includes(searchOrderId.toLowerCase())
+      : true;
+
+    return matchesStatus && matchesUser && matchesOrder;
+  });
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -99,8 +125,37 @@ export default function AdminOrdersPage() {
   return (
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Admin Panel - Orders</h1>
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="all">All Status</option>
+          <option value="paid">Paid</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Search by User ID"
+          value={searchUserId}
+          onChange={(e) => setSearchUserId(e.target.value)}
+          className="border p-2 rounded"
+        />
+
+        <input
+          type="text"
+          placeholder="Search by Order ID"
+          value={searchOrderId}
+          onChange={(e) => setSearchOrderId(e.target.value)}
+          className="border p-2 rounded"
+        />
+      </div>
       <ul className="space-y-4">
-        {orders.map((order) => (
+        {filteredOrders.map((order) => (
           <li key={order.id} className="border rounded p-4 shadow-sm bg-white">
             <div className="flex justify-between items-center mb-2">
               <span className="font-semibold">Order ID: {order.id}</span>
@@ -126,9 +181,16 @@ export default function AdminOrdersPage() {
                 <button
                   key={status}
                   onClick={() => updateStatus(order.id, status)}
-                  className="px-2 py-1 text-sm border rounded hover:bg-gray-100"
+                  disabled={
+                    order.status === status || updatingOrderId === order.id
+                  }
+                  className={`px-2 py-1 text-sm border rounded transition
+                    ${order.status === status ? "bg-gray-200 cursor-not-allowed" : "hover:bg-gray-100"}
+                    ${updatingOrderId === order.id ? "opacity-50 cursor-wait" : ""}`}
                 >
-                  {status}
+                  {updatingOrderId === order.id && order.status !== status
+                    ? "Updating..."
+                    : status}
                 </button>
               ))}
             </div>
