@@ -6,6 +6,15 @@ import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 
+import {
+  DollarSign,
+  TrendingUp,
+  TrendingDown,
+  ShoppingCart,
+  Users,
+  Package,
+} from "lucide-react";
+
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -77,6 +86,20 @@ export default function AdminProductsPage() {
   >([]);
   const [todayOrders, setTodayOrders] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
+  const [totalStripeFees, setTotalStripeFees] = useState(0);
+  const [totalNetRevenue, setTotalNetRevenue] = useState(0);
+
+  const [uniqueCustomers, setUniqueCustomers] = useState(0);
+  const [returningCustomers, setReturningCustomers] = useState(0);
+  const [returningRate, setReturningRate] = useState(0);
+  const [topCustomers, setTopCustomers] = useState<
+    { userId: string; revenue: number }[]
+  >([]);
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  const [displayRevenue, setDisplayRevenue] = useState(0);
+  const [displayProfit, setDisplayProfit] = useState(0);
 
   const {
     register,
@@ -121,16 +144,30 @@ export default function AdminProductsPage() {
       let todayCount = 0;
       const todayKey = new Date().toISOString().split("T")[0];
 
+      let stripeFees = 0;
+      let netRevenue = 0;
+
+      const customerOrders: Record<string, number> = {};
+      const customerRevenue: Record<string, number> = {};
+
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.status === "paid" || data.status === "delivered") {
+
+        if (data.status === "delivered") {
           revenue += data.totalAmount || 0;
+          stripeFees += data.stripeFee || 0;
+          netRevenue += data.netRevenue || 0;
         }
+
+        if (data.status === "delivered" && data.userId) {
+          customerOrders[data.userId] = (customerOrders[data.userId] || 0) + 1;
+
+          customerRevenue[data.userId] =
+            (customerRevenue[data.userId] || 0) + (data.netRevenue || 0);
+        }
+
         // Profit (requires cost field per item)
-        if (
-          (data.status === "paid" || data.status === "delivered") &&
-          data.items
-        ) {
+        if (data.status === "delivered" && data.items) {
           data.items.forEach((item: any) => {
             const cost = item.cost || 0;
             const price = item.price || 0;
@@ -138,16 +175,17 @@ export default function AdminProductsPage() {
             profit += (price - cost) * qty;
           });
         }
-        // Monthly revenue
-        if (
-          data.createdAt &&
-          (data.status === "paid" || data.status === "delivered")
-        ) {
+
+        // Monthly revenue (net-based)
+        if (data.createdAt && data.status === "delivered") {
           const date = new Date(data.createdAt.seconds * 1000);
-          const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          const monthKey = `${date.getFullYear()}-${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}`;
           monthlyMap[monthKey] =
-            (monthlyMap[monthKey] || 0) + (data.totalAmount || 0);
+            (monthlyMap[monthKey] || 0) + (data.netRevenue || 0);
         }
+
         // Orders today
         if (data.createdAt) {
           const orderDate = new Date(data.createdAt.seconds * 1000)
@@ -155,6 +193,7 @@ export default function AdminProductsPage() {
             .split("T")[0];
           if (orderDate === todayKey) todayCount++;
         }
+
         if (data.status === "paid") paid++;
         if (data.status === "delivered") delivered++;
         if (data.status === "cancelled") cancelled++;
@@ -167,7 +206,26 @@ export default function AdminProductsPage() {
       setCancelledOrders(cancelled);
 
       setTotalProfit(profit);
+      setTotalStripeFees(stripeFees);
+      setTotalNetRevenue(netRevenue);
       setTodayOrders(todayCount);
+
+      const unique = Object.keys(customerOrders).length;
+      const returning = Object.values(customerOrders).filter(
+        (count) => count > 1
+      ).length;
+
+      const rate = unique ? (returning / unique) * 100 : 0;
+
+      const sortedCustomers = Object.entries(customerRevenue)
+        .map(([userId, revenue]) => ({ userId, revenue }))
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 5);
+
+      setUniqueCustomers(unique);
+      setReturningCustomers(returning);
+      setReturningRate(Number(rate.toFixed(1)));
+      setTopCustomers(sortedCustomers);
 
       const sortedMonths = Object.entries(monthlyMap)
         .map(([month, total]) => ({ month, total }))
@@ -175,10 +233,18 @@ export default function AdminProductsPage() {
 
       setMonthlyRevenue(sortedMonths.slice(-6));
 
-      // Last 7 days revenue
+      // KPI trend (last 2 months comparison)
+      const lastTwo = sortedMonths.slice(-2);
+      let revenueTrend = 0;
+      if (lastTwo.length === 2 && lastTwo[0].total > 0) {
+        revenueTrend =
+          ((lastTwo[1].total - lastTwo[0].total) / lastTwo[0].total) * 100;
+      }
+      (window as any).__revenueTrend = revenueTrend;
+
+      // Last 7 days revenue + product stats
       const today = new Date();
       const days: { date: string; total: number }[] = [];
-
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(today.getDate() - i);
@@ -189,43 +255,7 @@ export default function AdminProductsPage() {
       const productSales: Record<string, number> = {};
       const productProfit: Record<string, number> = {};
 
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-
-        // Revenue by day
-        if (
-          data.createdAt &&
-          (data.status === "paid" || data.status === "delivered")
-        ) {
-          const orderDate = new Date(data.createdAt.seconds * 1000)
-            .toISOString()
-            .split("T")[0];
-
-          const day = days.find((d) => d.date === orderDate);
-          if (day) {
-            day.total += data.totalAmount || 0;
-          }
-        }
-
-        // Top products (quantity + profit)
-        if (data.items && Array.isArray(data.items)) {
-          data.items.forEach((item: any) => {
-            if (!item.productId) return;
-
-            const qty = item.quantity || 1;
-            const price = item.price || 0;
-            const cost = item.cost || 0;
-
-            productSales[item.productId] =
-              (productSales[item.productId] || 0) + qty;
-
-            productProfit[item.productId] =
-              (productProfit[item.productId] || 0) + (price - cost) * qty;
-          });
-        }
-      });
-
-      setLast7DaysRevenue(days);
+      // (second snapshot.forEach block removed)
 
       const sorted = Object.entries(productSales)
         .map(([productId, quantity]) => ({ productId, quantity }))
@@ -242,6 +272,21 @@ export default function AdminProductsPage() {
       setTopProfitProducts(sortedProfit);
     });
   };
+
+  useEffect(() => {
+    let r = 0;
+    let p = 0;
+    const interval = setInterval(() => {
+      r += totalRevenue / 20;
+      p += totalProfit / 20;
+      if (r >= totalRevenue) r = totalRevenue;
+      if (p >= totalProfit) p = totalProfit;
+      setDisplayRevenue(Number(r.toFixed(2)));
+      setDisplayProfit(Number(p.toFixed(2)));
+      if (r === totalRevenue && p === totalProfit) clearInterval(interval);
+    }, 30);
+    return () => clearInterval(interval);
+  }, [totalRevenue, totalProfit]);
 
   useEffect(() => {
     if (!loading) {
@@ -371,40 +416,260 @@ export default function AdminProductsPage() {
     return margin < 20;
   });
 
+  const totalInventoryCost = products.reduce((acc: number, p: any) => {
+    const cost = p.cost ?? 0;
+    const stock = p.stock ?? 0;
+    return acc + cost * stock;
+  }, 0);
+
+  const potentialInventoryRevenue = products.reduce((acc: number, p: any) => {
+    const price = p.price ?? 0;
+    const stock = p.stock ?? 0;
+    return acc + price * stock;
+  }, 0);
+
+  const outOfStockCount = products.filter((p) => (p.stock ?? 0) === 0).length;
+
+  const criticalStockCount = products.filter(
+    (p) => (p.stock ?? 0) > 0 && (p.stock ?? 0) <= 5
+  ).length;
+
+  const totalProductsCount = products.length || 1;
+
+  const stockRiskPercent =
+    ((criticalStockCount + outOfStockCount) / totalProductsCount) * 100;
+
+  const stockHealthLabel =
+    stockRiskPercent < 10
+      ? "Healthy"
+      : stockRiskPercent < 25
+        ? "Warning"
+        : "Risky";
+
   if (loading || !user || !isAdmin) {
     return null;
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Total Revenue</p>
-          <p className="text-xl font-bold">€{totalRevenue.toFixed(2)}</p>
+    <div
+      className={`max-w-6xl mx-auto px-6 py-10 space-y-10 fade-in ${
+        darkMode ? "bg-gray-900 text-white min-h-screen" : ""
+      }`}
+    >
+      <div
+        className={`flex justify-between items-center backdrop-blur-md rounded-2xl p-6 shadow-sm border ${darkMode ? "bg-gray-800/70 border-gray-700" : "bg-white/70 border-gray-200"}`}
+      >
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+          <p className="text-gray-500 mt-1 text-sm">
+            Financial overview & operational insights
+          </p>
         </div>
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Total Orders</p>
-          <p className="text-xl font-bold">{totalOrders}</p>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-400">Live Firestore Analytics</div>
+          <button
+            onClick={() => setDarkMode((d) => !d)}
+            className="px-4 py-1.5 text-xs rounded-full border border-gray-300 bg-white hover:shadow-sm transition"
+          >
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
         </div>
-        <div className="bg-white p-4 rounded shadow">
+      </div>
+      <div className="grid md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-xs uppercase tracking-wide opacity-80 flex items-center gap-1">
+                <DollarSign size={14} /> Total Revenue
+              </p>
+              <p className="text-2xl font-bold mt-1">
+                €{displayRevenue.toFixed(2)}
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded">
+              {(window as any).__revenueTrend >= 0 ? (
+                <TrendingUp size={14} />
+              ) : (
+                <TrendingDown size={14} />
+              )}
+              {((window as any).__revenueTrend || 0).toFixed(1)}%
+            </div>
+          </div>
+          {last7DaysRevenue.length > 0 && (
+            <div className="mt-4">
+              <svg viewBox="0 0 100 30" className="w-full h-8">
+                {(() => {
+                  const max = Math.max(
+                    ...last7DaysRevenue.map((d) => d.total),
+                    1
+                  );
+                  const points = last7DaysRevenue
+                    .map((d, i) => {
+                      const x = (i / (last7DaysRevenue.length - 1)) * 100;
+                      const y = 30 - (d.total / max) * 30;
+                      return `${x},${y}`;
+                    })
+                    .join(" ");
+
+                  return (
+                    <polyline
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      points={points}
+                    />
+                  );
+                })()}
+              </svg>
+            </div>
+          )}
+        </div>
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Total Orders</p>
+              <p className="text-xl font-bold">{totalOrders}</p>
+            </div>
+            <ShoppingCart size={18} className="text-gray-400" />
+          </div>
+        </div>
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <p className="text-sm text-gray-500">Paid Orders</p>
           <p className="text-xl font-bold">{paidOrders}</p>
         </div>
-        <div className="bg-white p-4 rounded shadow">
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <p className="text-sm text-gray-500">Delivered Orders</p>
           <p className="text-xl font-bold">{deliveredOrders}</p>
         </div>
-        <div className="bg-white p-4 rounded shadow">
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <p className="text-sm text-gray-500">Orders Today</p>
           <p className="text-xl font-bold">{todayOrders}</p>
         </div>
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Total Profit</p>
-          <p className="text-xl font-bold">€{totalProfit.toFixed(2)}</p>
+        <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          <p className="text-xs uppercase tracking-wide opacity-80">
+            📈 Total Profit
+          </p>
+          <p className="text-2xl font-bold mt-1">€{displayProfit.toFixed(2)}</p>
+          {last7DaysRevenue.length > 0 && (
+            <div className="mt-4">
+              <svg viewBox="0 0 100 30" className="w-full h-8">
+                {(() => {
+                  const max = Math.max(
+                    ...last7DaysRevenue.map((d) => d.total),
+                    1
+                  );
+                  const points = last7DaysRevenue
+                    .map((d, i) => {
+                      const x = (i / (last7DaysRevenue.length - 1)) * 100;
+                      const y = 30 - (d.total / max) * 30;
+                      return `${x},${y}`;
+                    })
+                    .join(" ");
+
+                  return (
+                    <polyline
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      points={points}
+                    />
+                  );
+                })()}
+              </svg>
+            </div>
+          )}
+        </div>
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <p className="text-sm text-gray-500">💸 Stripe Fees</p>
+          <p className="text-xl font-bold text-red-600">
+            €{totalStripeFees.toFixed(2)}
+          </p>
+        </div>
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <p className="text-sm text-gray-500">🧾 Net Revenue</p>
+          <p className="text-xl font-bold text-green-600">
+            €{totalNetRevenue.toFixed(2)}
+          </p>
+        </div>
+
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Unique Customers</p>
+              <p className="text-xl font-bold">{uniqueCustomers}</p>
+            </div>
+            <Users size={18} className="text-gray-400" />
+          </div>
+        </div>
+
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <p className="text-sm text-gray-500">🔁 Returning Customers</p>
+          <p className="text-xl font-bold">{returningCustomers}</p>
+          <p
+            className={`text-xs mt-1 ${returningRate >= 30 ? "text-green-600" : "text-gray-400"}`}
+          >
+            Rate: {returningRate}%
+          </p>
+        </div>
+
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Inventory Cost</p>
+              <p className="text-xl font-bold">
+                €{totalInventoryCost.toFixed(2)}
+              </p>
+            </div>
+            <Package size={18} className="text-gray-400" />
+          </div>
+        </div>
+
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <p className="text-sm text-gray-500">💰 Potential Revenue</p>
+          <p className="text-xl font-bold">
+            €{potentialInventoryRevenue.toFixed(2)}
+          </p>
+        </div>
+
+        <div
+          className={`surface-card p-4 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <p className="text-sm text-gray-500">🔴 Out of Stock</p>
+          <p className="text-xl font-bold text-red-600">{outOfStockCount}</p>
+        </div>
+
+        <div className="surface-card p-4">
+          <p className="text-sm text-gray-500">📊 Stock Health</p>
+          <p className="text-xl font-bold">{stockHealthLabel}</p>
+          <p className="text-xs text-gray-400 mt-1">
+            Risk: {stockRiskPercent.toFixed(1)}%
+          </p>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded shadow">
+      <div
+        className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+      >
         <h2 className="text-lg font-semibold mb-4">Last 7 Days Revenue</h2>
         <div className="flex items-end gap-3 h-40">
           {last7DaysRevenue.map((day) => {
@@ -414,7 +679,7 @@ export default function AdminProductsPage() {
             return (
               <div key={day.date} className="flex-1 flex flex-col items-center">
                 <div
-                  className="w-full bg-blue-500 rounded-t"
+                  className={`w-full rounded-t ${darkMode ? "bg-blue-400" : "bg-blue-500"}`}
                   style={{ height: `${height}%` }}
                 ></div>
                 <p className="text-xs mt-2">{day.date.slice(5)}</p>
@@ -425,7 +690,9 @@ export default function AdminProductsPage() {
       </div>
 
       {lowStockProducts.length > 0 && (
-        <div className="bg-red-50 border border-red-200 p-6 rounded shadow">
+        <div
+          className={`surface-card p-6 border border-red-200 bg-red-50/60 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <h2 className="text-lg font-semibold text-red-700 mb-4">
             ⚠ Low Stock Warning
           </h2>
@@ -446,7 +713,9 @@ export default function AdminProductsPage() {
       )}
 
       {lowMarginProducts.length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 p-6 rounded shadow">
+        <div
+          className={`surface-card p-6 border border-yellow-200 bg-yellow-50/60 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <h2 className="text-lg font-semibold text-yellow-700 mb-4">
             ⚠ Low Profit Margin (&lt;20%)
           </h2>
@@ -475,7 +744,9 @@ export default function AdminProductsPage() {
       )}
 
       {topProducts.length > 0 && (
-        <div className="bg-white p-6 rounded shadow">
+        <div
+          className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <h2 className="text-lg font-semibold mb-4">
             🔥 Top Selling Products
           </h2>
@@ -509,7 +780,9 @@ export default function AdminProductsPage() {
       )}
 
       {topProfitProducts.length > 0 && (
-        <div className="bg-white p-6 rounded shadow">
+        <div
+          className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <h2 className="text-lg font-semibold mb-4">
             💰 Most Profitable Products
           </h2>
@@ -534,8 +807,33 @@ export default function AdminProductsPage() {
         </div>
       )}
 
+      {topCustomers.length > 0 && (
+        <div
+          className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
+          <h2 className="text-lg font-semibold mb-4">
+            🏆 Top Customers (by Net Revenue)
+          </h2>
+          <ul className="space-y-2">
+            {topCustomers.map((c) => (
+              <li
+                key={c.userId}
+                className="flex justify-between items-center border p-3 rounded"
+              >
+                <span className="font-medium truncate">{c.userId}</span>
+                <span className="text-purple-600 font-bold">
+                  €{c.revenue.toFixed(2)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {monthlyRevenue.length > 0 && (
-        <div className="bg-white p-6 rounded shadow">
+        <div
+          className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+        >
           <h2 className="text-lg font-semibold mb-4">
             📊 Monthly Revenue (Last 6 Months)
           </h2>
@@ -549,7 +847,7 @@ export default function AdminProductsPage() {
                   className="flex-1 flex flex-col items-center"
                 >
                   <div
-                    className="w-full bg-green-500 rounded-t"
+                    className={`w-full rounded-t ${darkMode ? "bg-green-400" : "bg-green-500"}`}
                     style={{ height: `${height}%` }}
                   ></div>
                   <p className="text-xs mt-2">{m.month}</p>
@@ -560,7 +858,9 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      <div className="bg-white shadow rounded p-6">
+      <div
+        className={`surface-card p-6 ${darkMode ? "bg-gray-800 border-gray-700 text-white" : ""}`}
+      >
         <h1 className="text-2xl font-bold mb-4">
           {editingId ? "Edit Product" : "Add Product"}
         </h1>
@@ -770,7 +1070,7 @@ export default function AdminProductsPage() {
           a.download = "products-export.csv";
           a.click();
         }}
-        className="mt-6 px-4 py-2 bg-black text-white rounded"
+        className="mt-8 px-5 py-2.5 rounded-full bg-gray-900 text-white hover:shadow-lg transition"
       >
         Export Products CSV
       </button>
