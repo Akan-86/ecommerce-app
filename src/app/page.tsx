@@ -11,25 +11,25 @@ export default async function Page() {
   return (
     <main className="relative z-0">
       {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 z-0">
+      <section className="relative isolate overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black z-0">
         <Image
           src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2000&auto=format&fit=crop"
           alt="Shop hero"
           fill
-          className="-z-10 object-cover opacity-35"
+          className="-z-10 object-cover opacity-25 scale-105"
           priority
         />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_40%_at_50%_0%,rgba(255,255,255,0.15),transparent_60%)]" />
-        <div className="mx-auto max-w-7xl px-6 py-28 lg:py-36">
+        <div className="mx-auto max-w-7xl px-6 py-32 lg:py-44">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
                 ✨ New Season <span className="text-white/60">·</span> Free
                 shipping over €100
               </span>
-              <h1 className="mt-6 text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl leading-[1.05]">
                 Shop smarter.
-                <span className="block bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(250,204,21,0.35)]">
                   Discover better.
                 </span>
               </h1>
@@ -51,6 +51,20 @@ export default async function Page() {
                   New Arrivals
                 </Link>
               </div>
+              <div className="mt-10 grid grid-cols-3 gap-6 max-w-xl">
+                <div>
+                  <p className="text-2xl font-bold text-white">10K+</p>
+                  <p className="text-xs text-white/60">Happy Customers</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">500+</p>
+                  <p className="text-xs text-white/60">Premium Products</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">24/7</p>
+                  <p className="text-xs text-white/60">Customer Support</p>
+                </div>
+              </div>
               <div className="mt-8 grid max-w-lg grid-cols-3 gap-4 text-white/80">
                 <div className="flex items-center gap-2 text-sm">
                   <span>🚚</span> Fast delivery
@@ -64,12 +78,12 @@ export default async function Page() {
               </div>
             </div>
             <div className="relative hidden lg:block">
-              <div className="absolute inset-0 -z-10 rounded-3xl bg-white/10" />
+              <div className="absolute inset-0 -z-10 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/10" />
               <div className="grid grid-cols-3 gap-4 p-6">
                 {(products || []).slice(0, 6).map((p: any) => (
                   <div
                     key={p.id}
-                    className="relative overflow-hidden rounded-2xl bg-gray-700 shadow"
+                    className="relative overflow-hidden rounded-2xl bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                   >
                     {p.image || p.thumbnail ? (
                       <Image
