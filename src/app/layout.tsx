@@ -12,12 +12,12 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen bg-white text-gray-900 antialiased">
+      <body className="min-h-screen bg-gray-50 text-gray-900 antialiased transition-colors duration-300">
         <AuthProvider>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
               {/* Top info bar */}
-              <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs relative z-50">
+              <div className="w-full bg-gradient-to-r from-gray-950 via-gray-900 to-gray-800 text-white text-xs relative z-50 shadow-sm">
                 <div className="mx-auto max-w-7xl px-6 py-2 flex items-center justify-between">
                   <span className="font-medium">
                     🚚 Free shipping on orders over €100
@@ -34,15 +34,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
 
               {/* Main */}
-              <main className="flex-1 pt-24">
+              <main className="flex-1 pt-28">
                 {/* Page content wrapper */}
-                <section className="mx-auto max-w-7xl px-6 py-10 lg:py-14 min-w-0">
+                <section className="mx-auto max-w-7xl px-6 py-12 lg:py-16 min-w-0">
                   {children}
                 </section>
               </main>
 
               {/* Footer */}
-              <footer className="border-t border-gray-200 bg-white">
+              <footer className="border-t border-gray-200 bg-gray-100/60 backdrop-blur-sm">
                 <div className="mx-auto max-w-7xl px-6 py-12">
                   <Footer />
                 </div>
