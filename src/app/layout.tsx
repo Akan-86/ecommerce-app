@@ -37,7 +37,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <main className="flex-1 pt-28">
                 {/* Page content wrapper */}
                 <section className="mx-auto max-w-7xl px-6 py-12 lg:py-16 min-w-0">
-                  {children}
+                  <div className="fade-in transition-all duration-300">
+                    {children}
+                  </div>
                 </section>
               </main>
 
