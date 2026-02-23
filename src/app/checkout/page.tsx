@@ -80,7 +80,10 @@ export default function CheckoutPage() {
 
   /* ---------------- Checkout Layout ---------------- */
   return (
-    <div className="relative mx-auto max-w-6xl px-4 py-20">
+    <div
+      className="relative mx-auto max-w-6xl px-4 py-24 fade-in"
+      style={{ backgroundColor: "var(--brand-bg-soft)" }}
+    >
       {processing && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-3 text-sm text-gray-700">
@@ -97,6 +100,41 @@ export default function CheckoutPage() {
         <p className="mt-2 text-sm text-gray-500">
           Complete your purchase with confidence.
         </p>
+      </div>
+
+      <div className="mb-14 flex items-center justify-center gap-6 text-xs font-medium">
+        <div
+          className="flex items-center gap-2"
+          style={{ color: "var(--brand-primary)" }}
+        >
+          <span
+            className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px]"
+            style={{ backgroundColor: "var(--brand-primary)" }}
+          >
+            1
+          </span>
+          Cart
+        </div>
+        <div className="h-px w-10 bg-gray-300" />
+        <div
+          className="flex items-center gap-2"
+          style={{ color: "var(--brand-primary)" }}
+        >
+          <span
+            className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px]"
+            style={{ backgroundColor: "var(--brand-primary)" }}
+          >
+            2
+          </span>
+          Checkout
+        </div>
+        <div className="h-px w-10 bg-gray-300" />
+        <div className="flex items-center gap-2 text-gray-400">
+          <span className="h-6 w-6 rounded-full flex items-center justify-center border border-gray-300 text-[11px]">
+            3
+          </span>
+          Confirmation
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -116,7 +154,7 @@ export default function CheckoutPage() {
         </section>
 
         {/* Order Summary */}
-        <aside className="rounded-2xl border bg-gradient-to-b from-gray-50 to-white p-6 shadow-sm">
+        <aside className="rounded-2xl border bg-white p-6 shadow-lg sticky top-28 h-fit">
           <h2 className="mb-6 text-sm font-semibold uppercase tracking-wide text-gray-900">
             Order Summary
           </h2>
@@ -143,9 +181,9 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          <div className="mt-6 flex justify-between border-t pt-4 text-base font-semibold text-gray-900">
+          <div className="mt-6 flex justify-between border-t pt-6 text-lg font-bold text-gray-900">
             <span>Total</span>
-            <span>
+            <span style={{ color: "var(--brand-primary)" }}>
               {new Intl.NumberFormat("de-DE", {
                 style: "currency",
                 currency: "EUR",
@@ -153,7 +191,7 @@ export default function CheckoutPage() {
             </span>
           </div>
 
-          <div className="mt-6 rounded-xl bg-white p-4 text-xs text-gray-500 space-y-1">
+          <div className="mt-8 rounded-2xl border border-black/5 bg-gray-50 p-5 text-xs text-gray-600 space-y-2">
             <p>✔ Free returns within 14 days</p>
             <p>✔ Fast & secure checkout</p>
             <p className="pt-2 text-gray-400">Powered by Stripe</p>
@@ -161,7 +199,7 @@ export default function CheckoutPage() {
 
           <Link
             href="/cart"
-            className="mt-6 block text-center text-sm text-gray-500 hover:text-gray-900 transition"
+            className="mt-6 block text-center text-sm link-accent transition"
           >
             ← Back to cart
           </Link>
