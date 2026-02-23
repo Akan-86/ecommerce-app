@@ -1,37 +1,41 @@
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50 mt-12">
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-sm text-gray-600">
-        {/* Brand / About */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">MyStore</h3>
-          <p className="text-gray-500">
-            Your trusted online store for quality products at the best prices.
+    <footer className="mt-24 bg-black text-white">
+      <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-4 gap-12">
+        {/* Brand */}
+        <div className="space-y-4">
+          <h3 className="text-2xl font-black tracking-tight">
+            <span>Vento</span>
+            <span style={{ color: "var(--brand-primary)" }}>Shop</span>
+          </h3>
+          <p className="text-white/60 text-sm leading-relaxed">
+            Modern essentials crafted for everyday life. Designed with clarity,
+            simplicity and premium quality in mind.
           </p>
         </div>
 
-        {/* Categories */}
+        {/* Shop */}
         <div>
-          <h4 className="font-semibold text-gray-800 mb-3">Categories</h4>
-          <ul className="space-y-2">
+          <h4 className="font-semibold mb-4 text-white">Shop</h4>
+          <ul className="space-y-3 text-sm text-white/60">
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Electronics
+              <a href="#" className="hover:text-white transition">
+                All Products
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Clothing
+              <a href="#" className="hover:text-white transition">
+                New Arrivals
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Home & Living
+              <a href="#" className="hover:text-white transition">
+                Best Sellers
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Sports
+              <a href="#" className="hover:text-white transition">
+                Sale
               </a>
             </li>
           </ul>
@@ -39,46 +43,47 @@ export function Footer() {
 
         {/* Support */}
         <div>
-          <h4 className="font-semibold text-gray-800 mb-3">Support</h4>
-          <ul className="space-y-2">
+          <h4 className="font-semibold mb-4 text-white">Support</h4>
+          <ul className="space-y-3 text-sm text-white/60">
             <li>
-              <a href="#" className="hover:text-blue-600">
+              <a href="#" className="hover:text-white transition">
                 Help Center
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
+              <a href="#" className="hover:text-white transition">
                 Returns
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Shipping Info
+              <a href="#" className="hover:text-white transition">
+                Shipping
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-600">
-                Contact Us
+              <a href="#" className="hover:text-white transition">
+                Contact
               </a>
             </li>
           </ul>
         </div>
 
         {/* Newsletter */}
-        <div>
-          <h4 className="font-semibold text-gray-800 mb-3">Stay Updated</h4>
-          <p className="text-gray-500 mb-3">
-            Subscribe to our newsletter for the latest deals.
+        <div className="space-y-4">
+          <h4 className="font-semibold text-white">Join Our Newsletter</h4>
+          <p className="text-sm text-white/60">
+            Get product updates and exclusive offers directly to your inbox.
           </p>
           <form className="flex">
             <input
               type="email"
               placeholder="Your email"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-1 px-4 py-3 rounded-l-xl bg-white/10 border border-white/10 text-sm focus:outline-none focus:ring-2"
+              style={{ outlineColor: "var(--brand-primary)" }}
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition"
+              className="px-5 py-3 rounded-r-xl text-sm font-semibold btn-primary"
             >
               Subscribe
             </button>
@@ -86,9 +91,9 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-gray-200 mt-8 py-4 text-center text-xs text-gray-500">
-        &copy; {new Date().getFullYear()} MyStore. All rights reserved.
+      {/* Bottom */}
+      <div className="border-t border-white/10 py-6 text-center text-xs text-white/50">
+        © {new Date().getFullYear()} VentoShop. Crafted with precision.
       </div>
     </footer>
   );
