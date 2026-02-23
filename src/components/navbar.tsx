@@ -6,9 +6,8 @@ import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
 
 export default function Navbar() {
-  const { items } = useCart();
+  const { items, open } = useCart();
   const cartCount = items.reduce((acc, i) => acc + i.quantity, 0);
-  const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -31,7 +30,6 @@ export default function Navbar() {
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
         setAccountOpen(false);
       }
     }
@@ -40,33 +38,43 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="relative z-50 bg-brand text-white shadow">
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-black/5 shadow-sm transition-all">
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between text-slate-900">
         <Link href="/" className="font-black tracking-tight text-xl">
-          VentoShop
+          <span>Vento</span>
+          <span style={{ color: "var(--brand-primary)" }}>Shop</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm">
-          <Link href="/products" className="hover:text-brand-accent">
+          <Link
+            href="/products"
+            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
+          >
             Products
           </Link>
-          <Link href="/about" className="hover:text-brand-accent">
+          <Link
+            href="/about"
+            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
+          >
             About
           </Link>
-          <Link href="/contact" className="hover:text-brand-accent">
+          <Link
+            href="/contact"
+            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
+          >
             Contact
           </Link>
         </nav>
 
         <div className="relative flex items-center gap-3" ref={ref}>
           <button
-            onClick={() => setOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-xl bg-white text-slate-900 px-4 py-2 text-sm font-extrabold shadow-lg hover:shadow-xl hover:scale-[1.03] transition"
+            onClick={open}
+            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-300"
             aria-label="Toggle cart"
           >
             🛒 <span className="hidden sm:inline">Cart</span>
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+              <span className="absolute -top-2 -right-2 inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-[var(--brand-primary)] px-1.5 text-[11px] font-bold text-white shadow-md transition-transform duration-300 group-hover:scale-110">
                 {cartCount}
               </span>
             )}
@@ -77,7 +85,7 @@ export default function Navbar() {
             className={`relative inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold shadow transition transform ${
               accountOpen
                 ? "bg-white text-slate-900 scale-[1.03]"
-                : "bg-white/10 text-white hover:bg-white/20 hover:scale-[1.03]"
+                : "bg-white border border-black/10 text-slate-900 hover:shadow-md hover:scale-[1.03]"
             }`}
             aria-label="Toggle account menu"
           >
@@ -92,52 +100,8 @@ export default function Navbar() {
             {!user && <span className="hidden sm:inline">Account</span>}
           </button>
 
-          {open && (
-            <div className="absolute right-0 top-full mt-3 w-80 rounded-2xl bg-white text-slate-900 shadow-2xl z-50 overflow-hidden">
-              <div className="p-4 max-h-80 overflow-y-auto">
-                {items.length === 0 ? (
-                  <p className="text-sm text-gray-600">Your cart is empty.</p>
-                ) : (
-                  items.map((i) => (
-                    <div
-                      key={i.product.id}
-                      className="flex items-center justify-between py-3 border-b last:border-b-0"
-                    >
-                      <div className="pr-2">
-                        <p className="text-sm font-semibold leading-tight">
-                          {i.product.title}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Qty: {i.quantity}
-                        </p>
-                      </div>
-                      <p className="text-sm font-semibold">
-                        €{(Number(i.product.price) * i.quantity).toFixed(2)}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-              <div className="p-4 border-t flex items-center justify-between">
-                <Link
-                  href="/cart"
-                  onClick={() => setOpen(false)}
-                  className="text-sm font-bold text-brand-accent hover:underline"
-                >
-                  View Cart
-                </Link>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="text-sm font-semibold text-gray-600 hover:text-gray-900"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          )}
-
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-56 rounded-2xl bg-white text-slate-900 shadow-2xl z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-3 w-56 rounded-2xl bg-white text-slate-900 shadow-xl border border-black/5 z-50 overflow-hidden">
               <div className="p-2">
                 {!user ? (
                   <>
