@@ -5,10 +5,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { Product } from "@/types";
 import { useCart } from "@/context/cart-context";
+import { Heart } from "lucide-react";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const { add } = useCart();
 
   const isOnSale =
@@ -20,8 +23,18 @@ export default function ProductCard({ product }: { product: Product }) {
       1000 * 60 * 60 * 24 * 14
     : false;
 
+  const isLowStock =
+    typeof product.stock === "number" &&
+    product.stock > 0 &&
+    product.stock <= 5;
+
   const rawImage =
     product.thumbnail || product.image || (product as any).imageUrl || "";
+
+  const secondaryImage =
+    Array.isArray((product as any).images) && (product as any).images.length > 1
+      ? (product as any).images[1]
+      : null;
 
   const imageSrc =
     !imgError && typeof rawImage === "string" && rawImage.trim().length > 0
@@ -43,13 +56,15 @@ export default function ProductCard({ product }: { product: Product }) {
       price: product.price,
       imageUrl: imageSrc,
     });
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 1500);
     // small UX delay for the spinner
     await new Promise((r) => setTimeout(r, 300));
     setAdding(false);
   };
 
   return (
-    <article className="group flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-gray-300 hover:ring-1 hover:ring-gray-200">
       {/* Image */}
       <Link
         href={`/products/${product.id}`}
@@ -58,7 +73,16 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Badges */}
         {isOnSale && (
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-red-600/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
-            Sale
+            {(() => {
+              const discount = product.originalPrice
+                ? Math.round(
+                    ((product.originalPrice - product.price) /
+                      product.originalPrice) *
+                      100
+                  )
+                : 0;
+              return `-${discount}%`;
+            })()}
           </span>
         )}
         {!isOnSale && isNew && (
@@ -66,23 +90,58 @@ export default function ProductCard({ product }: { product: Product }) {
             New
           </span>
         )}
+        {!isOnSale && !isNew && isLowStock && (
+          <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-amber-500/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
+            Low stock
+          </span>
+        )}
 
-        <div className="relative w-full aspect-[3/4] bg-gray-100">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            setLiked((prev) => !prev);
+          }}
+          className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur transition hover:scale-110"
+        >
+          <Heart
+            size={16}
+            className={liked ? "fill-red-500 text-red-500" : "text-gray-600"}
+          />
+        </button>
+
+        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
           <Image
             src={imageSrc}
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className="object-cover transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-[0.5deg]"
             onError={() => setImgError(true)}
             priority={false}
             placeholder="blur"
             blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2VlZWVlZSIvPjwvc3ZnPg=="
           />
+
+          {secondaryImage && (
+            <Image
+              src={secondaryImage}
+              alt={`${product.title} secondary`}
+              fill
+              sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
+              className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            />
+          )}
         </div>
 
-        {/* Hover gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <button
+            onClick={(e) => handleAddToCart(e)}
+            className="mb-4 rounded-full px-4 py-2 text-sm font-semibold btn-primary hover:scale-105"
+          >
+            Quick add
+          </button>
+        </div>
       </Link>
 
       {/* Content */}
@@ -105,7 +164,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-black"
+            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary active:scale-[0.98]"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -134,7 +193,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:border-gray-900 hover:text-gray-900"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 active:scale-[0.98]"
           >
             View
           </Link>
@@ -151,18 +210,45 @@ export default function ProductCard({ product }: { product: Product }) {
                 {formatPrice(product.originalPrice!)}
               </span>
             )}
+            {isOnSale && product.originalPrice && (
+              <span
+                className="text-xs font-medium"
+                style={{ color: "var(--brand-primary)" }}
+              >
+                Save {formatPrice(product.originalPrice - product.price)}
+              </span>
+            )}
           </div>
           <span
             className={`text-[11px] font-medium ${
-              product.stock && product.stock > 0
-                ? "text-green-600"
-                : "text-red-500"
+              product.stock && product.stock > 0 ? "" : "text-red-500"
             }`}
+            style={
+              product.stock && product.stock > 0
+                ? { color: "var(--brand-primary)" }
+                : undefined
+            }
           >
             {product.stock && product.stock > 0 ? "In stock" : "Out of stock"}
           </span>
         </div>
+        {typeof product.stock === "number" && product.stock > 0 && (
+          <div className="mt-2 h-1.5 w-full rounded-full bg-gray-200">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{
+                width: `${Math.min(product.stock, 10) * 10}%`,
+                backgroundColor: "var(--brand-primary)",
+              }}
+            />
+          </div>
+        )}
       </div>
+      {showToast && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-fade-in">
+          Added to cart ✓
+        </div>
+      )}
     </article>
   );
 }
