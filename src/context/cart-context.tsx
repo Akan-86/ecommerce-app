@@ -13,6 +13,7 @@ type CartItem = { product: Product; quantity: number };
 
 type State = {
   items: CartItem[];
+  isOpen: boolean;
   lastAction?: { type: string; productId?: string };
 };
 
@@ -22,14 +23,24 @@ type Action =
   | { type: "REMOVE_ALL"; payload: string }
   | { type: "CLEAR" }
   | { type: "SET_QTY"; payload: { id: string; quantity: number } }
-  | { type: "HYDRATE"; payload: CartItem[] };
+  | { type: "HYDRATE"; payload: CartItem[] }
+  | { type: "OPEN" }
+  | { type: "CLOSE" };
 
-const initialState: State = { items: [], lastAction: undefined };
+const initialState: State = {
+  items: [],
+  isOpen: false,
+  lastAction: undefined,
+};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "HYDRATE": {
-      return { items: action.payload || [], lastAction: { type: "HYDRATE" } };
+      return {
+        items: action.payload || [],
+        lastAction: { type: "HYDRATE" },
+        isOpen: state.isOpen,
+      };
     }
     case "ADD": {
       const exists = state.items.find(
@@ -43,11 +54,13 @@ function reducer(state: State, action: Action): State {
               : i
           ),
           lastAction: { type: "ADD", productId: action.payload.id },
+          isOpen: state.isOpen,
         };
       }
       return {
         items: [...state.items, { product: action.payload, quantity: 1 }],
         lastAction: { type: "ADD", productId: action.payload.id },
+        isOpen: state.isOpen,
       };
     }
     case "REMOVE_ONE": {
@@ -61,26 +74,30 @@ function reducer(state: State, action: Action): State {
               : i
           ),
           lastAction: { type: "REMOVE_ONE", productId: action.payload },
+          isOpen: state.isOpen,
         };
       }
       return {
         items: state.items.filter((i) => i.product.id !== action.payload),
         lastAction: { type: "REMOVE_ONE", productId: action.payload },
+        isOpen: state.isOpen,
       };
     }
     case "REMOVE_ALL":
       return {
         items: state.items.filter((i) => i.product.id !== action.payload),
         lastAction: { type: "REMOVE_ALL", productId: action.payload },
+        isOpen: state.isOpen,
       };
     case "CLEAR":
-      return { items: [], lastAction: { type: "CLEAR" } };
+      return { items: [], lastAction: { type: "CLEAR" }, isOpen: state.isOpen };
     case "SET_QTY": {
       const { id, quantity } = action.payload;
       if (quantity <= 0) {
         return {
           items: state.items.filter((i) => i.product.id !== id),
           lastAction: { type: "SET_QTY", productId: id },
+          isOpen: state.isOpen,
         };
       }
       return {
@@ -88,8 +105,13 @@ function reducer(state: State, action: Action): State {
           i.product.id === id ? { ...i, quantity } : i
         ),
         lastAction: { type: "SET_QTY", productId: id },
+        isOpen: state.isOpen,
       };
     }
+    case "OPEN":
+      return { ...state, isOpen: true };
+    case "CLOSE":
+      return { ...state, isOpen: false };
     default:
       return state;
   }
@@ -127,6 +149,9 @@ type CartContextValue = {
     image: string;
     quantity: number;
   }[];
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -183,6 +208,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeAll: (id) => dispatch({ type: "REMOVE_ALL", payload: id }),
       clear: () => dispatch({ type: "CLEAR" }),
       clearCart: () => dispatch({ type: "CLEAR" }),
+      isOpen: state.isOpen,
+      open: () => dispatch({ type: "OPEN" }),
+      close: () => dispatch({ type: "CLOSE" }),
       count,
       total,
       getStripeItems: () =>
