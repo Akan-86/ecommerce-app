@@ -5,6 +5,9 @@ import {
   getDocs,
   doc,
   getDoc,
+  query,
+  where,
+  limit,
 } from "firebase/firestore";
 import type { Product } from "./types";
 
@@ -32,4 +35,26 @@ export async function fetchProduct(id: string | number): Promise<Product> {
   const snap = await getDoc(ref);
   if (!snap.exists()) throw new Error("Product not found");
   return { id: snap.id, ...snap.data() } as Product;
+}
+
+export async function fetchRelatedProducts(
+  category: string,
+  currentProductId: string,
+  max: number = 4
+): Promise<Product[]> {
+  const productsRef = collection(db, "products");
+  const q = query(
+    productsRef,
+    where("category", "==", category),
+    limit(max + 2)
+  );
+
+  const snapshot = await getDocs(q);
+
+  const products = snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }) as Product)
+    .filter((p) => p.id !== currentProductId)
+    .slice(0, max);
+
+  return products;
 }
