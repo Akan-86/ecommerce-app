@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Brand Tokens ---------- */
+:root {
+  --brand-primary: #059669; /* emerald-600 */
+  --brand-primary-hover: #047857; /* emerald-700 */
+  --brand-primary-soft: #d1fae5; /* emerald-100 */
+  --brand-bg-soft: #f9fafb; /* warm light background */
+}
+
 /* ---------- Base Reset ---------- */
 html,
 body {
@@ -13,7 +21,7 @@ html {
 }
 
 body {
-  background-color: #f8fafc; /* soft slate background */
+  background-color: var(--brand-bg-soft);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -92,8 +100,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #0f172a; /* slate-900 */
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }
 
 /* ---------- Buttons (global feel) ---------- */
@@ -143,4 +151,28 @@ img {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ---------- Brand Button Utility ---------- */
+.btn-primary {
+  background-color: var(--brand-primary);
+  color: white;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
+}
+
+/* ---------- Brand Link Accent ---------- */
+.link-accent {
+  color: var(--brand-primary);
+  transition: color 0.2s ease;
+}
+
+.link-accent:hover {
+  color: var(--brand-primary-hover);
 }
