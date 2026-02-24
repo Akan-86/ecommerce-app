@@ -147,14 +147,16 @@ export default function ProductsPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
         {/* Filters */}
-        <aside className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg h-fit sticky top-24 border border-black/5">
-          <h2 className="font-bold mb-4">Filters</h2>
+        <aside className="bg-white/95 backdrop-blur-xl rounded-3xl p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] h-fit sticky top-24 border border-black/5 transition-all duration-300">
+          <h2 className="text-lg font-extrabold tracking-tight mb-6">
+            Refine Results
+          </h2>
 
           <div className="space-y-4">
             <div>
               <label className="text-sm font-semibold">Category</label>
               <select
-                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none"
+                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
@@ -170,7 +172,7 @@ export default function ProductsPage() {
               <label className="text-sm font-semibold">Min Price</label>
               <input
                 type="number"
-                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none"
+                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
                 value={minPrice}
                 onChange={(e) => setMinPrice(Number(e.target.value || 0))}
               />
@@ -180,7 +182,7 @@ export default function ProductsPage() {
               <label className="text-sm font-semibold">Max Price</label>
               <input
                 type="number"
-                className="mt-1 w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none"
+                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value || 10000))}
               />
@@ -191,12 +193,17 @@ export default function ProductsPage() {
         {/* Products */}
         <section>
           {/* Sort bar */}
-          <div className="flex items-center justify-between mb-8 border-b border-black/5 pb-4">
-            <p className="text-sm text-gray-600">{filtered.length} products</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 bg-white/80 backdrop-blur rounded-2xl px-6 py-4 border border-black/5 shadow-sm">
+            <p className="text-sm text-gray-600 font-medium">
+              <span className="text-gray-900 font-semibold">
+                {filtered.length}
+              </span>{" "}
+              products found
+            </p>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Sort:</span>
               <select
-                className="rounded-lg border border-black/10 px-3 py-2 text-sm"
+                className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as any)}
               >
@@ -212,8 +219,8 @@ export default function ProductsPage() {
               <ProductCard key={product.id} product={product} />
             ))}
             {filtered.length === 0 && (
-              <div className="col-span-full text-center py-20">
-                <p className="text-lg font-semibold mb-2">No products found</p>
+              <div className="col-span-full text-center py-24 bg-white/70 backdrop-blur rounded-3xl border border-black/5">
+                <p className="text-xl font-bold mb-3">No products found</p>
                 <p className="text-sm text-gray-500">
                   Try adjusting your filters.
                 </p>
