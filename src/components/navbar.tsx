@@ -11,6 +11,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   const initials = user?.email
     ? user.email
@@ -37,8 +38,24 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-black/5 shadow-sm transition-all">
+    <header
+      className={`sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300 ${
+        scrolled
+          ? "bg-white/90 shadow-md border-black/10"
+          : "bg-white/60 border-black/5"
+      }`}
+    >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between text-slate-900">
         <Link href="/" className="font-black tracking-tight text-xl">
           <span>Vento</span>
