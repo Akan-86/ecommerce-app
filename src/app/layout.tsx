@@ -1,18 +1,25 @@
+// use client
+
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 interface RootLayoutProps {
   children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const pathname = usePathname();
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen bg-gray-50 text-gray-900 antialiased transition-colors duration-300">
+      <body
+        className="min-h-screen text-gray-900 antialiased transition-colors duration-300"
+        style={{ backgroundColor: "var(--brand-bg-soft)" }}
+      >
         <AuthProvider>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
@@ -36,8 +43,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
               {/* Main */}
               <main className="flex-1 pt-28">
                 {/* Page content wrapper */}
-                <section className="mx-auto max-w-7xl px-6 py-12 lg:py-16 min-w-0">
-                  <div className="fade-in transition-all duration-300">
+                <section className="mx-auto max-w-7xl px-6 py-14 lg:py-20 min-w-0">
+                  <div
+                    key={pathname}
+                    className="animate-[pageEnter_0.4s_ease-out]"
+                  >
                     {children}
                   </div>
                 </section>
