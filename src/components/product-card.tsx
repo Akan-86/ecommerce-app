@@ -64,7 +64,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-gray-300 hover:ring-1 hover:ring-gray-200">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)] hover:border-emerald-300/60">
       {/* Image */}
       <Link
         href={`/products/${product.id}`}
@@ -116,7 +116,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-[0.5deg]"
+            className="object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-112"
             onError={() => setImgError(true)}
             priority={false}
             placeholder="blur"
@@ -193,7 +193,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 active:scale-[0.98]"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/40 active:scale-[0.97]"
           >
             View
           </Link>
@@ -202,7 +202,10 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price */}
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-base font-bold text-gray-900">
+            <span
+              className="text-lg font-extrabold tracking-tight"
+              style={{ color: "var(--brand-primary)" }}
+            >
               {formatPrice(product.price)}
             </span>
             {isOnSale && (
@@ -244,6 +247,10 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         )}
       </div>
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{ boxShadow: "inset 0 0 0 1px rgba(16,185,129,0.15)" }}
+      />
       {showToast && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-fade-in">
           Added to cart ✓
