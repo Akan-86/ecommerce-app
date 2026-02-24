@@ -20,6 +20,16 @@ export default async function Page() {
           priority
         />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_40%_at_50%_0%,rgba(255,255,255,0.15),transparent_60%)]" />
+        {/* Emerald Glow Accent */}
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(40%_35%_at_70%_20%,rgba(16,185,129,0.25),transparent_70%)]" />
+        {/* Subtle Grain Texture */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 opacity-[0.06] mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url('https://grainy-gradients.vercel.app/noise.svg')",
+          }}
+        />
         <div className="mx-auto max-w-7xl px-6 py-32 lg:py-44">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
@@ -29,7 +39,7 @@ export default async function Page() {
               </span>
               <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl leading-[1.05]">
                 Shop smarter.
-                <span className="block bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(250,204,21,0.35)]">
+                <span className="block bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(5,150,105,0.45)]">
                   Discover better.
                 </span>
               </h1>
@@ -40,13 +50,13 @@ export default async function Page() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center rounded-full bg-yellow-400 px-7 py-3.5 text-sm font-extrabold text-gray-900 shadow-lg hover:bg-yellow-300 hover:shadow-xl hover:scale-[1.02] transition"
+                  className="inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-bold btn-primary hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
                 >
                   Browse Products
                 </Link>
                 <Link
                   href="/products?sort=new"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-white/40 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10 hover:scale-[1.02] transition"
+                  className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 backdrop-blur px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 hover:scale-[1.03] transition-all duration-300"
                 >
                   New Arrivals
                 </Link>
@@ -104,14 +114,18 @@ export default async function Page() {
             </div>
           </div>
         </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60 animate-pulse">
+          <span className="text-[10px] tracking-widest">SCROLL</span>
+          <div className="mt-2 h-8 w-[2px] bg-white/40" />
+        </div>
       </section>
 
       {/* PROMO CARDS */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
-            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-yellow-200/40 blur-2xl" />
-            <p className="text-xs font-semibold text-yellow-600">DEALS</p>
+            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/40 blur-2xl" />
+            <p className="text-xs font-semibold text-emerald-600">DEALS</p>
             <h3 className="mt-2 text-lg font-bold">Big spend, big save</h3>
             <p className="mt-1 text-sm text-gray-600">
               High‑ticket items with special offers
@@ -124,27 +138,29 @@ export default async function Page() {
             </Link>
           </div>
           <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
-            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-200/40 blur-2xl" />
-            <p className="text-xs font-semibold text-yellow-600">RECOMMENDED</p>
+            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/40 blur-2xl" />
+            <p className="text-xs font-semibold text-emerald-600">
+              RECOMMENDED
+            </p>
             <h3 className="mt-2 text-lg font-bold">Continue shopping</h3>
             <p className="mt-1 text-sm text-gray-600">
               Based on your recent views
             </p>
             <Link
               href="/products"
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gray-900"
+              className="mt-4 inline-flex items-center rounded-full px-6 py-2 text-sm font-semibold btn-primary"
             >
               View items →
             </Link>
           </div>
           <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
-            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-green-200/40 blur-2xl" />
-            <p className="text-xs font-semibold text-yellow-600">DAILY</p>
+            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/40 blur-2xl" />
+            <p className="text-xs font-semibold text-emerald-600">DAILY</p>
             <h3 className="mt-2 text-lg font-bold">Daily essentials</h3>
             <p className="mt-1 text-sm text-gray-600">Save on everyday needs</p>
             <Link
               href="/products?promo=daily"
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gray-900"
+              className="mt-4 inline-flex items-center rounded-full px-6 py-2 text-sm font-semibold btn-primary"
             >
               Start now →
             </Link>
@@ -153,21 +169,39 @@ export default async function Page() {
       </section>
 
       {/* FEATURED */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Featured Products
-          </h2>
+      <section className="relative mx-auto max-w-7xl px-6 py-20">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-emerald-50/40 to-transparent" />
+
+        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase">
+              Featured Collection
+            </p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              Curated for You
+            </h2>
+            <p className="mt-3 max-w-xl text-sm text-gray-600">
+              Hand‑picked premium products selected for quality, design and
+              everyday performance.
+            </p>
+          </div>
           <Link
             href="/products"
-            className="text-sm font-semibold text-gray-900 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:text-emerald-600 transition-colors"
           >
-            View all
+            View all products →
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-          {(products || []).slice(0, 10).map((p: any) => (
-            <ProductCard key={p.id} product={p} />
+
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+          {(products || []).slice(0, 10).map((p: any, index: number) => (
+            <div
+              key={p.id}
+              className="animate-[fadeUp_0.6s_ease_forwards] opacity-0"
+              style={{ animationDelay: `${index * 80}ms` }}
+            >
+              <ProductCard product={p} />
+            </div>
           ))}
         </div>
       </section>
@@ -180,7 +214,7 @@ export default async function Page() {
             <p className="mt-2 text-gray-300">Smart gear for modern life</p>
             <Link
               href="/products?cat=tech"
-              className="mt-4 inline-flex rounded-full bg-yellow-400 px-5 py-2 text-sm font-semibold text-gray-900"
+              className="mt-4 inline-flex rounded-full px-6 py-2 text-sm font-semibold btn-primary"
             >
               Shop Tech
             </Link>
@@ -190,7 +224,7 @@ export default async function Page() {
             <p className="mt-2 text-gray-300">Style that moves with you</p>
             <Link
               href="/products?cat=fashion"
-              className="mt-4 inline-flex rounded-full bg-yellow-400 px-5 py-2 text-sm font-semibold text-gray-900"
+              className="mt-4 inline-flex rounded-full px-6 py-2 text-sm font-semibold btn-primary"
             >
               Shop Fashion
             </Link>
