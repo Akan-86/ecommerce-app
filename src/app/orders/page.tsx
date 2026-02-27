@@ -78,14 +78,16 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="mx-auto max-w-4xl p-6 text-center">
-        <h1 className="text-2xl font-semibold mb-2">No orders yet</h1>
-        <p className="text-gray-600 mb-4">
+      <div className="mx-auto max-w-4xl px-6 py-24 text-center">
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 mb-3">
+          No orders yet
+        </h1>
+        <p className="text-gray-600 text-base mb-6">
           Start shopping and your orders will appear here.
         </p>
         <a
           href="/products"
-          className="inline-flex items-center rounded-xl border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          className="inline-flex items-center rounded-2xl border border-black/10 px-6 py-3 text-sm font-medium transition-all duration-300 hover:bg-gray-50 hover:shadow-sm active:scale-[0.98]"
         >
           Browse products →
         </a>
@@ -93,52 +95,57 @@ export default function OrdersPage() {
     );
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyles = (status: string) => {
     switch (status) {
       case "paid":
-        return "text-green-600";
+        return "bg-green-50 text-green-600 border-green-200";
       case "shipped":
-        return "text-blue-600";
+        return "bg-blue-50 text-blue-600 border-blue-200";
       case "delivered":
-        return "text-purple-600";
+        return "bg-purple-50 text-purple-600 border-purple-200";
       case "cancelled":
-        return "text-red-600";
+        return "bg-red-50 text-red-600 border-red-200";
       default:
-        return "text-gray-600";
+        return "bg-gray-50 text-gray-600 border-gray-200";
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">My Orders</h1>
-      <ul className="space-y-4">
+    <div className="max-w-5xl mx-auto px-6 py-16">
+      <h1 className="text-4xl font-semibold tracking-tight text-gray-900 mb-10">
+        My Orders
+      </h1>
+      <ul className="space-y-6">
         {orders.map((order) => (
           <li key={order.id}>
             <Link
               href={`/orders/${order.id}`}
-              className="block border rounded-2xl p-4 shadow-sm bg-white transition hover:shadow-md hover:border-gray-400"
+              className="block border border-black/5 rounded-3xl p-6 bg-white shadow-[0_15px_40px_-15px_rgba(0,0,0,0.15)] transition-all duration-300 hover:shadow-[0_25px_60px_-20px_rgba(0,0,0,0.25)] hover:-translate-y-1"
             >
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold">Order ID: {order.id}</span>
-                <span className="text-sm text-gray-500">
+              <div className="flex justify-between items-start mb-4">
+                <span className="font-semibold text-gray-900">
+                  Order ID: {order.id}
+                </span>
+                <span className="text-sm text-gray-500 whitespace-nowrap">
                   {order.createdAt?.toDate
                     ? order.createdAt.toDate().toLocaleString()
                     : ""}
                 </span>
               </div>
-              <p className="mb-2">
-                Status:{" "}
-                <span className={`font-medium ${getStatusColor(order.status)}`}>
+              <div className="mb-4">
+                <span
+                  className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium capitalize ${getStatusStyles(order.status)}`}
+                >
                   {order.status}
                 </span>
-              </p>
-              <p className="mb-2 text-sm text-gray-700">
+              </div>
+              <p className="mb-1 text-sm text-gray-700">
                 Shipping Address: {order.shippingAddress ?? "Not provided"}
               </p>
-              <p className="mb-2 text-sm text-gray-700">
+              <p className="mb-4 text-sm text-gray-700">
                 Tracking Number: {order.trackingNumber ?? "Not available"}
               </p>
-              <p className="font-bold">
+              <p className="text-lg font-semibold text-gray-900">
                 Total: ${(order.total / 100).toFixed(2)}
               </p>
             </Link>
