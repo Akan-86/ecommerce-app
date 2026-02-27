@@ -65,17 +65,19 @@ function CheckoutForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 rounded-xl border bg-white p-6 shadow-sm"
+      className="space-y-8 rounded-3xl border border-black/5 bg-white p-8 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)] transition-all duration-300"
     >
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Secure Checkout</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-xl font-semibold tracking-tight text-gray-900">
+          Secure Checkout
+        </h2>
+        <p className="text-sm text-gray-500 leading-relaxed">
           Payments are encrypted and processed securely via Stripe.
         </p>
       </div>
 
       {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50/80 px-5 py-4 text-sm text-red-700 shadow-sm">
           {error}
         </div>
       )}
@@ -83,12 +85,14 @@ function CheckoutForm({
       <button
         type="submit"
         disabled={!stripe || isSubmitting}
-        className="w-full rounded-lg bg-black px-6 py-3 text-white font-medium transition hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-60"
+        className={`w-full rounded-2xl bg-black px-6 py-3.5 text-white font-medium tracking-wide transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_10px_25px_-10px_rgba(0,0,0,0.6)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${
+          isSubmitting ? "animate-pulse" : ""
+        }`}
       >
         {isSubmitting ? "Processing payment…" : "Proceed to payment"}
       </button>
 
-      <div className="text-center text-xs text-gray-400">
+      <div className="text-center text-xs text-gray-400 pt-4 border-t border-black/5">
         🔒 SSL secure payment · Powered by Stripe
       </div>
     </form>
