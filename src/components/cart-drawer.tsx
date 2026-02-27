@@ -23,14 +23,14 @@ export function CartDrawer() {
       {/* Backdrop */}
       <div
         onClick={close}
-        className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 z-40 ${
+        className={`fixed inset-0 bg-black/40 backdrop-blur-md transition-all duration-500 ease-out z-40 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       {/* Drawer */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] z-50 transform transition-all duration-500 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -49,16 +49,34 @@ export function CartDrawer() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <div
+          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 transition-all duration-500 ${
+            isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center py-20 text-gray-500">
-              <ShoppingBag size={36} className="mb-4 opacity-40" />
-              <p className="font-semibold text-gray-700">Your cart is empty</p>
-              <p className="text-sm">Add products to get started.</p>
+            <div className="flex flex-col items-center justify-center text-center py-24 px-6">
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
+                <ShoppingBag size={28} className="opacity-40" />
+              </div>
+              <p className="font-semibold text-gray-900 text-lg">
+                Your cart is empty
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Add products to start building your order.
+              </p>
             </div>
           ) : (
-            items.map((item) => (
-              <div key={item.id} className="flex gap-4">
+            items.map((item, index) => (
+              <div
+                key={item.id}
+                className="flex gap-4 transition-all duration-500"
+                style={{
+                  transitionDelay: `${index * 60}ms`,
+                  opacity: isOpen ? 1 : 0,
+                  transform: isOpen ? "translateY(0px)" : "translateY(10px)",
+                }}
+              >
                 <div className="relative w-20 h-24 rounded-lg overflow-hidden bg-gray-100">
                   <Image
                     src={item.thumbnail}
@@ -117,7 +135,7 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-black/5 px-6 py-6 space-y-4">
+          <div className="border-t border-black/5 px-6 py-6 space-y-5 bg-white">
             <div className="flex justify-between text-sm font-medium">
               <span>Total</span>
               <span style={{ color: "var(--brand-primary)" }}>
