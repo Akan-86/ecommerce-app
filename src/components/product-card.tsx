@@ -31,9 +31,14 @@ export default function ProductCard({ product }: { product: Product }) {
   const rawImage =
     product.thumbnail || product.image || (product as any).imageUrl || "";
 
-  const secondaryImage =
+  const secondaryImageRaw =
     Array.isArray((product as any).images) && (product as any).images.length > 1
       ? (product as any).images[1]
+      : null;
+
+  const secondaryImage =
+    typeof secondaryImageRaw === "string" && secondaryImageRaw.trim().length > 0
+      ? secondaryImageRaw
       : null;
 
   const imageSrc =
@@ -123,7 +128,7 @@ export default function ProductCard({ product }: { product: Product }) {
             blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2VlZWVlZSIvPjwvc3ZnPg=="
           />
 
-          {secondaryImage && (
+          {secondaryImage ? (
             <Image
               src={secondaryImage}
               alt={`${product.title} secondary`}
@@ -131,7 +136,7 @@ export default function ProductCard({ product }: { product: Product }) {
               sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
               className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             />
-          )}
+          ) : null}
         </div>
 
         <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
