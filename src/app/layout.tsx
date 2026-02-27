@@ -6,14 +6,12 @@ import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 
 interface RootLayoutProps {
   children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const pathname = usePathname();
   return (
     <html lang="en" className="h-full">
       <body
@@ -44,10 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <main className="flex-1 pt-28">
                 {/* Page content wrapper */}
                 <section className="mx-auto max-w-7xl px-6 py-14 lg:py-20 min-w-0">
-                  <div
-                    key={pathname}
-                    className="animate-[pageEnter_0.4s_ease-out]"
-                  >
+                  <div className="animate-[pageEnter_0.4s_ease-out]">
                     {children}
                   </div>
                 </section>
