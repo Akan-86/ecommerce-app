@@ -26,10 +26,39 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get("sort"); // 'price-asc' | 'price-desc' | 'new'
 
     const snapshot = await db.collection("products").get();
-    let products = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as any[];
+    let products = snapshot.docs.map((doc) => {
+      const data = doc.data() as any;
+
+      const createdAt =
+        data.createdAt && typeof data.createdAt.toDate === "function"
+          ? data.createdAt.toDate().toISOString()
+          : data.createdAt || null;
+
+      const updatedAt =
+        data.updatedAt && typeof data.updatedAt.toDate === "function"
+          ? data.updatedAt.toDate().toISOString()
+          : data.updatedAt || null;
+
+      const thumbnail =
+        typeof data.thumbnail === "string" && data.thumbnail.trim().length > 0
+          ? data.thumbnail
+          : null;
+
+      const images = Array.isArray(data.images)
+        ? data.images.filter(
+            (img: any) => typeof img === "string" && img.trim().length > 0
+          )
+        : [];
+
+      return {
+        id: doc.id,
+        ...data,
+        thumbnail,
+        images,
+        createdAt,
+        updatedAt,
+      };
+    }) as any[];
 
     // Filter by category
     if (category && category !== "all") {
