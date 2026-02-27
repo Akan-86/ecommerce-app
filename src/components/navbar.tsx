@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { items, open } = useCart();
@@ -12,6 +13,8 @@ export default function Navbar() {
   const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [cartBump, setCartBump] = useState(false);
+  const pathname = usePathname();
 
   const initials = user?.email
     ? user.email
@@ -48,39 +51,60 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (cartCount === 0) return;
+    setCartBump(true);
+    const t = setTimeout(() => setCartBump(false), 400);
+    return () => clearTimeout(t);
+  }, [cartCount]);
+
   return (
     <header
-      className={`sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300 ${
+      className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-500 ${
         scrolled
-          ? "bg-white/90 shadow-md border-black/10"
-          : "bg-white/60 border-black/5"
+          ? "bg-white/95 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.25)] border-black/10"
+          : "bg-white/70 border-black/5"
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between text-slate-900">
-        <Link href="/" className="font-black tracking-tight text-xl">
-          <span>Vento</span>
-          <span style={{ color: "var(--brand-primary)" }}>Shop</span>
+        <Link
+          href="/"
+          className="group font-black tracking-tight text-xl flex items-center gap-1"
+        >
+          <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+            Vento
+          </span>
+          <span className="text-[var(--brand-primary)] transition-all duration-300 group-hover:tracking-wide">
+            Shop
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm">
-          <Link
-            href="/products"
-            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
-          >
-            Products
-          </Link>
-          <Link
-            href="/about"
-            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--brand-primary)] after:transition-all hover:after:w-full"
-          >
-            Contact
-          </Link>
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+          {[
+            { href: "/products", label: "Products" },
+            { href: "/about", label: "About" },
+            { href: "/contact", label: "Contact" },
+          ].map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`group relative transition-colors duration-300 ${
+                  active
+                    ? "text-slate-900"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {link.label}
+                <span
+                  className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-[var(--brand-primary)] transition-transform duration-300 ease-out ${
+                    active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="relative flex items-center gap-3" ref={ref}>
@@ -91,7 +115,11 @@ export default function Navbar() {
           >
             🛒 <span className="hidden sm:inline">Cart</span>
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-[var(--brand-primary)] px-1.5 text-[11px] font-bold text-white shadow-md transition-transform duration-300 group-hover:scale-110">
+              <span
+                className={`absolute -top-2 -right-2 inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-[var(--brand-primary)] px-1.5 text-[11px] font-bold text-white shadow-lg transition-transform duration-300 ${
+                  cartBump ? "scale-125" : "scale-100"
+                }`}
+              >
                 {cartCount}
               </span>
             )}
@@ -118,7 +146,7 @@ export default function Navbar() {
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-56 rounded-2xl bg-white text-slate-900 shadow-xl border border-black/5 z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-3 w-60 rounded-3xl bg-white text-slate-900 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-black/5 z-50 overflow-hidden backdrop-blur-xl">
               <div className="p-2">
                 {!user ? (
                   <>
