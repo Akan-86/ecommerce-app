@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { getIdToken } from "@/lib/firebase";
+import { useToast } from "@/context/toast-context";
 
 type Category = {
   id: string;
@@ -22,6 +24,7 @@ export default function AdminCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   const slugPreview = useMemo(() => slugify(name), [name]);
 
@@ -29,7 +32,11 @@ export default function AdminCategoriesPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/admin/categories");
+        const token = await getIdToken();
+
+        const res = await fetch("/api/admin/categories", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
         setCategories(data);
@@ -52,9 +59,14 @@ export default function AdminCategoriesPage() {
     setError(null);
 
     try {
+      const token = await getIdToken();
+
       const res = await fetch("/api/admin/categories", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ name }),
       });
 
@@ -63,8 +75,10 @@ export default function AdminCategoriesPage() {
       const created = await res.json();
       setCategories((prev) => [...prev, created]);
       setName("");
+      addToast({ type: "success", message: "Category created" });
     } catch (err) {
       console.error(err);
+      addToast({ type: "error", message: "Category could not be created" });
       setError("Category could not be created.");
     } finally {
       setSubmitting(false);
@@ -76,19 +90,28 @@ export default function AdminCategoriesPage() {
     const ok = confirm("Are you sure you want to delete this category?");
     if (!ok) return;
 
+    const previous = categories;
+
     try {
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+
+      const token = await getIdToken();
+
       const res = await fetch("/api/admin/categories", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ id }),
       });
 
       if (!res.ok) throw new Error("Failed to delete category");
 
-      setCategories((prev) => prev.filter((c) => c.id !== id));
+      addToast({ type: "success", message: "Category deleted" });
     } catch (err) {
-      console.error(err);
-      alert("Category could not be deleted");
+      setCategories(previous);
+      addToast({ type: "error", message: "Category could not be deleted" });
     }
   };
 
@@ -97,8 +120,10 @@ export default function AdminCategoriesPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-6">Admin · Categories</h1>
+    <div className="max-w-3xl mx-auto p-8 space-y-10">
+      <h1 className="text-3xl font-semibold tracking-tight">
+        Categories Management
+      </h1>
 
       {/* Error */}
       {error && (
@@ -108,19 +133,19 @@ export default function AdminCategoriesPage() {
       )}
 
       {/* Create */}
-      <div className="mb-8 space-y-2">
+      <div className="rounded-2xl border border-white/10 bg-[#111318] p-8 space-y-4 shadow-[0_0_40px_-15px_rgba(0,0,0,0.6)]">
         <div className="flex gap-2">
           <input
             type="text"
             placeholder="Category name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 rounded border px-3 py-2"
+            className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/20"
           />
           <button
             onClick={handleAddCategory}
             disabled={submitting || !name.trim()}
-            className="rounded bg-black px-4 py-2 text-white disabled:opacity-40"
+            className="rounded-lg bg-white text-black px-5 py-2 text-sm font-medium disabled:opacity-40 transition hover:opacity-90"
           >
             {submitting ? "Adding…" : "Add"}
           </button>
@@ -135,15 +160,21 @@ export default function AdminCategoriesPage() {
 
       {/* List */}
       {categories.length === 0 ? (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-gray-500">
-          No categories yet. Add your first category above.
+        <div className="rounded-2xl border border-dashed border-white/10 p-12 text-center text-white/40">
+          <div className="flex flex-col items-center gap-3">
+            <div className="text-4xl">🏷️</div>
+            <div className="text-sm">No categories yet</div>
+            <div className="text-xs text-white/30">
+              Create your first category above
+            </div>
+          </div>
         </div>
       ) : (
         <ul className="space-y-2">
           {categories.map((cat) => (
             <li
               key={cat.id}
-              className="flex items-center justify-between rounded border px-4 py-3"
+              className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#111318] px-5 py-4 hover:shadow-[0_0_30px_-10px_rgba(0,0,0,0.6)] transition"
             >
               <div>
                 <p className="font-medium">{cat.name}</p>
@@ -152,7 +183,7 @@ export default function AdminCategoriesPage() {
 
               <button
                 onClick={() => handleDeleteCategory(cat.id)}
-                className="rounded bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 active:scale-95 transition"
+                className="rounded-lg bg-red-500/20 border border-red-500/30 px-4 py-1.5 text-sm text-red-400 hover:bg-red-500/30 transition"
               >
                 Delete
               </button>
