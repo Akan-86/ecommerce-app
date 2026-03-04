@@ -3,10 +3,21 @@ import Image from "next/image";
 import ProductCard from "@/components/product-card";
 
 export default async function Page() {
-  const res = await fetch("http://localhost:3000/api/products", {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/products`,
+    {
+      cache: "no-store",
+    }
+  );
   const products = await res.json();
+
+  if (!Array.isArray(products)) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-sm text-gray-500">Unable to load products.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="relative z-0">
@@ -30,8 +41,8 @@ export default async function Page() {
               "url('https://grainy-gradients.vercel.app/noise.svg')",
           }}
         />
-        <div className="mx-auto max-w-7xl px-6 py-32 lg:py-44">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-20 sm:py-28 lg:py-44">
+          <div className="grid items-center gap-10 md:gap-12 lg:grid-cols-2">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
                 ✨ New Season <span className="text-white/60">·</span> Free
@@ -61,7 +72,7 @@ export default async function Page() {
                   New Arrivals
                 </Link>
               </div>
-              <div className="mt-10 grid grid-cols-3 gap-6 max-w-xl">
+              <div className="mt-10 grid grid-cols-3 gap-4 sm:gap-6 max-w-xl">
                 <div>
                   <p className="text-2xl font-bold text-white">10K+</p>
                   <p className="text-xs text-white/60">Happy Customers</p>
@@ -75,7 +86,7 @@ export default async function Page() {
                   <p className="text-xs text-white/60">Customer Support</p>
                 </div>
               </div>
-              <div className="mt-8 grid max-w-lg grid-cols-3 gap-4 text-white/80">
+              <div className="mt-8 grid max-w-lg grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-white/80">
                 <div className="flex items-center gap-2 text-sm">
                   <span>🚚</span> Fast delivery
                 </div>
@@ -114,14 +125,14 @@ export default async function Page() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60 animate-pulse">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60 animate-pulse transition-opacity duration-500">
           <span className="text-[10px] tracking-widest">SCROLL</span>
           <div className="mt-2 h-8 w-[2px] bg-white/40" />
         </div>
       </section>
 
       {/* PROMO CARDS */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-12">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-md transition hover:shadow-xl">
             <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-200/40 blur-2xl" />
@@ -168,8 +179,12 @@ export default async function Page() {
         </div>
       </section>
 
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      </div>
+
       {/* FEATURED */}
-      <section className="relative mx-auto max-w-7xl px-6 py-20">
+      <section className="relative mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-emerald-50/40 to-transparent" />
 
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -193,7 +208,7 @@ export default async function Page() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {(products || []).slice(0, 10).map((p: any, index: number) => (
             <div
               key={p.id}
@@ -207,9 +222,9 @@ export default async function Page() {
       </section>
 
       {/* CATEGORY BANNERS */}
-      <section className="mx-auto max-w-7xl px-6 pb-16">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-14 sm:pb-16">
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="relative overflow-hidden rounded-3xl bg-gray-900 p-8 text-white">
+          <div className="relative overflow-hidden rounded-3xl bg-gray-900 p-8 text-white border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] transition-all duration-300">
             <h3 className="text-2xl font-bold">Tech & Gadgets</h3>
             <p className="mt-2 text-gray-300">Smart gear for modern life</p>
             <Link
@@ -219,7 +234,7 @@ export default async function Page() {
               Shop Tech
             </Link>
           </div>
-          <div className="relative overflow-hidden rounded-3xl bg-gray-900 p-8 text-white">
+          <div className="relative overflow-hidden rounded-3xl bg-gray-900 p-8 text-white border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] transition-all duration-300">
             <h3 className="text-2xl font-bold">Fashion & Lifestyle</h3>
             <p className="mt-2 text-gray-300">Style that moves with you</p>
             <Link
