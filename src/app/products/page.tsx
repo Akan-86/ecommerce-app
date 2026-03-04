@@ -18,7 +18,7 @@ type Product = {
 function Header() {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="text-xl font-black tracking-tight">
             VentoShop
@@ -135,8 +135,8 @@ export default function ProductsPage() {
 
       <section className="relative overflow-hidden bg-black text-white">
         <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-black via-gray-900 to-black" />
-        <div className="relative max-w-7xl mx-auto px-6 py-16">
-          <h1 className="text-5xl font-black tracking-tight mb-3">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
             Discover Our Collection
           </h1>
           <p className="text-white/70 max-w-xl">
@@ -145,9 +145,9 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 sm:gap-8">
         {/* Filters */}
-        <aside className="bg-white/95 backdrop-blur-xl rounded-3xl p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] h-fit sticky top-24 border border-black/5 transition-all duration-300">
+        <aside className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] h-fit lg:sticky lg:top-24 border border-black/5 transition-all duration-300">
           <h2 className="text-lg font-extrabold tracking-tight mb-6">
             Refine Results
           </h2>
@@ -193,7 +193,7 @@ export default function ProductsPage() {
         {/* Products */}
         <section>
           {/* Sort bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 bg-white/80 backdrop-blur rounded-2xl px-6 py-4 border border-black/5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10 bg-white/80 backdrop-blur rounded-2xl px-4 sm:px-6 py-4 border border-black/5 shadow-sm">
             <p className="text-sm text-gray-600 font-medium">
               <span className="text-gray-900 font-semibold">
                 {filtered.length}
@@ -214,12 +214,12 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
             {filtered.length === 0 && (
-              <div className="col-span-full text-center py-24 bg-white/70 backdrop-blur rounded-3xl border border-black/5">
+              <div className="col-span-full text-center py-16 sm:py-24 bg-white/70 backdrop-blur rounded-3xl border border-black/5 px-6">
                 <p className="text-xl font-bold mb-3">No products found</p>
                 <p className="text-sm text-gray-500">
                   Try adjusting your filters.
