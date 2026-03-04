@@ -50,7 +50,7 @@ export function CartDrawer() {
 
         {/* Content */}
         <div
-          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 transition-all duration-500 ${
+          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 transition-all duration-500 ease-out ${
             isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
@@ -70,7 +70,7 @@ export function CartDrawer() {
             items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex gap-4 transition-all duration-500"
+                className="flex gap-4 rounded-2xl p-3 transition-all duration-500 hover:bg-gray-50"
                 style={{
                   transitionDelay: `${index * 60}ms`,
                   opacity: isOpen ? 1 : 0,
@@ -93,7 +93,7 @@ export function CartDrawer() {
                     </p>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-xs text-red-500 hover:underline"
+                      className="text-xs text-red-500 hover:underline transition active:scale-95"
                     >
                       Remove
                     </button>
@@ -102,10 +102,11 @@ export function CartDrawer() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center border border-black/10 rounded-lg overflow-hidden text-sm">
                       <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
-                        className="px-3 py-1 hover:bg-gray-100"
+                        onClick={() => {
+                          if (item.quantity <= 1) return;
+                          updateQuantity(item.id, item.quantity - 1);
+                        }}
+                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-95"
                       >
                         -
                       </button>
@@ -114,7 +115,7 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
                         }
-                        className="px-3 py-1 hover:bg-gray-100"
+                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-95"
                       >
                         +
                       </button>
@@ -138,7 +139,10 @@ export function CartDrawer() {
           <div className="border-t border-black/5 px-6 py-6 space-y-5 bg-white">
             <div className="flex justify-between text-sm font-medium">
               <span>Total</span>
-              <span style={{ color: "var(--brand-primary)" }}>
+              <span
+                className="text-lg font-semibold"
+                style={{ color: "var(--brand-primary)" }}
+              >
                 ${total.toFixed(2)}
               </span>
             </div>
@@ -146,7 +150,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary"
+              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg active:scale-95"
             >
               Proceed to Checkout
             </Link>
