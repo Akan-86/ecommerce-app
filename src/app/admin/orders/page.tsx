@@ -211,9 +211,9 @@ export default function AdminOrdersPage() {
         </select>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#111318] overflow-hidden">
+      <div className="rounded-2xl border border-white/10 bg-[#111318] overflow-hidden shadow-[0_0_50px_-15px_rgba(0,0,0,0.7)]">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-white/60 uppercase text-xs">
+          <thead className="bg-[#151821] text-white/60 uppercase text-xs sticky top-0 z-10 backdrop-blur border-b border-white/10">
             <tr>
               <th className="text-left px-6 py-4">Order</th>
               <th className="text-left px-6 py-4">Customer</th>
@@ -236,18 +236,24 @@ export default function AdminOrdersPage() {
               </tr>
             ) : filteredOrders.length === 0 ? (
               <tr>
-                <td
-                  colSpan={6}
-                  className="px-6 py-20 text-center text-white/40"
-                >
-                  No matching orders
+                <td colSpan={6} className="px-6 py-24 text-center">
+                  <div className="flex flex-col items-center gap-3 text-white/40">
+                    <div className="text-4xl">🧾</div>
+                    <div className="text-sm">No matching orders found</div>
+                    <div className="text-xs text-white/30">
+                      Try adjusting filters or search
+                    </div>
+                  </div>
                 </td>
               </tr>
             ) : (
               filteredOrders.map((order) => (
                 <tr
                   key={order.id}
-                  className="border-t border-white/5 hover:bg-white/5"
+                  onClick={() =>
+                    (window.location.href = `/admin/orders/${order.id}`)
+                  }
+                  className="border-t border-white/5 hover:bg-white/5 hover:shadow-[0_0_20px_-8px_rgba(0,0,0,0.6)] transition cursor-pointer"
                 >
                   <td className="px-6 py-4 font-medium">
                     #{order.id.slice(0, 8)}
@@ -258,8 +264,9 @@ export default function AdminOrdersPage() {
                   <td className="px-6 py-4">
                     <select
                       value={order.status}
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => updateStatus(order.id, e.target.value)}
-                      className={`rounded-full border px-3 py-1 text-xs capitalize bg-transparent ${getStatusStyles(order.status)}`}
+                      className={`rounded-full border px-3 py-1 text-xs capitalize bg-transparent transition ${getStatusStyles(order.status)}`}
                     >
                       {STATUS_OPTIONS.map((s) => (
                         <option key={s} value={s}>
