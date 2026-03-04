@@ -25,3 +25,14 @@ const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// 🔐 Helper to get current user's ID token (for secure admin API calls)
+export async function getIdToken() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  return await user.getIdToken();
+}
