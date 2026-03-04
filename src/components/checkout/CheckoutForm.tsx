@@ -27,7 +27,12 @@ function CheckoutForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!stripe) return;
+    if (!stripe || isSubmitting) return;
+
+    if (!items || items.length === 0) {
+      setError("Your cart is empty.");
+      return;
+    }
 
     setIsSubmitting(true);
     setError(null);
@@ -46,17 +51,24 @@ function CheckoutForm({
 
       const { sessionId } = await res.json();
 
-      // Create order in Firestore before redirect
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // Only execute success logic if redirect call succeeds
       if (onSuccess) {
         await onSuccess();
       }
 
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        throw new Error(error.message);
-      }
+      // Fallback safety in case redirect does not navigate
+      setIsSubmitting(false);
+      onProcessing?.(false);
     } catch (err: any) {
-      setError(err.message || "Something went wrong. Please retry.");
+      setError(
+        err?.message || "Payment could not be initiated. Please try again."
+      );
       setIsSubmitting(false);
       onProcessing?.(false);
     }
@@ -84,12 +96,14 @@ function CheckoutForm({
 
       <button
         type="submit"
-        disabled={!stripe || isSubmitting}
+        disabled={!stripe || isSubmitting || !items || items.length === 0}
         className={`w-full rounded-2xl bg-black px-6 py-3.5 text-white font-medium tracking-wide transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_10px_25px_-10px_rgba(0,0,0,0.6)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${
           isSubmitting ? "animate-pulse" : ""
         }`}
       >
-        {isSubmitting ? "Processing payment…" : "Proceed to payment"}
+        {isSubmitting
+          ? "Redirecting to secure payment…"
+          : "Proceed to secure payment"}
       </button>
 
       <div className="text-center text-xs text-gray-400 pt-4 border-t border-black/5">
