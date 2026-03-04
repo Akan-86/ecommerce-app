@@ -8,25 +8,17 @@ import CheckoutForm from "@/components/checkout/CheckoutForm";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useToast } from "@/context/toast-context";
 
 export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { items, total, clearCart } = useCart();
   const [processing, setProcessing] = useState(false);
-
-  useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.replace("/login?redirect=/checkout");
-      } else if (items.length === 0) {
-        router.replace("/cart");
-      }
-    }
-  }, [user, loading, router, items.length]);
+  const { addToast } = useToast();
 
   const handleOrderSuccess = async () => {
-    if (!user) return;
+    if (!user || processing) return;
 
     try {
       setProcessing(true);
@@ -41,9 +33,11 @@ export default function CheckoutPage() {
       });
 
       clearCart();
+      addToast({ type: "success", message: "Order placed successfully" });
       router.push("/success");
     } catch (error) {
       console.error("Order creation failed:", error);
+      addToast({ type: "error", message: "Payment failed. Please try again." });
       setProcessing(false);
     }
   };
@@ -81,28 +75,28 @@ export default function CheckoutPage() {
   /* ---------------- Checkout Layout ---------------- */
   return (
     <div
-      className="relative mx-auto max-w-6xl px-4 py-24 fade-in"
+      className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24 lg:py-32 fade-in"
       style={{ backgroundColor: "var(--brand-bg-soft)" }}
     >
       {processing && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-3 text-sm text-gray-700">
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
-            <span>Redirecting to secure payment…</span>
+            <span>Processing your order securely…</span>
           </div>
         </div>
       )}
       {/* Header */}
       <div className="mb-16 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900">
           Secure Checkout
         </h1>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-3 text-base text-gray-500">
           Complete your purchase with confidence.
         </p>
       </div>
 
-      <div className="mb-14 flex items-center justify-center gap-6 text-xs font-medium">
+      <div className="mb-10 sm:mb-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-xs font-medium text-center">
         <div
           className="flex items-center gap-2"
           style={{ color: "var(--brand-primary)" }}
@@ -137,9 +131,9 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-3">
         {/* Checkout Form */}
-        <section className="lg:col-span-2 rounded-2xl border bg-white p-8 shadow-sm">
+        <section className="lg:col-span-2 rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)] transition-all duration-300">
           <CheckoutForm
             items={items}
             userId={user.uid}
@@ -147,23 +141,23 @@ export default function CheckoutPage() {
             onSuccess={handleOrderSuccess}
           />
 
-          <div className="mt-10 flex items-center gap-2 text-xs text-gray-500">
+          <div className="mt-12 flex items-center gap-2 text-sm text-gray-600 border-t border-black/5 pt-6">
             <span>🔒</span>
             <span>SSL secure payment · No card data stored</span>
           </div>
         </section>
 
         {/* Order Summary */}
-        <aside className="rounded-2xl border bg-white p-6 shadow-lg sticky top-28 h-fit">
-          <h2 className="mb-6 text-sm font-semibold uppercase tracking-wide text-gray-900">
+        <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_30px_80px_-25px_rgba(0,0,0,0.25)] lg:sticky lg:top-32 h-fit transition-all duration-300">
+          <h2 className="mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
             Order Summary
           </h2>
 
-          <div className="space-y-4 text-sm text-gray-700">
+          <div className="space-y-5 text-sm text-gray-700 divide-y divide-black/5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-start gap-3"
+                className="flex justify-between items-start gap-3 pt-4 first:pt-0"
               >
                 <span className="truncate">
                   {item.title}
@@ -181,7 +175,7 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          <div className="mt-6 flex justify-between border-t pt-6 text-lg font-bold text-gray-900">
+          <div className="mt-6 sm:mt-8 flex justify-between border-t border-black/10 pt-6 sm:pt-8 text-lg sm:text-xl font-semibold text-gray-900">
             <span>Total</span>
             <span style={{ color: "var(--brand-primary)" }}>
               {new Intl.NumberFormat("de-DE", {
@@ -191,15 +185,15 @@ export default function CheckoutPage() {
             </span>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-black/5 bg-gray-50 p-5 text-xs text-gray-600 space-y-2">
+          <div className="mt-10 rounded-3xl border border-black/5 bg-gradient-to-br from-gray-50 to-white p-6 text-sm text-gray-600 space-y-3 shadow-sm">
             <p>✔ Free returns within 14 days</p>
             <p>✔ Fast & secure checkout</p>
             <p className="pt-2 text-gray-400">Powered by Stripe</p>
           </div>
 
           <Link
-            href="/cart"
-            className="mt-6 block text-center text-sm link-accent transition"
+            href={processing ? "#" : "/cart"}
+            className={`mt-8 block text-center text-sm link-accent transition-opacity duration-300 hover:opacity-70 ${processing ? "pointer-events-none opacity-40" : ""}`}
           >
             ← Back to cart
           </Link>
