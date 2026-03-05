@@ -60,13 +60,13 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-500 ${
+      className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-250 ${
         scrolled
-          ? "bg-white/95 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.25)] border-black/10"
-          : "bg-white/70 border-black/5"
+          ? "bg-white/95 shadow-card border-brand-200"
+          : "bg-white/70 border-brand-100"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between text-slate-900">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900">
         <Link
           href="/"
           className="group font-black tracking-tight text-xl flex items-center gap-1"
@@ -92,8 +92,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`group relative transition-colors duration-300 ${
                   active
-                    ? "text-slate-900"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "text-brand-900"
+                    : "text-brand-600 hover:text-brand-900"
                 }`}
               >
                 {link.label}
@@ -110,7 +110,7 @@ export default function Navbar() {
         <div className="relative flex items-center gap-3" ref={ref}>
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-300"
+            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-250"
             aria-label="Toggle cart"
           >
             🛒 <span className="hidden sm:inline">Cart</span>
@@ -130,7 +130,7 @@ export default function Navbar() {
             className={`relative inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold shadow transition transform ${
               accountOpen
                 ? "bg-white text-slate-900 scale-[1.03]"
-                : "bg-white border border-black/10 text-slate-900 hover:shadow-md hover:scale-[1.03]"
+                : "bg-white border border-brand-200 text-brand-900 hover:shadow-card hover:scale-[1.03]"
             }`}
             aria-label="Toggle account menu"
           >
@@ -146,21 +146,21 @@ export default function Navbar() {
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-60 rounded-3xl bg-white text-slate-900 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-black/5 z-50 overflow-hidden backdrop-blur-xl">
+            <div className="absolute right-0 top-full mt-3 w-60 rounded-3xl bg-white text-brand-900 shadow-elevated border border-brand-200 z-50 overflow-hidden backdrop-blur-xl">
               <div className="p-2">
                 {!user ? (
                   <>
                     <Link
                       href="/login"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
                       Register
                     </Link>
@@ -170,21 +170,21 @@ export default function Navbar() {
                     <Link
                       href="/account"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
                       My Account
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
                       Orders
                     </Link>
                     <Link
                       href="/account/settings"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
                       Settings
                     </Link>
