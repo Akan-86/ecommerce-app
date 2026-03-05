@@ -16,7 +16,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="h-full">
       <body
-        className="min-h-screen text-gray-900 antialiased transition-colors duration-300"
+        className="min-h-screen text-brand-900 font-sans antialiased transition-colors duration-250"
         style={{ backgroundColor: "var(--brand-bg-soft)" }}
       >
         <AuthProvider>
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <div className="flex min-h-screen flex-col">
                 {/* Top info bar */}
                 <div className="w-full bg-gradient-to-r from-gray-950 via-gray-900 to-gray-800 text-white text-xs relative z-50 shadow-sm">
-                  <div className="mx-auto max-w-7xl px-6 py-2 flex items-center justify-between">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6 py-2 flex items-center justify-between">
                     <span className="font-medium">
                       🚚 Free shipping on orders over €100
                     </span>
@@ -41,9 +41,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </div>
 
                 {/* Main */}
-                <main className="flex-1 pt-28">
+                <main className="flex-1 pt-24 sm:pt-28">
                   {/* Page content wrapper */}
-                  <section className="mx-auto max-w-7xl px-6 py-14 lg:py-20 min-w-0">
+                  <section className="mx-auto max-w-7xl px-4 sm:px-6 py-section-sm lg:py-section min-w-0">
                     <div className="animate-[pageEnter_0.4s_ease-out]">
                       {children}
                     </div>
@@ -51,8 +51,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </main>
 
                 {/* Footer */}
-                <footer className="border-t border-gray-200 bg-gray-100/60 backdrop-blur-sm">
-                  <div className="mx-auto max-w-7xl px-6 py-12">
+                <footer className="border-t border-brand-200 bg-brand-100/60 backdrop-blur-sm">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6 py-section-sm">
                     <Footer />
                   </div>
                 </footer>
