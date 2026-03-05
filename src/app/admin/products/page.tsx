@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { getIdToken } from "@/lib/firebase";
 import { useToast } from "@/context/toast-context";
+import EmptyState from "@/components/ui/empty-state";
+import { PackagePlus } from "lucide-react";
 
 type Product = {
   id: string;
@@ -355,15 +357,23 @@ export default function AdminProductsPage() {
 
       {/* List */}
       {products.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 p-12 text-center text-white/40">
-          <div className="flex flex-col items-center gap-3">
-            <div className="text-4xl">📦</div>
-            <div className="text-sm">No products yet</div>
-            <div className="text-xs text-white/30">
-              Create your first product to get started
-            </div>
-          </div>
-        </div>
+        <EmptyState
+          icon={<PackagePlus size={26} />}
+          title="No products yet"
+          description="You haven’t added any products. Create your first product to start building your catalog."
+          primaryAction={
+            <button
+              onClick={() => {
+                document
+                  .querySelector("input[placeholder='Title']")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="px-4 py-2 rounded-lg text-sm font-semibold btn-primary transition-all duration-250 active:scale-[0.97]"
+            >
+              Add First Product
+            </button>
+          }
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((p) => (
