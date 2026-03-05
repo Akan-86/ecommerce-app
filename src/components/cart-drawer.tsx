@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { X, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import EmptyState from "@/components/ui/empty-state";
 
 export function CartDrawer() {
   const { items, isOpen, close, remove, updateQuantity, total } = useCart();
@@ -23,19 +24,19 @@ export function CartDrawer() {
       {/* Backdrop */}
       <div
         onClick={close}
-        className={`fixed inset-0 bg-black/40 backdrop-blur-md transition-all duration-500 ease-out z-40 ${
+        className={`fixed inset-0 bg-black/40 backdrop-blur-md transition-all duration-250 ease-out z-40 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       {/* Drawer */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] z-50 transform transition-all duration-500 ease-out flex flex-col ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-modal z-50 transform transition-all duration-250 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-brand-200">
           <div className="flex items-center gap-2 font-semibold">
             <ShoppingBag size={18} />
             Your Cart
@@ -55,22 +56,27 @@ export function CartDrawer() {
           }`}
         >
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center py-24 px-6">
-              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
-                <ShoppingBag size={28} className="opacity-40" />
-              </div>
-              <p className="font-semibold text-gray-900 text-lg">
-                Your cart is empty
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Add products to start building your order.
-              </p>
+            <div className="py-16">
+              <EmptyState
+                icon={<ShoppingBag size={26} />}
+                title="Your cart is empty"
+                description="Looks like you haven’t added anything yet. Explore products and start building your order."
+                primaryAction={
+                  <Link
+                    href="/products"
+                    onClick={close}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold btn-primary transition-all duration-250 active:scale-[0.97]"
+                  >
+                    Browse Products
+                  </Link>
+                }
+              />
             </div>
           ) : (
             items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex gap-4 rounded-2xl p-3 transition-all duration-500 hover:bg-gray-50"
+                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-250 hover:bg-brand-100 hover:border-brand-200"
                 style={{
                   transitionDelay: `${index * 60}ms`,
                   opacity: isOpen ? 1 : 0,
@@ -100,7 +106,7 @@ export function CartDrawer() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center border border-black/10 rounded-lg overflow-hidden text-sm">
+                    <div className="flex items-center border border-brand-200 rounded-lg overflow-hidden text-sm">
                       <button
                         onClick={() => {
                           if (item.quantity <= 1) return;
@@ -136,7 +142,7 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-black/5 px-6 py-6 space-y-5 bg-white">
+          <div className="border-t border-brand-200 px-6 py-6 space-y-5 bg-white">
             <div className="flex justify-between text-sm font-medium">
               <span>Total</span>
               <span
@@ -150,7 +156,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg active:scale-95"
+              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-250 hover:-translate-y-0.5 hover:shadow-card active:scale-95"
             >
               Proceed to Checkout
             </Link>
