@@ -69,7 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)] hover:border-emerald-300/60">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-250 ease-out hover:-translate-y-2 hover:shadow-elevated hover:border-brand-400">
       {/* Image */}
       <Link
         href={`/products/${product.id}`}
@@ -121,7 +121,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-112"
+            className="object-cover transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
             onError={() => setImgError(true)}
             priority={false}
             placeholder="blur"
@@ -134,15 +134,15 @@ export default function ProductCard({ product }: { product: Product }) {
               alt={`${product.title} secondary`}
               fill
               sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-              className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className="object-cover opacity-0 transition-opacity duration-250 group-hover:opacity-100"
             />
           ) : null}
         </div>
 
-        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-250 group-hover:opacity-100">
           <button
             onClick={(e) => handleAddToCart(e)}
-            className="mb-4 rounded-full px-4 py-2 text-sm font-semibold btn-primary hover:scale-105"
+            className="mb-4 rounded-full px-4 py-2 text-sm font-semibold btn-primary hover:scale-105 active:scale-[0.97] transition-all duration-250"
           >
             Quick add
           </button>
@@ -169,7 +169,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary active:scale-[0.98]"
+            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary active:scale-[0.98] transition-all duration-250"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/40 active:scale-[0.97]"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-all duration-250 hover:border-brand-500 hover:text-brand-900 hover:bg-brand-100 active:scale-[0.97] hover:shadow-card"
           >
             View
           </Link>
@@ -254,7 +254,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ boxShadow: "inset 0 0 0 1px rgba(16,185,129,0.15)" }}
+        style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-fade-in">

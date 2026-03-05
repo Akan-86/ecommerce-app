@@ -8,10 +8,8 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  query,
-  where,
-  getDocs,
   increment,
+  setDoc,
 } from "firebase/firestore";
 
 export const runtime = "nodejs";
@@ -19,23 +17,26 @@ export const runtime = "nodejs";
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
-function requireEnv(key: string, value: string | undefined) {
-  if (!value) {
-    const msg = `Missing environment variable: ${key}`;
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(msg);
-    } else {
-      console.warn(`⚠️ ${msg}`);
-    }
-  }
+if (!STRIPE_SECRET_KEY) {
+  throw new Error("Missing STRIPE_SECRET_KEY");
 }
 
-requireEnv("STRIPE_SECRET_KEY", STRIPE_SECRET_KEY);
-requireEnv("STRIPE_WEBHOOK_SECRET", STRIPE_WEBHOOK_SECRET);
+if (!STRIPE_WEBHOOK_SECRET) {
+  throw new Error("Missing STRIPE_WEBHOOK_SECRET");
+}
 
-const stripe = new Stripe(STRIPE_SECRET_KEY || "", {
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2024-11-20",
 });
+
+function calculateStripeFee(amount: number) {
+  return Math.round(amount * 0.029 + 30);
+}
+
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature") || "";
@@ -44,117 +45,183 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      STRIPE_WEBHOOK_SECRET || ""
-    );
+    event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
   } catch (err: any) {
-    console.error(
-      "❌ Webhook signature verification failed:",
-      err?.message ?? err
-    );
+    console.error("Webhook signature error:", err.message);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+  /**
+   * Prevent duplicate webhook processing
+   */
+  const eventRef = doc(db, "webhookEvents", event.id);
+  const existingEvent = await getDoc(eventRef);
 
-    try {
-      const ordersRef = collection(db, "orders");
-      const existingQuery = query(
-        ordersRef,
-        where("sessionId", "==", session.id)
-      );
-      const existingSnap = await getDocs(existingQuery);
-      if (!existingSnap.empty) {
-        // Already processed
-        return NextResponse.json({ received: true }, { status: 200 });
-      }
-
-      const lineItems = await stripe.checkout.sessions.listLineItems(
-        session.id
-      );
-
-      for (const item of lineItems.data) {
-        const productId =
-          typeof item.price?.product === "string" ? item.price.product : null;
-        const quantity = item.quantity ?? 1;
-
-        if (productId) {
-          const productRef = doc(db, "products", productId);
-          const productSnap = await getDoc(productRef);
-
-          if (productSnap.exists()) {
-            const currentStock = Number(productSnap.data().stock) || 0;
-            await updateDoc(productRef, {
-              stock: Math.max(currentStock - quantity, 0),
-              updatedAt: serverTimestamp(),
-            });
-          } else {
-            console.warn(`⚠️ Product not found for id: ${productId}`);
-          }
-        } else {
-          console.warn(
-            "⚠️ Missing productId on line item, skipping stock update."
-          );
-        }
-      }
-
-      const metadata = session.metadata || {};
-      const userId = metadata.userId ?? null;
-      const appliedCouponId = metadata.appliedCouponId ?? null;
-      const discountAmount = metadata.discountAmount
-        ? Number(metadata.discountAmount)
-        : 0;
-      const subtotal = metadata.subtotal ? Number(metadata.subtotal) : 0;
-      const total =
-        typeof session.amount_total === "number"
-          ? Number(session.amount_total)
-          : Math.max(0, subtotal - discountAmount);
-
-      const orderDoc = {
-        userId,
-        items: lineItems.data.map((item) => ({
-          name: item.description ?? "",
-          quantity: item.quantity ?? 1,
-          amount: item.amount_total ?? 0,
-          price: item.price?.unit_amount ?? null,
-          productId:
-            typeof item.price?.product === "string" ? item.price.product : null,
-        })),
-        total,
-        subtotal,
-        discount: discountAmount,
-        appliedCouponId: appliedCouponId || null,
-        createdAt: serverTimestamp(),
-        status: "paid",
-        sessionId: session.id,
-      };
-
-      await addDoc(collection(db, "orders"), orderDoc);
-
-      if (appliedCouponId) {
-        try {
-          const couponRef = doc(db, "coupons", appliedCouponId);
-          await updateDoc(couponRef, {
-            usageCount: increment(1),
-            updatedAt: serverTimestamp(),
-          });
-        } catch (couponErr) {
-          console.error("❌ Failed to increment coupon usageCount:", couponErr);
-        }
-      }
-    } catch (err) {
-      console.error("❌ Error handling checkout.session.completed:", err);
-      return NextResponse.json(
-        { error: "Webhook handling failed" },
-        { status: 500 }
-      );
-    }
-  } else {
-    console.info(`ℹ️ Unhandled event type: ${event.type}`);
+  if (existingEvent.exists()) {
+    return NextResponse.json({ received: true });
   }
 
-  return NextResponse.json({ received: true }, { status: 200 });
+  await setDoc(eventRef, {
+    receivedAt: serverTimestamp(),
+  });
+
+  if (event.type !== "checkout.session.completed") {
+    return NextResponse.json({ received: true });
+  }
+
+  const session = event.data.object as Stripe.Checkout.Session;
+
+  try {
+    /**
+     * Get line items
+     */
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+      limit: 100,
+    });
+
+    /**
+     * Cache products to avoid multiple Firestore reads
+     */
+    const productCache: Record<string, any> = {};
+
+    /**
+     * Update stock + sales counter
+     */
+    for (const item of lineItems.data) {
+      const productId =
+        typeof item.price?.product === "string" ? item.price.product : null;
+
+      const quantity = item.quantity ?? 1;
+
+      if (!productId) continue;
+
+      const productRef = doc(db, "products", productId);
+      const productSnap = await getDoc(productRef);
+
+      if (!productSnap.exists()) continue;
+
+      const productData = productSnap.data();
+
+      productCache[productId] = productData;
+
+      await updateDoc(productRef, {
+        stock: increment(-quantity),
+        salesCount: increment(quantity),
+        updatedAt: serverTimestamp(),
+      });
+    }
+
+    /**
+     * Metadata
+     */
+    const metadata = session.metadata || {};
+
+    const userId = metadata.userId ?? null;
+    const appliedCouponId = metadata.appliedCouponId ?? null;
+
+    const discountAmount = metadata.discountAmount
+      ? Number(metadata.discountAmount)
+      : 0;
+
+    const subtotal = metadata.subtotal ? Number(metadata.subtotal) : 0;
+
+    const total =
+      typeof session.amount_total === "number"
+        ? Number(session.amount_total)
+        : subtotal - discountAmount;
+
+    /**
+     * Stripe fee + revenue
+     */
+    const stripeFee = calculateStripeFee(total);
+
+    /**
+     * Build order items
+     */
+    const items = lineItems.data.map((item) => {
+      const productId =
+        typeof item.price?.product === "string" ? item.price.product : null;
+
+      const product = productId ? productCache[productId] : null;
+
+      const cost = product?.cost ?? 0;
+
+      return {
+        name: item.description ?? "",
+        quantity: item.quantity ?? 1,
+        price: item.price?.unit_amount ?? 0,
+        amount: item.amount_total ?? 0,
+        productId,
+        cost,
+      };
+    });
+
+    /**
+     * Calculate cost + profit
+     */
+    const totalCost = items.reduce(
+      (acc, item) => acc + item.cost * item.quantity,
+      0
+    );
+
+    const profit = total - stripeFee - totalCost;
+
+    /**
+     * Save order
+     */
+    await addDoc(collection(db, "orders"), {
+      userId,
+      items,
+      total,
+      subtotal,
+      discount: discountAmount,
+      stripeFee,
+      cost: totalCost,
+      profit,
+      appliedCouponId: appliedCouponId || null,
+      sessionId: session.id,
+      status: "paid",
+      createdAt: serverTimestamp(),
+    });
+
+    /**
+     * Update coupon usage
+     */
+    if (appliedCouponId) {
+      try {
+        const couponRef = doc(db, "coupons", appliedCouponId);
+
+        await updateDoc(couponRef, {
+          usageCount: increment(1),
+          updatedAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("Coupon update error:", err);
+      }
+    }
+
+    /**
+     * Update analytics
+     */
+    const todayKey = getTodayKey();
+
+    const analyticsRef = doc(db, "analytics", todayKey);
+
+    await setDoc(
+      analyticsRef,
+      {
+        revenue: increment(total),
+        profit: increment(profit),
+        orders: increment(1),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } catch (err) {
+    console.error("Webhook processing error:", err);
+
+    return NextResponse.json({ error: "Webhook failed" }, { status: 500 });
+  }
+
+  return NextResponse.json({ received: true });
 }

@@ -1,7 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, storage } from "@/lib/firebase";
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
+
+// Tek ürün getir (PDP için)
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    if (!params.id) {
+      return NextResponse.json({ error: "Ürün ID eksik" }, { status: 400 });
+    }
+
+    const productRef = doc(db, "products", params.id);
+    const snap = await getDoc(productRef);
+
+    if (!snap.exists()) {
+      return NextResponse.json({ error: "Ürün bulunamadı" }, { status: 404 });
+    }
+
+    const data = snap.data() as any;
+
+    const createdAt =
+      data.createdAt && typeof data.createdAt.toDate === "function"
+        ? data.createdAt.toDate().toISOString()
+        : data.createdAt || null;
+
+    const updatedAt =
+      data.updatedAt && typeof data.updatedAt.toDate === "function"
+        ? data.updatedAt.toDate().toISOString()
+        : data.updatedAt || null;
+
+    const thumbnail =
+      typeof data.thumbnail === "string" && data.thumbnail.trim().length > 0
+        ? data.thumbnail
+        : null;
+
+    const images = Array.isArray(data.images)
+      ? data.images.filter(
+          (img: any) => typeof img === "string" && img.trim().length > 0
+        )
+      : [];
+
+    return NextResponse.json({
+      id: snap.id,
+      ...data,
+      thumbnail,
+      images,
+      createdAt,
+      updatedAt,
+    });
+  } catch (err) {
+    console.error("Tek ürün getirme hatası:", err);
+    return NextResponse.json({ error: "Ürün getirilemedi" }, { status: 500 });
+  }
+}
 
 export async function PUT(
   req: NextRequest,
