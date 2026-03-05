@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import EmptyState from "@/components/ui/empty-state";
+import { SearchX } from "lucide-react";
 
 // ---------------- Types ----------------
 type Product = {
@@ -219,11 +221,33 @@ export default function ProductsPage() {
               <ProductCard key={product.id} product={product} />
             ))}
             {filtered.length === 0 && (
-              <div className="col-span-full text-center py-16 sm:py-24 bg-white/70 backdrop-blur rounded-3xl border border-black/5 px-6">
-                <p className="text-xl font-bold mb-3">No products found</p>
-                <p className="text-sm text-gray-500">
-                  Try adjusting your filters.
-                </p>
+              <div className="col-span-full py-10 sm:py-16">
+                <EmptyState
+                  icon={<SearchX size={28} />}
+                  title="No products found"
+                  description="We couldn’t find any products matching your current filters. Try adjusting your criteria or explore all products."
+                  primaryAction={
+                    <button
+                      onClick={() => {
+                        setCategory("all");
+                        setMinPrice(0);
+                        setMaxPrice(10000);
+                        setSort("new");
+                      }}
+                      className="px-4 py-2 rounded-lg text-sm font-semibold btn-primary transition-all duration-250 active:scale-[0.97]"
+                    >
+                      Clear Filters
+                    </button>
+                  }
+                  secondaryAction={
+                    <Link
+                      href="/products"
+                      className="px-4 py-2 rounded-lg text-sm font-semibold border border-brand-200 text-brand-700 hover:bg-brand-100 transition-all duration-250 active:scale-[0.97]"
+                    >
+                      Browse All
+                    </Link>
+                  }
+                />
               </div>
             )}
           </div>
