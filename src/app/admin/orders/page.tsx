@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getAuth } from "firebase/auth";
 import { useToast } from "@/context/toast-context";
+import EmptyState from "@/components/ui/empty-state";
+import { Receipt } from "lucide-react";
 
 interface Order {
   id: string;
@@ -162,7 +164,7 @@ export default function AdminOrdersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Orders</h1>
-          <div className="text-xs text-white/40 mt-1">
+          <div className="text-xs text-white/50 mt-1">
             {filteredOrders.length} / {totalCount} orders
           </div>
         </div>
@@ -171,7 +173,7 @@ export default function AdminOrdersPage() {
           <select
             value={sortField}
             onChange={(e) => setSortField(e.target.value as any)}
-            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs"
+            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs transition-all duration-250 hover:border-brand-400"
           >
             <option value="date">Sort by Date</option>
             <option value="total">Sort by Total</option>
@@ -181,7 +183,7 @@ export default function AdminOrdersPage() {
             onClick={() =>
               setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
             }
-            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs"
+            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs transition-all duration-250 hover:border-brand-400"
           >
             {sortDirection === "asc" ? "Asc" : "Desc"}
           </button>
@@ -194,13 +196,13 @@ export default function AdminOrdersPage() {
           placeholder="Search by ID or email"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm w-64"
+          className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm w-64 transition-all duration-250 focus:border-brand-400 focus:outline-none"
         />
 
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm"
+          className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm transition-all duration-250 hover:border-brand-400 focus:border-brand-400 focus:outline-none"
         >
           <option value="all">All</option>
           {STATUS_OPTIONS.map((s) => (
@@ -211,7 +213,7 @@ export default function AdminOrdersPage() {
         </select>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#111318] overflow-hidden shadow-[0_0_50px_-15px_rgba(0,0,0,0.7)]">
+      <div className="rounded-2xl border border-white/10 bg-[#111318] overflow-hidden shadow-card">
         <table className="w-full text-sm">
           <thead className="bg-[#151821] text-white/60 uppercase text-xs sticky top-0 z-10 backdrop-blur border-b border-white/10">
             <tr>
@@ -236,14 +238,23 @@ export default function AdminOrdersPage() {
               </tr>
             ) : filteredOrders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-24 text-center">
-                  <div className="flex flex-col items-center gap-3 text-white/40">
-                    <div className="text-4xl">🧾</div>
-                    <div className="text-sm">No matching orders found</div>
-                    <div className="text-xs text-white/30">
-                      Try adjusting filters or search
-                    </div>
-                  </div>
+                <td colSpan={6} className="px-6 py-16">
+                  <EmptyState
+                    icon={<Receipt size={26} />}
+                    title="No matching orders"
+                    description="We couldn’t find any orders matching your current filters or search criteria. Try adjusting them to see results."
+                    primaryAction={
+                      <button
+                        onClick={() => {
+                          setSearch("");
+                          setFilter("all");
+                        }}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold btn-primary transition-all duration-250 active:scale-[0.97]"
+                      >
+                        Clear Filters
+                      </button>
+                    }
+                  />
                 </td>
               </tr>
             ) : (
@@ -253,7 +264,7 @@ export default function AdminOrdersPage() {
                   onClick={() =>
                     (window.location.href = `/admin/orders/${order.id}`)
                   }
-                  className="border-t border-white/5 hover:bg-white/5 hover:shadow-[0_0_20px_-8px_rgba(0,0,0,0.6)] transition cursor-pointer"
+                  className="border-t border-white/5 hover:bg-white/5 hover:shadow-card transition-all duration-250 cursor-pointer"
                 >
                   <td className="px-6 py-4 font-medium">
                     #{order.id.slice(0, 8)}
@@ -266,7 +277,7 @@ export default function AdminOrdersPage() {
                       value={order.status}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => updateStatus(order.id, e.target.value)}
-                      className={`rounded-full border px-3 py-1 text-xs capitalize bg-transparent transition ${getStatusStyles(order.status)}`}
+                      className={`rounded-full border px-3 py-1 text-xs capitalize bg-transparent transition-all duration-250 hover:shadow-card focus:outline-none ${getStatusStyles(order.status)}`}
                     >
                       {STATUS_OPTIONS.map((s) => (
                         <option key={s} value={s}>
@@ -286,7 +297,7 @@ export default function AdminOrdersPage() {
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/admin/orders/${order.id}`}
-                      className="text-xs text-white/60 hover:text-white"
+                      className="text-xs text-white/60 hover:text-white transition-colors duration-250"
                     >
                       View →
                     </Link>
@@ -306,7 +317,7 @@ export default function AdminOrdersPage() {
             fetchOrders(true);
           }}
           disabled={loading}
-          className="px-4 py-2 text-xs rounded-lg border border-white/10 bg-white/5 disabled:opacity-40"
+          className="px-4 py-2 text-xs rounded-lg border border-white/10 bg-white/5 disabled:opacity-40 transition-all duration-250 hover:border-brand-400 hover:shadow-card"
         >
           Reset
         </button>
@@ -319,7 +330,7 @@ export default function AdminOrdersPage() {
             }
           }}
           disabled={!nextCursor || loading}
-          className="px-4 py-2 text-xs rounded-lg border border-white/10 bg-white/5 disabled:opacity-40"
+          className="px-4 py-2 text-xs rounded-lg border border-white/10 bg-white/5 disabled:opacity-40 transition-all duration-250 hover:border-brand-400 hover:shadow-card"
         >
           Next
         </button>
