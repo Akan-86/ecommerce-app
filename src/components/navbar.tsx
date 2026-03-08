@@ -69,13 +69,11 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900">
         <Link
           href="/"
-          className="group font-black tracking-tight text-xl flex items-center gap-1"
+          data-testid="site-logo"
+          className="group font-black tracking-tight text-xl flex items-center gap-2"
         >
-          <span className="transition-transform duration-300 group-hover:translate-x-0.5">
-            Vento
-          </span>
-          <span className="text-[var(--brand-primary)] transition-all duration-300 group-hover:tracking-wide">
-            Shop
+          <span className="text-xl font-bold tracking-tight">
+            Velora<span className="text-[var(--brand-primary)]">.</span>
           </span>
         </Link>
 
@@ -111,7 +109,7 @@ export default function Navbar() {
           <button
             onClick={open}
             className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-250"
-            aria-label="Toggle cart"
+            aria-label="Open shopping cart"
           >
             🛒 <span className="hidden sm:inline">Cart</span>
             {cartCount > 0 && (
