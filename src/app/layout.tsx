@@ -8,6 +8,15 @@ import { AuthProvider } from "@/context/auth-context";
 import { ToastProvider } from "@/context/toast-context";
 import type { ReactNode } from "react";
 
+export const metadata = {
+  title: "VELORA — Modern E‑commerce Store",
+  description:
+    "VELORA is a modern e‑commerce experience built with Next.js, featuring fast checkout, curated products and a sleek shopping interface.",
+  icons: {
+    icon: "/favicon.svg",
+  },
+};
+
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -16,7 +25,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="h-full">
       <body
-        className="min-h-screen text-brand-900 font-sans antialiased transition-colors duration-250"
+        className="min-h-screen text-brand-900 font-sans antialiased transition-colors duration-300"
         style={{ backgroundColor: "var(--brand-bg-soft)" }}
       >
         <AuthProvider>
@@ -41,9 +50,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </div>
 
                 {/* Main */}
-                <main className="flex-1 pt-24 sm:pt-28">
+                <main
+                  data-testid="main-content"
+                  className="flex-1 pt-24 sm:pt-28"
+                >
                   {/* Page content wrapper */}
-                  <section className="mx-auto max-w-7xl px-4 sm:px-6 py-section-sm lg:py-section min-w-0">
+                  <section
+                    data-testid="page-container"
+                    className="mx-auto max-w-7xl px-4 sm:px-6 py-section-sm lg:py-section min-w-0"
+                  >
                     <div className="animate-[pageEnter_0.4s_ease-out]">
                       {children}
                     </div>
