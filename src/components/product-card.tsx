@@ -69,10 +69,14 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-250 ease-out hover:-translate-y-2 hover:shadow-elevated hover:border-brand-400">
+    <article
+      data-testid="product-card"
+      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-250 ease-out hover:-translate-y-2 hover:shadow-elevated hover:border-brand-400"
+    >
       {/* Image */}
       <Link
         href={`/products/${product.id}`}
+        data-testid="product-link"
         className="relative block w-full overflow-hidden bg-gray-100"
       >
         {/* Badges */}
@@ -141,6 +145,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-250 group-hover:opacity-100">
           <button
+            data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
             className="mb-4 rounded-full px-4 py-2 text-sm font-semibold btn-primary hover:scale-105 active:scale-[0.97] transition-all duration-250"
           >
@@ -166,6 +171,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Actions */}
         <div className="relative z-10 mt-2 flex gap-1.5">
           <button
+            data-testid="add-to-cart"
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
