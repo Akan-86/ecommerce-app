@@ -58,3 +58,25 @@ export async function fetchRelatedProducts(
 
   return products;
 }
+
+export async function searchProducts(searchTerm: string): Promise<Product[]> {
+  const snapshot = await getDocs(collection(db, "products"));
+
+  const term = searchTerm.toLowerCase();
+
+  const products = snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }) as Product)
+    .filter((product) => {
+      const title = product.title?.toLowerCase() || "";
+      const description = product.description?.toLowerCase() || "";
+      const category = product.category?.toLowerCase() || "";
+
+      return (
+        title.includes(term) ||
+        description.includes(term) ||
+        category.includes(term)
+      );
+    });
+
+  return products;
+}
