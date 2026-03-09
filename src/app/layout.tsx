@@ -23,11 +23,13 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="h-full">
-      <body
-        className="min-h-screen text-brand-900 font-sans antialiased transition-colors duration-300"
-        style={{ backgroundColor: "var(--brand-bg-soft)" }}
-      >
+    <html lang="en" className="h-full scroll-smooth">
+      <body className="min-h-screen text-brand-900 font-sans antialiased transition-colors duration-300 bg-gradient-to-b from-white via-brand-50/40 to-brand-100/40">
+        {/* Global background glow */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-indigo-200/20 blur-3xl" />
+          <div className="absolute bottom-[-200px] right-[-100px] h-[400px] w-[600px] rounded-full bg-fuchsia-200/20 blur-3xl" />
+        </div>
         <AuthProvider>
           <ToastProvider>
             <CartProvider>
