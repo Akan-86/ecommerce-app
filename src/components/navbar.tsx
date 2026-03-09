@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { items, open } = useCart();
@@ -14,7 +14,10 @@ export default function Navbar() {
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [cartBump, setCartBump] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const initials = user?.email
     ? user.email
@@ -72,40 +75,75 @@ export default function Navbar() {
           data-testid="site-logo"
           className="group font-black tracking-tight text-xl flex items-center gap-2"
         >
-          <span className="text-xl font-bold tracking-tight">
-            Velora<span className="text-[var(--brand-primary)]">.</span>
+          <span className="text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide">
+            Velora
+            <span className="text-[var(--brand-primary)] group-hover:opacity-80">
+              .
+            </span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-          {[
-            { href: "/products", label: "Products" },
-            { href: "/about", label: "About" },
-            { href: "/contact", label: "Contact" },
-          ].map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`group relative transition-colors duration-300 ${
-                  active
-                    ? "text-brand-900"
-                    : "text-brand-600 hover:text-brand-900"
-                }`}
-              >
-                {link.label}
-                <span
-                  className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-[var(--brand-primary)] transition-transform duration-300 ease-out ${
-                    active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+        <div className="hidden md:flex items-center gap-6">
+          {/* Search */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchQuery.trim()) {
+                  router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                }
+              }}
+              className="w-64 rounded-xl border border-brand-200 bg-white/80 px-4 py-2 text-sm outline-none focus:ring-2 backdrop-blur"
+              style={{ outlineColor: "var(--brand-primary)" }}
+            />
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
+              🔍
+            </span>
+          </div>
+
+          <nav className="flex items-center gap-8 text-sm font-medium">
+            {[
+              { href: "/products", label: "Products" },
+              { href: "/about", label: "About" },
+              { href: "/contact", label: "Contact" },
+            ].map((link) => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`group relative transition-colors duration-300 ${
+                    active
+                      ? "text-brand-900"
+                      : "text-brand-600 hover:text-brand-900"
                   }`}
-                />
-              </Link>
-            );
-          })}
-        </nav>
+                >
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-transform duration-300 ease-out ${
+                      active
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
         <div className="relative flex items-center gap-3" ref={ref}>
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            className="md:hidden inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold hover:bg-brand-100 transition"
+            aria-label="Toggle mobile menu"
+          >
+            ☰
+          </button>
+
           <button
             onClick={open}
             className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-250"
@@ -202,6 +240,33 @@ export default function Navbar() {
           )}
         </div>
       </div>
+      {mobileOpen && (
+        <div className="md:hidden border-t border-brand-200 bg-white/95 backdrop-blur-xl">
+          <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
+            <Link
+              href="/products"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+            >
+              Products
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
