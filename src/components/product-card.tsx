@@ -111,7 +111,7 @@ export default function ProductCard({ product }: { product: Product }) {
             e.preventDefault();
             setLiked((prev) => !prev);
           }}
-          className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur transition hover:scale-110"
+          className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur transition-all duration-300 hover:scale-110 hover:shadow-lg active:scale-95"
         >
           <Heart
             size={16}
@@ -125,7 +125,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
+            className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg]"
             onError={() => setImgError(true)}
             priority={false}
             placeholder="blur"
@@ -138,16 +138,16 @@ export default function ProductCard({ product }: { product: Product }) {
               alt={`${product.title} secondary`}
               fill
               sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-              className="object-cover opacity-0 transition-opacity duration-250 group-hover:opacity-100"
+              className="object-cover opacity-0 scale-105 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:scale-100"
             />
           ) : null}
         </div>
 
-        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 transition-opacity duration-250 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
           <button
             data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
-            className="mb-4 rounded-full px-4 py-2 text-sm font-semibold btn-primary hover:scale-105 active:scale-[0.97] transition-all duration-250"
+            className="mb-4 rounded-full px-5 py-2 text-sm font-semibold btn-primary hover:scale-105 hover:shadow-lg active:scale-[0.96] transition-all duration-300"
           >
             Quick add
           </button>
@@ -166,6 +166,15 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.description}
             </p>
           )}
+          {/* Rating */}
+          <div className="mt-1 flex items-center gap-1 text-amber-500 text-xs">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span className="text-gray-300">★</span>
+            <span className="ml-1 text-gray-500">(42)</span>
+          </div>
         </div>
 
         {/* Actions */}
