@@ -179,6 +179,72 @@ export default async function Page() {
         </div>
       </section>
 
+      {/* CATEGORY GRID */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-16">
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase">
+              Categories
+            </p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              Shop by Category
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/products?cat=fashion"
+            className="group relative overflow-hidden rounded-3xl bg-gray-900 text-white h-[320px] flex items-end p-8 shadow-xl"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1600&auto=format&fit=crop"
+              alt="Fashion"
+              fill
+              className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold">Fashion</h3>
+              <p className="text-sm text-white/80">Modern everyday style</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/products?cat=tech"
+            className="group relative overflow-hidden rounded-3xl bg-gray-900 text-white h-[320px] flex items-end p-8 shadow-xl"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop"
+              alt="Tech"
+              fill
+              className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold">Tech</h3>
+              <p className="text-sm text-white/80">Smart devices & gadgets</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/products?cat=lifestyle"
+            className="group relative overflow-hidden rounded-3xl bg-gray-900 text-white h-[320px] flex items-end p-8 shadow-xl"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1600&auto=format&fit=crop"
+              alt="Lifestyle"
+              fill
+              className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold">Lifestyle</h3>
+              <p className="text-sm text-white/80">
+                Upgrade your daily routine
+              </p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       <div className="mx-auto max-w-7xl px-6">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
       </div>
