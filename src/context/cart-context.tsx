@@ -54,13 +54,13 @@ function reducer(state: State, action: Action): State {
               : i
           ),
           lastAction: { type: "ADD", productId: action.payload.id },
-          isOpen: state.isOpen,
+          isOpen: true,
         };
       }
       return {
         items: [...state.items, { product: action.payload, quantity: 1 }],
         lastAction: { type: "ADD", productId: action.payload.id },
-        isOpen: state.isOpen,
+        isOpen: true,
       };
     }
     case "REMOVE_ONE": {
