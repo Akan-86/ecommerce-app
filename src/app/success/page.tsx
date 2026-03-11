@@ -9,6 +9,7 @@ export default function SuccessPage() {
   const [loading, setLoading] = useState(true);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -16,6 +17,23 @@ export default function SuccessPage() {
 
   const hasProcessed = useRef(false);
   const sessionId = searchParams.get("session_id");
+
+  useEffect(() => {
+    if (!loading && !error) {
+      const interval = setInterval(() => {
+        setRedirectCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            router.push("/orders");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [loading, error, router]);
 
   useEffect(() => {
     if (!sessionId) {
@@ -94,9 +112,12 @@ export default function SuccessPage() {
             <h1 className="text-4xl font-semibold tracking-tight text-gray-900 mb-3">
               Payment Successful
             </h1>
-            <p className="text-gray-600 text-base leading-relaxed mb-6">
+            <p className="text-gray-600 text-base leading-relaxed mb-4">
               Thanks for your order! We’ve received your payment and your order
               is being processed.
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Redirecting to your orders in {redirectCountdown}s...
             </p>
             {orderId && (
               <div className="bg-gray-50 border border-black/5 rounded-2xl py-4 px-6 mb-8 shadow-sm">
