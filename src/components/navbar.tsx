@@ -14,10 +14,13 @@ export default function Navbar() {
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [cartBump, setCartBump] = useState(false);
+  const prevCartCount = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const initials = user?.email
     ? user.email
@@ -55,11 +58,47 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    if (cartCount === 0) return;
-    setCartBump(true);
-    const t = setTimeout(() => setCartBump(false), 400);
-    return () => clearTimeout(t);
+    if (cartCount > prevCartCount.current) {
+      setCartBump(true);
+      const t = setTimeout(() => setCartBump(false), 450);
+      prevCartCount.current = cartCount;
+      return () => clearTimeout(t);
+    }
+
+    prevCartCount.current = cartCount;
   }, [cartCount]);
+
+  useEffect(() => {
+    const q = searchQuery.trim();
+
+    if (!q) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/products?search=${encodeURIComponent(q)}`
+        );
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setSuggestions(data.slice(0, 5));
+          setShowSuggestions(true);
+        }
+      } catch (e) {
+        console.error("Search suggestion error", e);
+      }
+    }, 250);
+
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setShowSuggestions(false);
+  }, [pathname]);
 
   return (
     <header
@@ -90,11 +129,19 @@ export default function Navbar() {
               type="text"
               placeholder="Search products..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && searchQuery.trim()) {
                   router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
                 }
+              }}
+              onFocus={() => {
+                if (suggestions.length > 0) setShowSuggestions(true);
+              }}
+              onBlur={() => {
+                setTimeout(() => setShowSuggestions(false), 150);
               }}
               className="w-64 rounded-xl border border-brand-200 bg-white/80 px-4 py-2 text-sm outline-none focus:ring-2 backdrop-blur"
               style={{ outlineColor: "var(--brand-primary)" }}
@@ -102,6 +149,40 @@ export default function Navbar() {
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
               🔍
             </span>
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute left-0 right-0 mt-2 rounded-xl border border-brand-200 bg-white shadow-lg overflow-hidden z-50">
+                {suggestions.map((p: any) => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      setShowSuggestions(false);
+                      setSearchQuery("");
+                      router.push(`/products/${p.id}`);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-brand-100 flex items-center gap-3"
+                  >
+                    {(p.thumbnail || p.image) && (
+                      <img
+                        src={p.thumbnail || p.image}
+                        alt={p.title}
+                        className="h-8 w-8 rounded object-cover"
+                      />
+                    )}
+                    <span className="truncate">{p.title}</span>
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => {
+                    setShowSuggestions(false);
+                    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm font-semibold border-t hover:bg-brand-100"
+                >
+                  View all results
+                </button>
+              </div>
+            )}
           </div>
 
           <nav className="flex items-center gap-8 text-sm font-medium">
@@ -153,7 +234,7 @@ export default function Navbar() {
             {cartCount > 0 && (
               <span
                 className={`absolute -top-2 -right-2 inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-[var(--brand-primary)] px-1.5 text-[11px] font-bold text-white shadow-lg transition-transform duration-300 ${
-                  cartBump ? "scale-125" : "scale-100"
+                  cartBump ? "scale-125 rotate-6" : "scale-100 rotate-0"
                 }`}
               >
                 {cartCount}
