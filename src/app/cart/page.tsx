@@ -22,6 +22,7 @@ export default function CartPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const FREE_SHIPPING_THRESHOLD = 100;
 
   useEffect(() => {
     if (lastAction) {
@@ -110,9 +111,17 @@ export default function CartPage() {
       <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
         Shopping Cart
       </h1>
-      <p className="mb-8 text-sm text-gray-500">
-        {items.length} items in your cart
-      </p>
+      <div className="mb-8 flex items-center justify-between">
+        <p className="text-sm text-gray-500">
+          {items.length} items in your cart
+        </p>
+        <Link
+          href="/products"
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+        >
+          Continue shopping
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
         {/* Cart items */}
@@ -139,6 +148,9 @@ export default function CartPage() {
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
                     {formatEUR(item.price)} · each
+                  </p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {formatEUR(item.price * item.quantity)} total
                   </p>
                 </div>
               </div>
@@ -176,6 +188,25 @@ export default function CartPage() {
           <h3 className="mb-6 text-lg font-semibold text-gray-900">
             Order Summary
           </h3>
+          {total < FREE_SHIPPING_THRESHOLD && (
+            <div className="mb-5 rounded-lg bg-indigo-50 p-3 text-xs text-indigo-700">
+              Spend {formatEUR(FREE_SHIPPING_THRESHOLD - total)} more to unlock
+              free shipping.
+              <div className="mt-2 h-2 w-full overflow-hidden rounded bg-indigo-100">
+                <div
+                  className="h-full bg-indigo-500 transition-all"
+                  style={{
+                    width: `${Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {total >= FREE_SHIPPING_THRESHOLD && (
+            <div className="mb-5 rounded-lg bg-green-50 p-3 text-xs font-medium text-green-700">
+              🎉 You unlocked free shipping!
+            </div>
+          )}
 
           <div className="mb-4 flex justify-between text-sm text-gray-700">
             <span>Subtotal</span>
