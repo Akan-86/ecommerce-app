@@ -24,6 +24,23 @@ type Order = {
 };
 
 export default function OrdersPage() {
+  const formatDate = (timestamp?: { toDate?: () => Date } | null) => {
+    if (!timestamp?.toDate) return "";
+    const date = timestamp.toDate();
+    return (
+      date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }) +
+      " • " +
+      date.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
+  };
+
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -43,7 +60,8 @@ export default function OrdersPage() {
       try {
         const q = query(
           collection(db, "orders"),
-          where("userId", "==", user.uid)
+          where("userId", "==", user.uid),
+          orderBy("createdAt", "desc")
         );
         const snapshot = await getDocs(q);
         const data = snapshot.docs.map((doc) => ({
@@ -127,9 +145,7 @@ export default function OrdersPage() {
                   Order ID: {order.id}
                 </span>
                 <span className="text-sm text-gray-500 whitespace-nowrap">
-                  {order.createdAt?.toDate
-                    ? order.createdAt.toDate().toLocaleString()
-                    : ""}
+                  {formatDate(order.createdAt)}
                 </span>
               </div>
               <div className="mb-4">
@@ -138,6 +154,26 @@ export default function OrdersPage() {
                 >
                   {order.status}
                 </span>
+              </div>
+              <div className="mb-3 text-sm text-gray-700">
+                <span className="font-medium text-gray-900">Items:</span>
+                <ul className="mt-1 space-y-1">
+                  {order.items?.slice(0, 2).map((item, i) => (
+                    <li key={i} className="flex justify-between">
+                      <span>
+                        {item.name} × {item.quantity}
+                      </span>
+                      <span className="text-gray-500">
+                        ${(item.amount / 100).toFixed(2)}
+                      </span>
+                    </li>
+                  ))}
+                  {order.items?.length > 2 && (
+                    <li className="text-gray-500 text-xs">
+                      +{order.items.length - 2} more items
+                    </li>
+                  )}
+                </ul>
               </div>
               <p className="mb-1 text-sm text-gray-700">
                 Shipping Address: {order.shippingAddress ?? "Not provided"}
