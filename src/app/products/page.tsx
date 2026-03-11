@@ -98,15 +98,18 @@ function ProductCard({ product }: { product: Product }) {
 // ---------------- Page ----------------
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<"new" | "price-asc" | "price-desc">("new");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [category, setCategory] = useState<string>("all");
 
   useEffect(() => {
+    setLoading(true);
     fetch("/api/products")
       .then((r) => r.json())
-      .then((data) => setProducts(data));
+      .then((data) => setProducts(data))
+      .finally(() => setLoading(false));
   }, []);
 
   const categories = useMemo(() => {
@@ -127,6 +130,19 @@ export default function ProductsPage() {
       list = [...list].sort((a, b) => b.price - a.price);
     return list;
   }, [products, sort, minPrice, maxPrice, category]);
+
+  function ProductSkeleton() {
+    return (
+      <div className="bg-white rounded-2xl shadow-soft overflow-hidden animate-pulse">
+        <div className="h-64 bg-gray-200" />
+        <div className="p-6 space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-3/4" />
+          <div className="h-4 bg-gray-200 rounded w-1/2" />
+          <div className="h-10 bg-gray-200 rounded mt-4" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -196,10 +212,14 @@ export default function ProductsPage() {
         <section>
           {/* Sort bar */}
           <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10 bg-white/80 backdrop-blur rounded-2xl px-4 sm:px-6 py-4 border border-black/5 shadow-sm">
-            <p className="text-sm text-gray-600 font-medium">
-              <span className="text-gray-900 font-semibold">
-                {filtered.length}
-              </span>{" "}
+            <p className="text-sm text-gray-600 font-medium flex items-center gap-2">
+              {loading ? (
+                <span className="inline-block h-4 w-10 rounded bg-gray-200 animate-pulse" />
+              ) : (
+                <span className="text-gray-900 font-semibold">
+                  {filtered.length}
+                </span>
+              )}
               products found
             </p>
             <div className="flex items-center gap-2">
@@ -217,10 +237,14 @@ export default function ProductsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
-            {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-            {filtered.length === 0 && (
+            {loading
+              ? Array.from({ length: 12 }).map((_, i) => (
+                  <ProductSkeleton key={i} />
+                ))
+              : filtered.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+            {!loading && filtered.length === 0 && (
               <div className="col-span-full py-10 sm:py-16">
                 <EmptyState
                   icon={<SearchX size={28} />}
