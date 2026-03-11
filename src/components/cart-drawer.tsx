@@ -10,12 +10,37 @@ import EmptyState from "@/components/ui/empty-state";
 
 export function CartDrawer() {
   const { items, isOpen, close, remove, updateQuantity, total } = useCart();
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const FREE_SHIPPING_THRESHOLD = 100;
+  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - total, 0);
+  const progress = Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   useEffect(() => {
-    const handleOpen = () => close(false);
-    window.addEventListener("cart:close", handleOpen);
-    return () => window.removeEventListener("cart:close", handleOpen);
+    const handleCloseEvent = () => close();
+    window.addEventListener("cart:close", handleCloseEvent);
+
+    return () => {
+      window.removeEventListener("cart:close", handleCloseEvent);
+    };
   }, [close]);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleEsc);
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isOpen, close]);
 
   if (typeof window === "undefined") return null;
 
@@ -40,6 +65,11 @@ export function CartDrawer() {
           <div className="flex items-center gap-2 font-semibold">
             <ShoppingBag size={18} />
             Your Cart
+            {itemCount > 0 && (
+              <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700 font-medium">
+                {itemCount} item{itemCount > 1 ? "s" : ""}
+              </span>
+            )}
           </div>
           <button
             onClick={close}
@@ -83,20 +113,28 @@ export function CartDrawer() {
                   transform: isOpen ? "translateY(0px)" : "translateY(10px)",
                 }}
               >
-                <div className="relative w-20 h-24 rounded-lg overflow-hidden bg-gray-100">
+                <Link
+                  href={`/products/${item.id}`}
+                  onClick={close}
+                  className="relative w-20 h-24 rounded-lg overflow-hidden bg-gray-100 block"
+                >
                   <Image
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     className="object-cover"
                   />
-                </div>
+                </Link>
 
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
-                    <p className="text-sm font-semibold text-gray-900 line-clamp-1">
+                    <Link
+                      href={`/products/${item.id}`}
+                      onClick={close}
+                      className="text-sm font-semibold text-gray-900 line-clamp-1 hover:underline"
+                    >
                       {item.title}
-                    </p>
+                    </Link>
                     <button
                       onClick={() => remove(item.id)}
                       className="text-xs text-red-500 hover:underline transition active:scale-95"
@@ -143,14 +181,43 @@ export function CartDrawer() {
         {/* Footer */}
         {items.length > 0 && (
           <div className="border-t border-brand-200 px-6 py-6 space-y-5 bg-white">
-            <div className="flex justify-between text-sm font-medium">
-              <span>Total</span>
-              <span
-                className="text-lg font-semibold"
-                style={{ color: "var(--brand-primary)" }}
-              >
-                ${total.toFixed(2)}
-              </span>
+            <div className="space-y-4">
+              {total < FREE_SHIPPING_THRESHOLD ? (
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-600">
+                    You're{" "}
+                    <span className="font-semibold">
+                      ${remaining.toFixed(2)}
+                    </span>{" "}
+                    away from
+                    <span className="font-semibold"> free shipping</span> 🚚
+                  </p>
+                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-brand-500 transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs font-medium text-green-600">
+                  🎉 You unlocked free shipping!
+                </p>
+              )}
+
+              <div className="flex justify-between text-sm font-medium">
+                <span>Subtotal</span>
+                <span
+                  className="text-lg font-semibold"
+                  style={{ color: "var(--brand-primary)" }}
+                >
+                  ${total.toFixed(2)}
+                </span>
+              </div>
+
+              <p className="text-xs text-gray-500">
+                Taxes and shipping calculated at checkout.
+              </p>
             </div>
 
             <Link
