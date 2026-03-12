@@ -29,7 +29,18 @@ export default function ProductCard({ product }: { product: Product }) {
     product.stock <= 5;
 
   const rawImage =
-    product.thumbnail || product.image || (product as any).imageUrl || "";
+    typeof (product as any).imageUrl === "string" &&
+    (product as any).imageUrl.trim().length > 0
+      ? (product as any).imageUrl
+      : typeof product.image === "string" && product.image.trim().length > 0
+        ? product.image
+        : typeof product.thumbnail === "string" &&
+            product.thumbnail.trim().length > 0
+          ? product.thumbnail
+          : Array.isArray((product as any).images) &&
+              (product as any).images.length > 0
+            ? (product as any).images[0]
+            : null;
 
   const secondaryImageRaw =
     Array.isArray((product as any).images) && (product as any).images.length > 1
@@ -39,6 +50,11 @@ export default function ProductCard({ product }: { product: Product }) {
   const secondaryImage =
     typeof secondaryImageRaw === "string" && secondaryImageRaw.trim().length > 0
       ? secondaryImageRaw
+      : null;
+
+  const secondarySrc =
+    typeof secondaryImage === "string" && secondaryImage.trim().length > 0
+      ? secondaryImage
       : null;
 
   const imageSrc =
@@ -121,20 +137,22 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
           <Image
-            src={imageSrc}
+            src={
+              imageSrc ||
+              "https://images.unsplash.com/photo-1556306535-0f09a537f0a3"
+            }
             alt={product.title}
             fill
+            unoptimized
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
             className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg]"
             onError={() => setImgError(true)}
             priority={false}
-            placeholder="blur"
-            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2VlZWVlZSIvPjwvc3ZnPg=="
           />
 
-          {secondaryImage ? (
+          {secondarySrc ? (
             <Image
-              src={secondaryImage}
+              src={secondarySrc}
               alt={`${product.title} secondary`}
               fill
               sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
