@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import EmptyState from "@/components/ui/empty-state";
 import { SearchX } from "lucide-react";
+import { fetchProducts } from "@/lib/api";
 
 // ---------------- Types ----------------
 type Product = {
@@ -62,9 +63,12 @@ function ProductCard({ product }: { product: Product }) {
       <div className="relative h-64 bg-gray-100">
         {img ? (
           <Image
-            src={img}
+            src={
+              img || "https://images.unsplash.com/photo-1556306535-0f09a537f0a3"
+            }
             alt={product.title}
             fill
+            unoptimized
             className="object-cover"
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
           />
@@ -105,11 +109,19 @@ export default function ProductsPage() {
   const [category, setCategory] = useState<string>("all");
 
   useEffect(() => {
-    setLoading(true);
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((data) => setProducts(data))
-      .finally(() => setLoading(false));
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts();
+        setProducts(data as Product[]);
+      } catch (error) {
+        console.error("Failed to load products", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
   }, []);
 
   const categories = useMemo(() => {
