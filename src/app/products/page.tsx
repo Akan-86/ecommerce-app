@@ -14,6 +14,8 @@ type Product = {
   price: number;
   imageUrl?: string;
   thumbnail?: string;
+  image?: string;
+  images?: string[];
   category?: string;
 };
 
@@ -57,21 +59,35 @@ function Header() {
 
 // ---------------- UI: Product Card ----------------
 function ProductCard({ product }: { product: Product }) {
-  const img = product.imageUrl || product.thumbnail;
+  const img =
+    product.imageUrl ||
+    product.thumbnail ||
+    product.image ||
+    (Array.isArray(product.images) ? product.images[0] : undefined);
+  console.log("PRODUCT DEBUG:", {
+    id: product.id,
+    title: product.title,
+    imageUrl: product.imageUrl,
+    thumbnail: product.thumbnail,
+    image: product.image,
+    images: product.images,
+    resolvedImage: img,
+  });
   return (
     <div className="bg-white rounded-2xl shadow-soft hover:shadow-2xl transition overflow-hidden flex flex-col">
-      <div className="relative h-64 bg-gray-100">
+      <div className="h-64 bg-gray-100 overflow-hidden">
         {img ? (
-          <Image
-            src={
-              img || "https://images.unsplash.com/photo-1556306535-0f09a537f0a3"
-            }
-            alt={product.title}
-            fill
-            unoptimized
-            className="object-cover"
-            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-          />
+          <>
+            <img
+              src={img}
+              alt={product.title}
+              className="w-full h-full object-cover"
+              onError={() => console.error("IMAGE LOAD FAILED:", img)}
+            />
+            <div className="absolute bottom-1 left-1 bg-black/70 text-white text-[10px] px-1 rounded">
+              debug
+            </div>
+          </>
         ) : (
           <div className="h-full w-full flex items-center justify-center text-gray-400 text-lg font-semibold">
             No image
@@ -113,6 +129,7 @@ export default function ProductsPage() {
       try {
         setLoading(true);
         const data = await fetchProducts();
+        console.log("API PRODUCTS RESPONSE:", data);
         setProducts(data as Product[]);
       } catch (error) {
         console.error("Failed to load products", error);
