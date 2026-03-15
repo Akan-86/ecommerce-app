@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import EmptyState from "@/components/ui/empty-state";
 import { SearchX } from "lucide-react";
 import { fetchProducts } from "@/lib/api";
@@ -20,7 +21,13 @@ type Product = {
 };
 
 // ---------------- UI: Header (lightweight) ----------------
-function Header() {
+function Header({
+  search,
+  setSearch,
+}: {
+  search: string;
+  setSearch: (v: string) => void;
+}) {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
@@ -42,7 +49,9 @@ function Header() {
         </div>
         <div className="flex items-center gap-3">
           <input
-            placeholder="Search…"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value.replace(/^\s+/, ""))}
             className="hidden md:block px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
           />
           <Link href="/cart" className="relative text-lg">
@@ -119,10 +128,23 @@ function ProductCard({ product }: { product: Product }) {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"new" | "price-asc" | "price-desc">("new");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [category, setCategory] = useState<string>("all");
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Sync filters with URL (?search= / ?category=)
+  useEffect(() => {
+    const q = searchParams.get("search");
+    const cat = searchParams.get("category");
+
+    if (q) setSearch(q);
+    if (cat) setCategory(cat);
+  }, [searchParams]);
 
   useEffect(() => {
     async function loadProducts() {
@@ -149,16 +171,20 @@ export default function ProductsPage() {
   }, [products]);
 
   const filtered = useMemo(() => {
-    let list = products.filter(
-      (p) => p.price >= minPrice && p.price <= maxPrice
-    );
+    let list = products.filter((p) => {
+      const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+      const text = `${p.title}`.toLowerCase();
+      const matchesSearch = text.includes(search.toLowerCase());
+
+      return matchesPrice && matchesSearch;
+    });
     if (category !== "all") list = list.filter((p) => p.category === category);
     if (sort === "price-asc")
       list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc")
       list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [products, sort, minPrice, maxPrice, category]);
+  }, [products, sort, minPrice, maxPrice, category, search]);
 
   function ProductSkeleton() {
     return (
@@ -178,7 +204,7 @@ export default function ProductsPage() {
       className="min-h-screen"
       style={{ backgroundColor: "var(--brand-bg-soft)" }}
     >
-      <Header />
+      <Header search={search} setSearch={setSearch} />
 
       <section className="relative overflow-hidden bg-black text-white">
         <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-black via-gray-900 to-black" />
@@ -205,7 +231,19 @@ export default function ProductsPage() {
               <select
                 className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setCategory(value);
+
+                  const params = new URLSearchParams(searchParams.toString());
+                  if (value === "all") {
+                    params.delete("category");
+                  } else {
+                    params.set("category", value);
+                  }
+
+                  router.push(`/products?${params.toString()}`);
+                }}
               >
                 {categories.map((c) => (
                   <option key={c} value={c}>
