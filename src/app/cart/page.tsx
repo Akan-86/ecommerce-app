@@ -252,8 +252,13 @@ export default function CartPage() {
             </span>
           </div>
 
-          <div className="mb-6 flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold text-gray-900">
+          <div className="mb-3 flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold text-gray-900">
             <span>{lang === "tr" ? "Toplam" : "Total"}</span>
+            <span>{formatEUR(total)}</span>
+          </div>
+
+          <div className="mb-6 flex justify-between text-xs text-gray-500">
+            <span>{lang === "tr" ? "Tahmini toplam" : "Estimated total"}</span>
             <span>{formatEUR(total)}</span>
           </div>
 
@@ -285,11 +290,19 @@ export default function CartPage() {
             </span>
           </button>
 
-          <p className="mt-4 text-center text-xs text-gray-500">
-            {lang === "tr"
-              ? "Güvenli ödeme · Vergiler ödeme sırasında hesaplanır · Stripe altyapısı"
-              : "Secure checkout · Taxes calculated at checkout · Powered by Stripe"}
-          </p>
+          <div className="mt-5 space-y-2 text-center text-xs text-gray-500">
+            <p>{lang === "tr" ? "🔒 Güvenli ödeme" : "🔒 Secure checkout"}</p>
+            <p>
+              {lang === "tr"
+                ? "💳 Stripe ile korunur"
+                : "💳 Payments powered by Stripe"}
+            </p>
+            <p>
+              {lang === "tr"
+                ? "📦 Hızlı gönderim"
+                : "📦 Fast worldwide shipping"}
+            </p>
+          </div>
         </div>
       </div>
     </div>
