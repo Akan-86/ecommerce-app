@@ -3,9 +3,11 @@
 import { useCart } from "@/context/cart-context";
 import type { Product } from "@/lib/types";
 import { useState } from "react";
+import { useLanguage } from "@/app/layout";
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { add } = useCart();
+  const { lang } = useLanguage();
   const [state, setState] = useState<"idle" | "loading" | "success">("idle");
   const [showToast, setShowToast] = useState(false);
 
@@ -16,7 +18,15 @@ export function AddToCartButton({ product }: { product: Product }) {
 
     // Simulate slight delay for smoother UX feel
     setTimeout(() => {
-      add(product);
+      const normalizedProduct = {
+        ...product,
+        image:
+          (product as any).image ||
+          (product as any).thumbnail ||
+          (product as any).imageUrl,
+      };
+
+      add(normalizedProduct as Product);
       window.dispatchEvent(new CustomEvent("cart:open"));
       setState("success");
       setShowToast(true);
@@ -64,14 +74,20 @@ export function AddToCartButton({ product }: { product: Product }) {
         )}
 
         {state === "success"
-          ? "Added ✓"
+          ? lang === "tr"
+            ? "Eklendi ✓"
+            : "Added ✓"
           : state === "loading"
-            ? "Adding..."
-            : "Add to Cart"}
+            ? lang === "tr"
+              ? "Ekleniyor..."
+              : "Adding..."
+            : lang === "tr"
+              ? "Sepete ekle"
+              : "Add to Cart"}
       </button>
       {showToast && (
         <div className="fixed bottom-6 right-6 bg-black text-white text-sm px-4 py-2 rounded-lg shadow-lg animate-fade-in">
-          ✓ Product added to cart
+          {lang === "tr" ? "✓ Ürün sepete eklendi" : "✓ Product added to cart"}
         </div>
       )}
     </>
