@@ -43,9 +43,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       <button
         onClick={handleAdd}
         disabled={state === "loading"}
-        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.97] flex items-center justify-center gap-2 ${
-          state === "success" ? "text-white" : "text-white"
-        }`}
+        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.97] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[1px] ${state === "loading" ? "opacity-90" : ""}`}
         style={{
           backgroundColor:
             state === "success"
@@ -72,7 +70,32 @@ export function AddToCartButton({ product }: { product: Product }) {
             />
           </svg>
         )}
-
+        {state === "idle" && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-4 w-4"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.64L23 6H6" />
+          </svg>
+        )}
+        {state === "success" && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            className="h-4 w-4"
+          >
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+        )}
         {state === "success"
           ? lang === "tr"
             ? "Eklendi ✓"
