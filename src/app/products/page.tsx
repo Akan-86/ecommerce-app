@@ -75,7 +75,10 @@ function ProductCard({ product }: { product: Product }) {
     (Array.isArray(product.images) ? product.images[0] : undefined);
   return (
     <div className="bg-white rounded-2xl shadow-soft hover:shadow-2xl transition overflow-hidden flex flex-col">
-      <div className="relative h-64 bg-gray-100 overflow-hidden">
+      <Link
+        href={`/products/${product.id}`}
+        className="relative h-64 bg-gray-100 overflow-hidden block"
+      >
         {img ? (
           <>
             <Image
@@ -91,9 +94,14 @@ function ProductCard({ product }: { product: Product }) {
             No image
           </div>
         )}
-      </div>
+      </Link>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="font-semibold text-lg mb-2">{product.title}</h3>
+        <Link
+          href={`/products/${product.id}`}
+          className="font-semibold text-lg mb-2 hover:text-brand-accent transition"
+        >
+          {product.title}
+        </Link>
         <p className="text-brand-accent font-bold mb-4 text-xl">
           €{product.price.toFixed(2)}
         </p>
@@ -276,7 +284,7 @@ export default function ProductsPage() {
                   {filtered.length}
                 </span>
               )}
-              products found
+              {filtered.length === 1 ? "product found" : "products found"}
             </p>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Sort:</span>
