@@ -8,6 +8,7 @@ import { useCart } from "@/context/cart-context";
 import { RemoveFromCartButton } from "@/components/remove-from-cart-button";
 import { useAuth } from "@/context/auth-context";
 import Spinner from "@/components/Spinner";
+import { useLanguage } from "@/app/layout";
 
 export default function CartPage() {
   const {
@@ -20,6 +21,7 @@ export default function CartPage() {
   } = useCart();
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { lang } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const FREE_SHIPPING_THRESHOLD = 100;
@@ -64,7 +66,11 @@ export default function CartPage() {
       router.push(data.url);
     } catch (err) {
       console.error("Checkout error:", err);
-      alert("Something went wrong during checkout.");
+      alert(
+        lang === "tr"
+          ? "Ödeme sırasında bir hata oluştu."
+          : "Something went wrong during checkout."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -83,16 +89,18 @@ export default function CartPage() {
       <div className="mx-auto mt-24 max-w-md rounded-2xl border border-gray-200 bg-white p-10 text-center shadow-sm">
         <div className="mb-4 text-5xl">🛒</div>
         <h2 className="text-xl font-semibold text-gray-900">
-          Your cart is empty
+          {lang === "tr" ? "Sepetiniz boş" : "Your cart is empty"}
         </h2>
         <p className="mt-2 text-sm text-gray-500">
-          Looks like you haven’t added anything yet.
+          {lang === "tr"
+            ? "Henüz hiçbir ürün eklemediniz."
+            : "Looks like you haven’t added anything yet."}
         </p>
         <Link
           href="/products"
           className="mt-6 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
         >
-          Browse products
+          {lang === "tr" ? "Ürünleri incele" : "Browse products"}
         </Link>
       </div>
     );
@@ -102,24 +110,31 @@ export default function CartPage() {
     <div className="mx-auto mt-20 max-w-6xl px-4">
       {showToast && lastAction && (
         <div className="fixed bottom-6 right-6 z-50 rounded-xl bg-gray-900 px-4 py-3 text-sm text-white shadow-lg animate-fadeIn">
-          {lastAction.type === "add" && "Item added to cart"}
-          {lastAction.type === "remove" && "Item removed from cart"}
-          {lastAction.type === "update" && "Cart updated"}
-          {lastAction.type === "clear" && "Cart cleared"}
+          {lastAction.type === "add" &&
+            (lang === "tr" ? "Ürün sepete eklendi" : "Item added to cart")}
+          {lastAction.type === "remove" &&
+            (lang === "tr"
+              ? "Ürün sepetten kaldırıldı"
+              : "Item removed from cart")}
+          {lastAction.type === "update" &&
+            (lang === "tr" ? "Sepet güncellendi" : "Cart updated")}
+          {lastAction.type === "clear" &&
+            (lang === "tr" ? "Sepet temizlendi" : "Cart cleared")}
         </div>
       )}
       <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
-        Shopping Cart
+        {lang === "tr" ? "Alışveriş Sepeti" : "Shopping Cart"}
       </h1>
       <div className="mb-8 flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          {items.length} items in your cart
+          {items.length}{" "}
+          {lang === "tr" ? "ürün sepetinizde" : "items in your cart"}
         </p>
         <Link
           href="/products"
           className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
         >
-          Continue shopping
+          {lang === "tr" ? "Alışverişe devam et" : "Continue shopping"}
         </Link>
       </div>
 
@@ -147,10 +162,12 @@ export default function CartPage() {
                     {item.name}
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
-                    {formatEUR(item.price)} · each
+                    {formatEUR(item.price)}{" "}
+                    {lang === "tr" ? "· adet" : "· each"}
                   </p>
                   <p className="text-sm font-medium text-gray-900">
-                    {formatEUR(item.price * item.quantity)} total
+                    {formatEUR(item.price * item.quantity)}{" "}
+                    {lang === "tr" ? "toplam" : "total"}
                   </p>
                 </div>
               </div>
@@ -186,12 +203,14 @@ export default function CartPage() {
         {/* Order summary */}
         <div className="sticky top-28 h-fit rounded-3xl border border-gray-200 bg-gradient-to-b from-white to-gray-50 p-8 shadow-md">
           <h3 className="mb-6 text-lg font-semibold text-gray-900">
-            Order Summary
+            {lang === "tr" ? "Sipariş Özeti" : "Order Summary"}
           </h3>
           {total < FREE_SHIPPING_THRESHOLD && (
             <div className="mb-5 rounded-lg bg-indigo-50 p-3 text-xs text-indigo-700">
-              Spend {formatEUR(FREE_SHIPPING_THRESHOLD - total)} more to unlock
-              free shipping.
+              Spend {formatEUR(FREE_SHIPPING_THRESHOLD - total)}{" "}
+              {lang === "tr"
+                ? "daha harcayın ve ücretsiz kargoyu açın."
+                : "more to unlock free shipping."}
               <div className="mt-2 h-2 w-full overflow-hidden rounded bg-indigo-100">
                 <div
                   className="h-full bg-indigo-500 transition-all"
@@ -204,22 +223,28 @@ export default function CartPage() {
           )}
           {total >= FREE_SHIPPING_THRESHOLD && (
             <div className="mb-5 rounded-lg bg-green-50 p-3 text-xs font-medium text-green-700">
-              🎉 You unlocked free shipping!
+              {lang === "tr"
+                ? "🎉 Ücretsiz kargo kazandınız!"
+                : "🎉 You unlocked free shipping!"}
             </div>
           )}
 
           <div className="mb-4 flex justify-between text-sm text-gray-700">
-            <span>Subtotal</span>
+            <span>{lang === "tr" ? "Ara Toplam" : "Subtotal"}</span>
             <span>{formatEUR(total)}</span>
           </div>
 
           <div className="mb-6 flex justify-between text-sm text-gray-500">
-            <span>Shipping</span>
-            <span>Calculated at checkout</span>
+            <span>{lang === "tr" ? "Kargo" : "Shipping"}</span>
+            <span>
+              {lang === "tr"
+                ? "Ödeme sırasında hesaplanır"
+                : "Calculated at checkout"}
+            </span>
           </div>
 
           <div className="mb-6 flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold text-gray-900">
-            <span>Total</span>
+            <span>{lang === "tr" ? "Toplam" : "Total"}</span>
             <span>{formatEUR(total)}</span>
           </div>
 
@@ -227,7 +252,7 @@ export default function CartPage() {
             onClick={clear}
             className="mb-4 w-full text-sm text-gray-500 underline transition hover:text-gray-700"
           >
-            Clear cart
+            {lang === "tr" ? "Sepeti temizle" : "Clear cart"}
           </button>
 
           <button
@@ -240,11 +265,21 @@ export default function CartPage() {
                 <Spinner />
               </span>
             )}
-            <span>{isLoading ? "Redirecting…" : "Proceed to Checkout"}</span>
+            <span>
+              {isLoading
+                ? lang === "tr"
+                  ? "Yönlendiriliyor…"
+                  : "Redirecting…"
+                : lang === "tr"
+                  ? "Ödemeye geç"
+                  : "Proceed to Checkout"}
+            </span>
           </button>
 
           <p className="mt-4 text-center text-xs text-gray-500">
-            Secure checkout · Taxes calculated at checkout · Powered by Stripe
+            {lang === "tr"
+              ? "Güvenli ödeme · Vergiler ödeme sırasında hesaplanır · Stripe altyapısı"
+              : "Secure checkout · Taxes calculated at checkout · Powered by Stripe"}
           </p>
         </div>
       </div>
