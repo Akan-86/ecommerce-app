@@ -138,6 +138,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </button>
 
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100" />
           <Image
             src={
               imageSrc ||
@@ -176,7 +177,12 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Content */}
       <div className="flex flex-col gap-2 p-3">
         <div>
-          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900">
+          {product.category && (
+            <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+              {product.category}
+            </p>
+          )}
+          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-brand-700">
             {product.title}
           </h3>
 
@@ -186,7 +192,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </p>
           )}
           {/* Rating */}
-          <div className="mt-1 flex items-center gap-1 text-amber-500 text-xs">
+          <div className="mt-1 flex items-center gap-1 text-amber-500 text-xs select-none">
             <span>★</span>
             <span>★</span>
             <span>★</span>
@@ -197,7 +203,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Actions */}
-        <div className="relative z-10 mt-2 flex gap-1.5">
+        <div className="relative z-10 mt-2 flex gap-1.5 transition-transform duration-200 group-hover:translate-y-[-1px]">
           <button
             data-testid="add-to-cart"
             onClick={(e) => handleAddToCart(e)}
@@ -242,7 +248,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="text-lg font-extrabold tracking-tight"
+              className="text-xl font-extrabold tracking-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.04)]"
               style={{ color: "var(--brand-primary)" }}
             >
               {formatPrice(product.price)}
@@ -294,7 +300,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-t from-black/[0.02] via-transparent to-transparent"
         style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
