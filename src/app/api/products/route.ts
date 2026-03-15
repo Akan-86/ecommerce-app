@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
       searchParams.get("maxPrice") || Number.MAX_SAFE_INTEGER
     );
     const sort = searchParams.get("sort"); // 'price-asc' | 'price-desc' | 'new'
+    const search = (searchParams.get("search") || "").toLowerCase();
 
     const snapshot = await db.collection("products").get();
     let products = snapshot.docs.map((doc) => {
@@ -59,6 +60,16 @@ export async function GET(req: NextRequest) {
         updatedAt,
       };
     }) as any[];
+
+    // Search by title or description
+    if (search) {
+      products = products.filter((p) => {
+        const title = String(p.title || "").toLowerCase();
+        const description = String(p.description || "").toLowerCase();
+
+        return title.includes(search) || description.includes(search);
+      });
+    }
 
     // Filter by category
     if (category && category !== "all") {
