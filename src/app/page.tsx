@@ -48,17 +48,17 @@ export default async function Page() {
                 ✨ New Season <span className="text-white/60">·</span> Free
                 shipping over €100
               </span>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl leading-[1.05]">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl leading-[1.05] animate-[fadeUp_0.8s_ease_forwards]">
                 Shop smarter.
                 <span className="block bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(5,150,105,0.45)]">
                   Discover better.
                 </span>
               </h1>
-              <p className="mt-5 max-w-xl text-gray-200">
+              <p className="mt-5 max-w-xl text-gray-200 animate-[fadeUp_1s_ease_forwards] opacity-0">
                 Premium products across fashion, tech, and lifestyle. Curated
                 for quality and value.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3 animate-[fadeUp_1.2s_ease_forwards] opacity-0">
                 <Link
                   href="/products"
                   className="inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-bold btn-primary hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
@@ -104,7 +104,7 @@ export default async function Page() {
                 {(products || []).slice(0, 6).map((p: any) => (
                   <div
                     key={p.id}
-                    className="relative overflow-hidden rounded-2xl bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                    className="relative overflow-hidden rounded-2xl bg-gray-800/80 backdrop-blur-sm shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-[fadeUp_0.8s_ease_forwards] opacity-0"
                   >
                     {p.image || p.thumbnail ? (
                       <Image
