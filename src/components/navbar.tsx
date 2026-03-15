@@ -108,13 +108,13 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-250 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-2xl backdrop-saturate-150 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 shadow-card border-brand-200"
-          : "bg-white/70 border-brand-100"
+          ? "bg-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-black/5"
+          : "bg-white/60 border-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 relative">
         <Link
           href="/"
           data-testid="site-logo"
