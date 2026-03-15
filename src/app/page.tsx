@@ -379,11 +379,11 @@ export default async function Page() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
           {(products || []).slice(0, 10).map((p: any, index: number) => (
             <div
               key={p.id}
-              className="animate-[fadeUp_0.6s_ease_forwards] opacity-0"
+              className="min-w-[220px] sm:min-w-[240px] md:min-w-[260px] snap-start animate-[fadeUp_0.6s_ease_forwards] opacity-0"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <ProductCard product={p} />
