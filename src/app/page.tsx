@@ -157,6 +157,85 @@ export default async function Page() {
         </div>
       </section>
 
+      {/* QUICK CATEGORY ICONS */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 text-center">
+            <Link
+              href="/products?cat=tech"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                💻
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                Tech
+              </span>
+            </Link>
+
+            <Link
+              href="/products?cat=fashion"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                👕
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                Fashion
+              </span>
+            </Link>
+
+            <Link
+              href="/products?cat=lifestyle"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                🏠
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                Home
+              </span>
+            </Link>
+
+            <Link
+              href="/products?cat=sports"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                ⚽
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                Sports
+              </span>
+            </Link>
+
+            <Link
+              href="/products?cat=beauty"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                💄
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                Beauty
+              </span>
+            </Link>
+
+            <Link
+              href="/products"
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="h-14 w-14 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-emerald-100 transition">
+                🛍️
+              </div>
+              <span className="text-xs font-semibold text-gray-700 group-hover:text-emerald-600">
+                All
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* PROMO CARDS */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-12">
         <div className="grid gap-6 md:grid-cols-3">
@@ -364,6 +443,63 @@ export default async function Page() {
           </div>
         </div>
       </section>
+      {/* FOOTER */}
+      <footer className="bg-gray-950 text-gray-300">
+        <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
+          <div>
+            <h4 className="text-white font-bold text-lg">Shop</h4>
+            <p className="mt-3 text-sm text-gray-400">
+              Premium products across fashion, tech and lifestyle categories.
+            </p>
+          </div>
+
+          <div>
+            <h5 className="text-white font-semibold mb-3">Company</h5>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#">About</Link>
+              </li>
+              <li>
+                <Link href="#">Careers</Link>
+              </li>
+              <li>
+                <Link href="#">Press</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h5 className="text-white font-semibold mb-3">Support</h5>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#">Help Center</Link>
+              </li>
+              <li>
+                <Link href="#">Returns</Link>
+              </li>
+              <li>
+                <Link href="#">Shipping</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h5 className="text-white font-semibold mb-3">Legal</h5>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="#">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="#">Terms of Service</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 py-6 text-center text-xs text-gray-500">
+          © {new Date().getFullYear()} Ecommerce Store. All rights reserved.
+        </div>
+      </footer>
     </main>
   );
 }
