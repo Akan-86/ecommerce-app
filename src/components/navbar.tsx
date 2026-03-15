@@ -19,7 +19,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { lang } = useLanguage();
+  const { lang, setLang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -246,6 +246,14 @@ export default function Navbar() {
         </div>
 
         <div className="relative flex items-center gap-3" ref={ref}>
+          {/* Language Toggle */}
+          <button
+            onClick={() => setLang(lang === "tr" ? "en" : "tr")}
+            className="hidden sm:inline-flex items-center rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-bold hover:bg-brand-100 transition"
+            aria-label="Toggle language"
+          >
+            {lang === "tr" ? "EN" : "TR"}
+          </button>
           <button
             onClick={() => setMobileOpen((v) => !v)}
             className="md:hidden inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold hover:bg-brand-100 transition"
@@ -360,6 +368,15 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-brand-200 bg-white/95 backdrop-blur-xl">
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
+            <button
+              onClick={() => {
+                setLang(lang === "tr" ? "en" : "tr");
+                setMobileOpen(false);
+              }}
+              className="rounded-lg px-3 py-2 text-left hover:bg-brand-100"
+            >
+              {lang === "tr" ? "Switch to English" : "Türkçe'ye geç"}
+            </button>
             <Link
               href="/products"
               onClick={() => setMobileOpen(false)}
