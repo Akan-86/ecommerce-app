@@ -73,29 +73,18 @@ function ProductCard({ product }: { product: Product }) {
     product.thumbnail ||
     product.image ||
     (Array.isArray(product.images) ? product.images[0] : undefined);
-  console.log("PRODUCT DEBUG:", {
-    id: product.id,
-    title: product.title,
-    imageUrl: product.imageUrl,
-    thumbnail: product.thumbnail,
-    image: product.image,
-    images: product.images,
-    resolvedImage: img,
-  });
   return (
     <div className="bg-white rounded-2xl shadow-soft hover:shadow-2xl transition overflow-hidden flex flex-col">
-      <div className="h-64 bg-gray-100 overflow-hidden">
+      <div className="relative h-64 bg-gray-100 overflow-hidden">
         {img ? (
           <>
-            <img
+            <Image
               src={img}
               alt={product.title}
-              className="w-full h-full object-cover"
-              onError={() => console.error("IMAGE LOAD FAILED:", img)}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover transition-transform duration-500 hover:scale-105"
             />
-            <div className="absolute bottom-1 left-1 bg-black/70 text-white text-[10px] px-1 rounded">
-              debug
-            </div>
           </>
         ) : (
           <div className="h-full w-full flex items-center justify-center text-gray-400 text-lg font-semibold">
