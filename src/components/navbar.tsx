@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
 import { usePathname, useRouter } from "next/navigation";
+import { useLanguage } from "@/context/language-context";
 
 export default function Navbar() {
   const { items, open } = useCart();
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { lang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -127,14 +129,16 @@ export default function Navbar() {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={lang === "tr" ? "Ürün ara..." : "Search products..."}
               value={searchQuery}
               onChange={(e) => {
-                setSearchQuery(e.target.value);
+                setSearchQuery(e.target.value.replace(/^\s+/, ""));
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && searchQuery.trim()) {
-                  router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                  router.push(
+                    `/products?search=${encodeURIComponent(searchQuery)}`
+                  );
                 }
               }}
               onFocus={() => {
@@ -175,11 +179,13 @@ export default function Navbar() {
                 <button
                   onClick={() => {
                     setShowSuggestions(false);
-                    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                    router.push(
+                      `/products?search=${encodeURIComponent(searchQuery)}`
+                    );
                   }}
                   className="w-full text-left px-4 py-2 text-sm font-semibold border-t hover:bg-brand-100"
                 >
-                  View all results
+                  {lang === "tr" ? "Tüm sonuçları gör" : "View all results"}
                 </button>
               </div>
             )}
@@ -187,9 +193,15 @@ export default function Navbar() {
 
           <nav className="flex items-center gap-8 text-sm font-medium">
             {[
-              { href: "/products", label: "Products" },
-              { href: "/about", label: "About" },
-              { href: "/contact", label: "Contact" },
+              {
+                href: "/products",
+                label: lang === "tr" ? "Ürünler" : "Products",
+              },
+              { href: "/about", label: lang === "tr" ? "Hakkında" : "About" },
+              {
+                href: "/contact",
+                label: lang === "tr" ? "İletişim" : "Contact",
+              },
             ].map((link) => {
               const active = pathname === link.href;
               return (
@@ -230,7 +242,10 @@ export default function Navbar() {
             className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-250"
             aria-label="Open shopping cart"
           >
-            🛒 <span className="hidden sm:inline">Cart</span>
+            🛒{" "}
+            <span className="hidden sm:inline">
+              {lang === "tr" ? "Sepet" : "Cart"}
+            </span>
             {cartCount > 0 && (
               <span
                 className={`absolute -top-2 -right-2 inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-[var(--brand-primary)] px-1.5 text-[11px] font-bold text-white shadow-lg transition-transform duration-300 ${
@@ -259,7 +274,11 @@ export default function Navbar() {
                 {shortEmail}
               </span>
             )}
-            {!user && <span className="hidden sm:inline">Account</span>}
+            {!user && (
+              <span className="hidden sm:inline">
+                {lang === "tr" ? "Hesap" : "Account"}
+              </span>
+            )}
           </button>
 
           {accountOpen && (
@@ -272,14 +291,14 @@ export default function Navbar() {
                       onClick={() => setAccountOpen(false)}
                       className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
-                      Login
+                      {lang === "tr" ? "Giriş" : "Login"}
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setAccountOpen(false)}
                       className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
-                      Register
+                      {lang === "tr" ? "Kayıt Ol" : "Register"}
                     </Link>
                   </>
                 ) : (
@@ -289,21 +308,21 @@ export default function Navbar() {
                       onClick={() => setAccountOpen(false)}
                       className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
-                      My Account
+                      {lang === "tr" ? "Hesabım" : "My Account"}
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setAccountOpen(false)}
                       className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
-                      Orders
+                      {lang === "tr" ? "Siparişler" : "Orders"}
                     </Link>
                     <Link
                       href="/account/settings"
                       onClick={() => setAccountOpen(false)}
                       className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
                     >
-                      Settings
+                      {lang === "tr" ? "Ayarlar" : "Settings"}
                     </Link>
                     <button
                       onClick={async () => {
@@ -312,7 +331,7 @@ export default function Navbar() {
                       }}
                       className="w-full text-left rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
                     >
-                      Logout
+                      {lang === "tr" ? "Çıkış" : "Logout"}
                     </button>
                   </>
                 )}
@@ -329,21 +348,21 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-3 py-2 hover:bg-brand-100"
             >
-              Products
+              {lang === "tr" ? "Ürünler" : "Products"}
             </Link>
             <Link
               href="/about"
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-3 py-2 hover:bg-brand-100"
             >
-              About
+              {lang === "tr" ? "Hakkında" : "About"}
             </Link>
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-3 py-2 hover:bg-brand-100"
             >
-              Contact
+              {lang === "tr" ? "İletişim" : "Contact"}
             </Link>
           </div>
         </div>
