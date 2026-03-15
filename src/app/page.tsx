@@ -131,6 +131,32 @@ export default async function Page() {
         </div>
       </section>
 
+      {/* TRUST BAR */}
+      <section className="bg-white border-b">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-sm">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">🚚</span>
+            <p className="font-semibold">Free Shipping</p>
+            <p className="text-gray-500 text-xs">Orders over €100</p>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">🔒</span>
+            <p className="font-semibold">Secure Payment</p>
+            <p className="text-gray-500 text-xs">Stripe protected</p>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">↩️</span>
+            <p className="font-semibold">Easy Returns</p>
+            <p className="text-gray-500 text-xs">30 day policy</p>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">⭐</span>
+            <p className="font-semibold">Top Rated</p>
+            <p className="text-gray-500 text-xs">Trusted products</p>
+          </div>
+        </div>
+      </section>
+
       {/* PROMO CARDS */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-12">
         <div className="grid gap-6 md:grid-cols-3">
@@ -283,6 +309,32 @@ export default async function Page() {
             >
               <ProductCard product={p} />
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* BEST SELLERS */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase">
+              Popular Products
+            </p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              Best Sellers
+            </h2>
+          </div>
+          <Link
+            href="/products"
+            className="text-sm font-semibold text-gray-900 hover:text-emerald-600 transition-colors"
+          >
+            View all →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {(products || []).slice(10, 20).map((p: any) => (
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </section>
