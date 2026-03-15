@@ -30,6 +30,12 @@ export default function ProductCard({ product }: { product: Product }) {
     product.stock > 0 &&
     product.stock <= 5;
 
+  // Fake rating data (until real review system is added)
+  const rating = 4.2;
+  const reviewCount = 42;
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating - fullStars >= 0.5;
+
   const rawImage =
     typeof (product as any).imageUrl === "string" &&
     (product as any).imageUrl.trim().length > 0
@@ -193,12 +199,21 @@ export default function ProductCard({ product }: { product: Product }) {
           )}
           {/* Rating */}
           <div className="mt-1 flex items-center gap-1 text-amber-500 text-xs select-none">
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
-            <span className="text-gray-300">★</span>
-            <span className="ml-1 text-gray-500">(42)</span>
+            {Array.from({ length: 5 }).map((_, i) => {
+              if (i < fullStars) return <span key={i}>★</span>;
+              if (i === fullStars && hasHalfStar)
+                return (
+                  <span key={i} className="opacity-70">
+                    ★
+                  </span>
+                );
+              return (
+                <span key={i} className="text-gray-300">
+                  ★
+                </span>
+              );
+            })}
+            <span className="ml-1 text-gray-500">({reviewCount})</span>
           </div>
         </div>
 
