@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Product } from "@/types";
 import { useCart } from "@/context/cart-context";
 import { Heart } from "lucide-react";
+import { useLanguage } from "@/app/layout";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
@@ -13,6 +14,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const [liked, setLiked] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const { add } = useCart();
+  const { lang } = useLanguage();
 
   const isOnSale =
     typeof product.originalPrice === "number" &&
@@ -112,12 +114,12 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         {!isOnSale && isNew && (
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-blue-600/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
-            New
+            {lang === "tr" ? "Yeni" : "New"}
           </span>
         )}
         {!isOnSale && !isNew && isLowStock && (
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-amber-500/95 px-3 py-1 text-xs font-semibold text-white shadow-md">
-            Low stock
+            {lang === "tr" ? "Az stok" : "Low stock"}
           </span>
         )}
 
@@ -143,7 +145,6 @@ export default function ProductCard({ product }: { product: Product }) {
             }
             alt={product.title}
             fill
-            unoptimized
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
             className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg]"
             onError={() => setImgError(true)}
@@ -167,7 +168,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             className="mb-4 rounded-full px-5 py-2 text-sm font-semibold btn-primary hover:scale-105 hover:shadow-lg active:scale-[0.96] transition-all duration-300"
           >
-            Quick add
+            {lang === "tr" ? "Hızlı ekle" : "Quick add"}
           </button>
         </div>
       </Link>
@@ -207,7 +208,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {adding ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                Adding…
+                {lang === "tr" ? "Ekleniyor…" : "Adding…"}
               </span>
             ) : (
               <span className="flex items-center gap-2">
@@ -224,7 +225,7 @@ export default function ProductCard({ product }: { product: Product }) {
                     clipRule="evenodd"
                   />
                 </svg>
-                Add to cart
+                {lang === "tr" ? "Sepete ekle" : "Add to cart"}
               </span>
             )}
           </button>
@@ -233,7 +234,7 @@ export default function ProductCard({ product }: { product: Product }) {
             href={`/products/${product.id}`}
             className="flex-1 inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-all duration-250 hover:border-brand-500 hover:text-brand-900 hover:bg-brand-100 active:scale-[0.97] hover:shadow-card"
           >
-            View
+            {lang === "tr" ? "İncele" : "View"}
           </Link>
         </div>
 
@@ -256,7 +257,8 @@ export default function ProductCard({ product }: { product: Product }) {
                 className="text-xs font-medium"
                 style={{ color: "var(--brand-primary)" }}
               >
-                Save {formatPrice(product.originalPrice - product.price)}
+                {lang === "tr" ? "Tasarruf" : "Save"}{" "}
+                {formatPrice(product.originalPrice - product.price)}
               </span>
             )}
           </div>
@@ -270,7 +272,13 @@ export default function ProductCard({ product }: { product: Product }) {
                 : undefined
             }
           >
-            {product.stock && product.stock > 0 ? "In stock" : "Out of stock"}
+            {product.stock && product.stock > 0
+              ? lang === "tr"
+                ? "Stokta"
+                : "In stock"
+              : lang === "tr"
+                ? "Stokta yok"
+                : "Out of stock"}
           </span>
         </div>
         {typeof product.stock === "number" && product.stock > 0 && (
@@ -291,7 +299,7 @@ export default function ProductCard({ product }: { product: Product }) {
       />
       {showToast && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-fade-in">
-          Added to cart ✓
+          {lang === "tr" ? "Sepete eklendi" : "Added to cart"} ✓
         </div>
       )}
     </article>
