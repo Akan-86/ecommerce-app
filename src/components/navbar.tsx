@@ -23,6 +23,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
   const initials = user?.email
     ? user.email
@@ -81,6 +82,7 @@ export default function Navbar() {
 
     const timeout = setTimeout(async () => {
       try {
+        setLoadingSuggestions(true);
         const res = await fetch(
           `/api/products?search=${encodeURIComponent(q)}`
         );
@@ -90,8 +92,10 @@ export default function Navbar() {
           setSuggestions(data.slice(0, 5));
           setShowSuggestions(true);
         }
+        setLoadingSuggestions(false);
       } catch (e) {
         console.error("Search suggestion error", e);
+        setLoadingSuggestions(false);
       }
     }, 250);
 
@@ -135,6 +139,10 @@ export default function Navbar() {
                 setSearchQuery(e.target.value.replace(/^\s+/, ""));
               }}
               onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setShowSuggestions(false);
+                  return;
+                }
                 if (e.key === "Enter" && searchQuery.trim()) {
                   router.push(
                     `/products?search=${encodeURIComponent(searchQuery)}`
@@ -153,8 +161,13 @@ export default function Navbar() {
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
               🔍
             </span>
-            {showSuggestions && suggestions.length > 0 && (
+            {showSuggestions && (
               <div className="absolute left-0 right-0 mt-2 rounded-xl border border-brand-200 bg-white shadow-lg overflow-hidden z-50">
+                {loadingSuggestions && (
+                  <div className="px-4 py-3 text-sm text-brand-600">
+                    {lang === "tr" ? "Aranıyor..." : "Searching..."}
+                  </div>
+                )}
                 {suggestions.map((p: any) => (
                   <button
                     key={p.id}
@@ -175,7 +188,11 @@ export default function Navbar() {
                     <span className="truncate">{p.title}</span>
                   </button>
                 ))}
-
+                {!loadingSuggestions && suggestions.length === 0 && (
+                  <div className="px-4 py-3 text-sm text-gray-500">
+                    {lang === "tr" ? "Sonuç bulunamadı" : "No products found"}
+                  </div>
+                )}
                 <button
                   onClick={() => {
                     setShowSuggestions(false);
