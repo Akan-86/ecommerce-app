@@ -127,8 +127,9 @@ export default function CartPage() {
       </h1>
       <div className="mb-8 flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          {items.length}{" "}
-          {lang === "tr" ? "ürün sepetinizde" : "items in your cart"}
+          {lang === "tr"
+            ? `${items.length} ürün sepetinizde`
+            : `${items.length} item${items.length > 1 ? "s" : ""} in your cart`}
         </p>
         <Link
           href="/products"
@@ -147,7 +148,10 @@ export default function CartPage() {
               className="flex flex-col gap-6 border-b border-gray-100 py-6 last:border-b-0 sm:flex-row sm:items-center sm:justify-between animate-fadeIn"
             >
               <div className="flex items-center gap-4">
-                <div className="relative h-20 w-20 overflow-hidden rounded-xl bg-gray-100">
+                <Link
+                  href={`/products/${item.id}`}
+                  className="relative h-20 w-20 overflow-hidden rounded-xl bg-gray-100 block"
+                >
                   <Image
                     src={item.image || "/placeholder.png"}
                     alt={item.name}
@@ -155,12 +159,15 @@ export default function CartPage() {
                     sizes="80px"
                     className="object-cover"
                   />
-                </div>
+                </Link>
 
                 <div>
-                  <p className="text-base font-semibold text-gray-900">
+                  <Link
+                    href={`/products/${item.id}`}
+                    className="text-base font-semibold text-gray-900 hover:text-indigo-600 transition"
+                  >
                     {item.name}
-                  </p>
+                  </Link>
                   <p className="mt-1 text-sm text-gray-500">
                     {formatEUR(item.price)}{" "}
                     {lang === "tr" ? "· adet" : "· each"}
@@ -207,7 +214,9 @@ export default function CartPage() {
           </h3>
           {total < FREE_SHIPPING_THRESHOLD && (
             <div className="mb-5 rounded-lg bg-indigo-50 p-3 text-xs text-indigo-700">
-              Spend {formatEUR(FREE_SHIPPING_THRESHOLD - total)}{" "}
+              {lang === "tr"
+                ? `${formatEUR(FREE_SHIPPING_THRESHOLD - total)} daha harcayın`
+                : `Spend ${formatEUR(FREE_SHIPPING_THRESHOLD - total)}`}{" "}
               {lang === "tr"
                 ? "daha harcayın ve ücretsiz kargoyu açın."
                 : "more to unlock free shipping."}
