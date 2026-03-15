@@ -30,10 +30,17 @@ export async function fetchProducts(): Promise<Product[]> {
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Product);
 }
 
-export async function fetchProduct(id: string | number): Promise<Product> {
+export async function fetchProduct(
+  id: string | number
+): Promise<Product | null> {
   const ref = doc(db, "products", String(id));
   const snap = await getDoc(ref);
-  if (!snap.exists()) throw new Error("Product not found");
+
+  if (!snap.exists()) {
+    console.warn("Product document not found for id:", id);
+    return null;
+  }
+
   return { id: snap.id, ...snap.data() } as Product;
 }
 
