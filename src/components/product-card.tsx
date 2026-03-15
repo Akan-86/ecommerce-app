@@ -11,6 +11,7 @@ import { useLanguage } from "@/app/layout";
 export default function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [liked, setLiked] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const { add } = useCart();
@@ -144,7 +145,9 @@ export default function ProductCard({ product }: { product: Product }) {
         </button>
 
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
-          <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100" />
+          {!imgLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100" />
+          )}
           <Image
             src={
               imageSrc ||
@@ -153,8 +156,9 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg]"
+            className={`object-cover transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg] ${imgLoaded ? "opacity-100" : "opacity-0"}`}
             onError={() => setImgError(true)}
+            onLoad={() => setImgLoaded(true)}
             priority={false}
           />
 
