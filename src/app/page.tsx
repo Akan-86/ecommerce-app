@@ -443,6 +443,53 @@ export default async function Page() {
           </div>
         </div>
       </section>
+      {/* NEWSLETTER / COMMUNITY */}
+      <section className="bg-emerald-600 text-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 grid gap-10 md:grid-cols-2 items-center">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-emerald-100 font-semibold">
+              Join our community
+            </p>
+            <h3 className="mt-3 text-3xl font-extrabold">
+              Get exclusive deals & product drops
+            </h3>
+            <p className="mt-3 text-emerald-100 text-sm max-w-md">
+              Subscribe to our newsletter and be the first to know about new
+              collections, limited offers and curated product picks.
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 max-w-md">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 rounded-full px-5 py-3 text-sm text-gray-900 outline-none"
+              />
+              <button className="rounded-full bg-black px-6 py-3 text-sm font-semibold hover:bg-gray-900 transition">
+                Subscribe
+              </button>
+            </div>
+
+            <p className="mt-4 text-xs text-emerald-100/80">
+              12,000+ subscribers already joined.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-6 text-center">
+            <div>
+              <p className="text-3xl font-bold">12K+</p>
+              <p className="text-xs text-emerald-100">Subscribers</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">4.8★</p>
+              <p className="text-xs text-emerald-100">Customer rating</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">500+</p>
+              <p className="text-xs text-emerald-100">Products</p>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* FOOTER */}
       <footer className="bg-gray-950 text-gray-300">
         <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
