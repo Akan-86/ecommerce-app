@@ -51,7 +51,24 @@ function Header({
           <input
             placeholder="Search products..."
             value={search}
-            onChange={(e) => setSearch(e.target.value.replace(/^\s+/, ""))}
+            onChange={(e) => {
+              const value = e.target.value.replace(/^\s+/, "");
+              setSearch(value);
+
+              const params = new URLSearchParams(window.location.search);
+              if (value) {
+                params.set("search", value);
+              } else {
+                params.delete("search");
+              }
+
+              const query = params.toString();
+              window.history.replaceState(
+                null,
+                "",
+                query ? `/products?${query}` : "/products"
+              );
+            }}
             className="hidden md:block px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
           />
           <Link href="/cart" className="relative text-lg">
@@ -139,8 +156,8 @@ export default function ProductsPage() {
     const q = searchParams.get("search");
     const cat = searchParams.get("category");
 
-    if (q) setSearch(q);
-    if (cat) setCategory(cat);
+    if (q !== null) setSearch(q);
+    if (cat !== null) setCategory(cat);
   }, [searchParams]);
 
   useEffect(() => {
