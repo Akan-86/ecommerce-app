@@ -149,22 +149,35 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_30px_80px_-25px_rgba(0,0,0,0.25)] lg:sticky lg:top-32 h-fit transition-all duration-300">
-          <h2 className="mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
+          <h2 className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
             Order Summary
           </h2>
+
+          <p className="mb-6 text-xs text-gray-400">
+            {items.reduce((sum, item) => sum + item.quantity, 0)} items in cart
+          </p>
 
           <div className="space-y-5 text-sm text-gray-700 divide-y divide-black/5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-start gap-3 pt-4 first:pt-0"
+                className="flex items-center justify-between gap-4 pt-4 first:pt-0"
               >
-                <span className="truncate">
-                  {item.title}
-                  <span className="block text-xs text-gray-400">
-                    Qty {item.quantity}
+                <div className="flex items-center gap-3 min-w-0">
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    className="h-12 w-12 rounded-md object-cover border border-black/5"
+                  />
+
+                  <span className="truncate">
+                    {item.title}
+                    <span className="block text-xs text-gray-400">
+                      Qty {item.quantity}
+                    </span>
                   </span>
-                </span>
+                </div>
+
                 <span className="font-medium whitespace-nowrap">
                   {new Intl.NumberFormat("de-DE", {
                     style: "currency",
