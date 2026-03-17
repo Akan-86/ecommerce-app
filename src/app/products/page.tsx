@@ -91,7 +91,7 @@ function ProductCard({ product }: { product: Product }) {
     product.image ||
     (Array.isArray(product.images) ? product.images[0] : undefined);
   return (
-    <div className="bg-white rounded-2xl shadow-soft hover:shadow-2xl transition overflow-hidden flex flex-col">
+    <div className="group bg-white rounded-2xl shadow-soft hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
       <Link
         href={`/products/${product.id}`}
         className="relative h-64 bg-gray-100 overflow-hidden block"
@@ -103,7 +103,7 @@ function ProductCard({ product }: { product: Product }) {
               alt={product.title}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition-transform duration-500 hover:scale-105"
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </>
         ) : (
@@ -239,6 +239,18 @@ export default function ProductsPage() {
             Refine Results
           </h2>
 
+          <button
+            onClick={() => {
+              setCategory("all");
+              setMinPrice(0);
+              setMaxPrice(10000);
+              setSort("new");
+            }}
+            className="mb-4 w-full rounded-xl border border-black/10 py-2 text-sm font-semibold hover:bg-black/5 transition"
+          >
+            Clear Filters
+          </button>
+
           <div className="space-y-4">
             <div>
               <label className="text-sm font-semibold">Category</label>
@@ -317,7 +329,7 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 animate-[fadeUp_0.6s_ease]">
             {loading
               ? Array.from({ length: 12 }).map((_, i) => (
                   <ProductSkeleton key={i} />
@@ -326,7 +338,7 @@ export default function ProductsPage() {
                   <ProductCard key={product.id} product={product} />
                 ))}
             {!loading && filtered.length === 0 && (
-              <div className="col-span-full py-10 sm:py-16">
+              <div className="col-span-full py-16 sm:py-20">
                 <EmptyState
                   icon={<SearchX size={28} />}
                   title="No products found"
