@@ -43,7 +43,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       <button
         onClick={handleAdd}
         disabled={state === "loading"}
-        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.97] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[1px] ${state === "loading" ? "opacity-90" : ""}`}
+        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.95] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[2px] ${state === "loading" ? "opacity-90" : ""}`}
         style={{
           backgroundColor:
             state === "success"
@@ -91,7 +91,7 @@ export function AddToCartButton({ product }: { product: Product }) {
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
-            className="h-4 w-4"
+            className="h-4 w-4 animate-[pop_0.3s_ease]"
           >
             <path d="M20 6L9 17l-5-5" />
           </svg>
@@ -109,10 +109,36 @@ export function AddToCartButton({ product }: { product: Product }) {
               : "Add to Cart"}
       </button>
       {showToast && (
-        <div className="fixed bottom-6 right-6 bg-black text-white text-sm px-4 py-2 rounded-lg shadow-lg animate-fade-in">
-          {lang === "tr" ? "✓ Ürün sepete eklendi" : "✓ Product added to cart"}
+        <div className="fixed bottom-6 right-6 bg-black text-white text-sm px-5 py-3 rounded-xl shadow-2xl animate-[toastIn_0.4s_ease]">
+          <span className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              className="h-4 w-4"
+            >
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            {lang === "tr" ? "Ürün sepete eklendi" : "Product added to cart"}
+          </span>
         </div>
       )}
     </>
   );
 }
+
+/* Add to globals.css:
+
+@keyframes toastIn {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+*/
