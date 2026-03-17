@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <article
       data-testid="product-card"
-      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-250 ease-out hover:-translate-y-2 hover:shadow-elevated hover:border-brand-400"
+      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-2xl hover:border-brand-400"
     >
       {/* Image */}
       <Link
@@ -156,7 +156,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className={`object-cover transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:rotate-[0.3deg] ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-115 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
             onError={() => setImgError(true)}
             onLoad={() => setImgLoaded(true)}
             priority={false}
@@ -177,7 +177,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <button
             data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
-            className="mb-4 rounded-full px-5 py-2 text-sm font-semibold btn-primary hover:scale-105 hover:shadow-lg active:scale-[0.96] transition-all duration-300"
+            className="mb-4 rounded-full px-6 py-2.5 text-sm font-semibold btn-primary shadow-lg hover:scale-105 hover:shadow-xl active:scale-[0.96] transition-all duration-300"
           >
             {lang === "tr" ? "Hızlı ekle" : "Quick add"}
           </button>
@@ -192,7 +192,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-brand-700">
+          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900 transition-all duration-200 group-hover:text-brand-700 group-hover:translate-x-[1px]">
             {product.title}
           </h3>
 
@@ -228,7 +228,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary active:scale-[0.98] transition-all duration-250"
+            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -319,7 +319,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-t from-black/[0.02] via-transparent to-transparent"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-all duration-500 group-hover:opacity-100 bg-gradient-to-t from-black/[0.03] via-transparent to-transparent"
         style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
