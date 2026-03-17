@@ -1,6 +1,4 @@
 import "./globals.css";
-import Navbar from "@/components/navbar";
-import { Footer } from "@/components/home/footer";
 import { type ReactNode } from "react";
 import Providers from "@/components/providers";
 
