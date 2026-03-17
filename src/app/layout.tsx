@@ -5,7 +5,7 @@ import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ToastProvider } from "@/context/toast-context";
 import { type ReactNode } from "react";
-import { LanguageProvider } from "@/context/language-context";
+import Providers from "@/components/providers";
 
 export const metadata = {
   title: "VELORA — Modern E‑commerce Store",
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-indigo-200/20 blur-3xl" />
           <div className="absolute bottom-[-200px] right-[-100px] h-[400px] w-[600px] rounded-full bg-fuchsia-200/20 blur-3xl" />
         </div>
-        <LanguageProvider>
+        <Providers>
           <AuthProvider>
             <ToastProvider>
               <CartProvider>
@@ -77,7 +77,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </CartProvider>
             </ToastProvider>
           </AuthProvider>
-        </LanguageProvider>
+        </Providers>
       </body>
     </html>
   );
