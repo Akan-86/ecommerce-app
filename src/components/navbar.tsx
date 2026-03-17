@@ -108,19 +108,19 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-2xl backdrop-saturate-150 transition-all duration-300 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-3xl backdrop-saturate-200 transition-all duration-300 ${
         scrolled
           ? "bg-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-black/5"
           : "bg-white/60 border-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-18 flex items-center justify-between text-brand-900 relative">
         <Link
           href="/"
           data-testid="site-logo"
           className="group font-black tracking-tight text-xl flex items-center gap-2"
         >
-          <span className="text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide">
+          <span className="text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide group-hover:scale-105">
             Velora
             <span className="text-[var(--brand-primary)] group-hover:opacity-80">
               .
@@ -155,7 +155,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-64 rounded-xl border border-brand-200 bg-white/80 px-4 py-2 text-sm outline-none focus:ring-2 backdrop-blur"
+              className="w-72 rounded-xl border border-brand-200 bg-white/80 px-4 py-2 text-sm outline-none focus:ring-2 backdrop-blur transition-all duration-300 focus:w-80"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
@@ -233,7 +233,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-transform duration-300 ease-out ${
+                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-transform duration-300 ease-out group-hover:opacity-100 opacity-80 ${
                       active
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
@@ -264,7 +264,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.05] active:scale-[0.97] transition-all duration-250"
+            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.07] active:scale-[0.96] transition-all duration-300 shadow-sm hover:shadow-md"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -287,7 +287,7 @@ export default function Navbar() {
             className={`relative inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold shadow transition transform ${
               accountOpen
                 ? "bg-white text-slate-900 scale-[1.03]"
-                : "bg-white border border-brand-200 text-brand-900 hover:shadow-card hover:scale-[1.03]"
+                : "bg-white border border-brand-200 text-brand-900 hover:shadow-card hover:scale-[1.05] transition-all duration-300"
             }`}
             aria-label="Toggle account menu"
           >
