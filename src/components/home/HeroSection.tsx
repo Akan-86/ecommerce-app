@@ -27,17 +27,11 @@ export default function HeroSection({ products }: { products: Product[] }) {
           </p>
 
           <div className="flex gap-4">
-            <Link
-              href="/products"
-              className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:opacity-90 transition"
-            >
+            <Link href="/products" className="btn btn-primary-modern">
               Shop now
             </Link>
 
-            <Link
-              href="/categories"
-              className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-            >
+            <Link href="/categories" className="btn btn-secondary-modern">
               Explore
             </Link>
           </div>
