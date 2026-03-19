@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <article
       data-testid="product-card"
-      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white shadow-card transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-2xl hover:border-brand-400"
+      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
       {/* Image */}
       <Link
@@ -144,7 +144,7 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         </button>
 
-        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
+        <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
           {!imgLoaded && (
             <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100" />
           )}
@@ -185,24 +185,24 @@ export default function ProductCard({ product }: { product: Product }) {
       </Link>
 
       {/* Content */}
-      <div className="flex flex-col gap-2 p-3">
+      <div className="flex flex-col gap-1.5 p-2.5">
         <div>
           {product.category && (
             <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-gray-900 transition-all duration-200 group-hover:text-brand-700 group-hover:translate-x-[1px]">
+          <h3 className="line-clamp-2 text-sm font-medium leading-snug text-gray-900 transition-all duration-200 group-hover:text-brand-700 group-hover:translate-x-[1px]">
             {product.title}
           </h3>
 
           {product.description && (
-            <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-gray-500">
+            <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-gray-500">
               {product.description}
             </p>
           )}
           {/* Rating */}
-          <div className="mt-1 flex items-center gap-1 text-amber-500 text-xs select-none">
+          <div className="mt-1 flex items-center gap-1 text-amber-500 text-[10px] select-none">
             {Array.from({ length: 5 }).map((_, i) => {
               if (i < fullStars) return <span key={i}>★</span>;
               if (i === fullStars && hasHalfStar)
@@ -222,13 +222,13 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Actions */}
-        <div className="relative z-10 mt-2 flex gap-1.5 transition-transform duration-200 group-hover:translate-y-[-1px]">
+        <div className="relative z-10 mt-1.5 flex gap-1 transition-transform duration-200 group-hover:translate-y-[-1px]">
           <button
             data-testid="add-to-cart"
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-semibold btn-primary shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
+            className="flex-1 inline-flex items-center justify-center px-2.5 py-1.5 text-xs font-medium btn-primary shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -257,17 +257,17 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-all duration-250 hover:border-brand-500 hover:text-brand-900 hover:bg-brand-100 active:scale-[0.97] hover:shadow-card"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-brand-200 px-2.5 py-1.5 text-xs font-medium text-brand-700 transition-all duration-250 hover:border-brand-500 hover:text-brand-900 hover:bg-brand-100 active:scale-[0.97] hover:shadow-card"
           >
             {lang === "tr" ? "İncele" : "View"}
           </Link>
         </div>
 
         {/* Price */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="text-xl font-extrabold tracking-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+              className="text-base font-semibold tracking-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.04)]"
               style={{ color: "var(--brand-primary)" }}
             >
               {formatPrice(product.price)}
@@ -288,7 +288,7 @@ export default function ProductCard({ product }: { product: Product }) {
             )}
           </div>
           <span
-            className={`text-[11px] font-medium ${
+            className={`text-[10px] font-medium ${
               product.stock && product.stock > 0 ? "" : "text-red-500"
             }`}
             style={
@@ -307,7 +307,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
         {typeof product.stock === "number" && product.stock > 0 && (
-          <div className="mt-2 h-1.5 w-full rounded-full bg-gray-200">
+          <div className="mt-1.5 h-1 w-full rounded-full bg-gray-200">
             <div
               className="h-full rounded-full transition-all"
               style={{
@@ -323,7 +323,7 @@ export default function ProductCard({ product }: { product: Product }) {
         style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-fade-in">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-3 py-1.5 text-[11px] font-medium text-white shadow-lg animate-fade-in">
           {lang === "tr" ? "Sepete eklendi" : "Added to cart"} ✓
         </div>
       )}
