@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Product } from "@/types";
 import { useCart } from "@/context/cart-context";
 import { Heart } from "lucide-react";
-import { useLanguage } from "@/app/layout";
+import { useLanguage } from "@/context/language-context";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [adding, setAdding] = useState(false);
