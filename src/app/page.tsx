@@ -17,12 +17,11 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/products`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/products`, {
+    next: { revalidate: 60 },
+  });
   const products = await res.json();
 
   if (!Array.isArray(products)) {
