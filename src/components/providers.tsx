@@ -11,17 +11,7 @@ export default function Providers({ children }: { children: ReactNode }) {
     <LanguageProvider>
       <AuthProvider>
         <ToastProvider>
-          <CartProvider>
-            <div className="flex min-h-screen flex-col">
-              {/* Navbar is here */}
-              <Navbar />
-
-              <main className="flex-1">{children}</main>
-
-              {/* Footer is here */}
-              <Footer />
-            </div>
-          </CartProvider>
+          <CartProvider>{children}</CartProvider>
         </ToastProvider>
       </AuthProvider>
     </LanguageProvider>
