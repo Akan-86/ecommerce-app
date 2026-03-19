@@ -5,8 +5,6 @@ import { LanguageProvider } from "@/context/language-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ToastProvider } from "@/context/toast-context";
 import { CartProvider } from "@/context/cart-context";
-import Navbar from "@/components/navbar";
-import { Footer } from "@/components/home/footer";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
