@@ -177,7 +177,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <button
             data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
-            className="mb-4 rounded-full px-6 py-2.5 text-sm font-semibold btn-primary shadow-lg hover:scale-105 hover:shadow-xl active:scale-[0.96] transition-all duration-300"
+            className="btn btn-primary-modern mb-4 shadow-lg hover:scale-105 hover:shadow-xl active:scale-[0.96] transition-all duration-300"
           >
             {lang === "tr" ? "Hızlı ekle" : "Quick add"}
           </button>
@@ -228,7 +228,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center px-2.5 py-1.5 text-xs font-medium btn-primary shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
+            className="flex-1 inline-flex items-center justify-center btn btn-primary-modern shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -257,7 +257,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-brand-200 px-2.5 py-1.5 text-xs font-medium text-brand-700 transition-all duration-250 hover:border-brand-500 hover:text-brand-900 hover:bg-brand-100 active:scale-[0.97] hover:shadow-card"
+            className="flex-1 inline-flex items-center justify-center btn btn-secondary-modern"
           >
             {lang === "tr" ? "İncele" : "View"}
           </Link>
