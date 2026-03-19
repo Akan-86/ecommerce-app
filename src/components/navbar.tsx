@@ -108,27 +108,29 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-3xl backdrop-saturate-200 transition-all duration-300 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
         scrolled
           ? "bg-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-black/5"
           : "bg-white/60 border-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-18 flex items-center justify-between text-brand-900 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 relative">
         <Link
           href="/"
           data-testid="site-logo"
           className="group font-black tracking-tight text-xl flex items-center gap-2"
         >
-          <span className="text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide group-hover:scale-105">
-            Velora
-            <span className="text-[var(--brand-primary)] group-hover:opacity-80">
-              .
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black">
+              V
+            </div>
+            <span className="text-lg font-semibold tracking-tight">
+              Velora<span className="text-[var(--brand-primary)]">.</span>
             </span>
-          </span>
+          </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-10">
           {/* Search */}
           <div className="relative">
             <input
@@ -155,7 +157,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-72 rounded-xl border border-brand-200 bg-white/80 px-4 py-2 text-sm outline-none focus:ring-2 backdrop-blur transition-all duration-300 focus:w-80"
+              className="w-64 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 transition-all duration-200 focus:w-72"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
@@ -208,7 +210,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <nav className="flex items-center gap-8 text-sm font-medium">
+          <nav className="flex items-center gap-6 text-sm font-medium">
             {[
               {
                 href: "/products",
@@ -249,14 +251,14 @@ export default function Navbar() {
           {/* Language Toggle */}
           <button
             onClick={() => setLang(lang === "tr" ? "en" : "tr")}
-            className="hidden sm:inline-flex items-center rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-bold hover:bg-brand-100 transition"
+            className="hidden sm:inline-flex items-center rounded-md border border-brand-200 px-2 py-1 text-xs font-medium hover:bg-brand-100 transition"
             aria-label="Toggle language"
           >
             {lang === "tr" ? "EN" : "TR"}
           </button>
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden inline-flex items-center justify-center rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold hover:bg-brand-100 transition"
+            className="md:hidden inline-flex items-center justify-center rounded-md border border-brand-200 px-2 py-2 text-sm hover:bg-brand-100 transition"
             aria-label="Toggle mobile menu"
           >
             ☰
@@ -264,7 +266,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold btn-primary hover:scale-[1.07] active:scale-[0.96] transition-all duration-300 shadow-sm hover:shadow-md"
+            className="group relative inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-[var(--brand-primary)] text-white hover:opacity-90 transition"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -284,11 +286,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className={`relative inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold shadow transition transform ${
-              accountOpen
-                ? "bg-white text-slate-900 scale-[1.03]"
-                : "bg-white border border-brand-200 text-brand-900 hover:shadow-card hover:scale-[1.05] transition-all duration-300"
-            }`}
+            className="relative inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm font-medium border border-brand-200 bg-white hover:shadow-sm transition"
             aria-label="Toggle account menu"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-white text-xs font-black">
