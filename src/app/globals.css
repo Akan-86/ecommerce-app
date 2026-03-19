@@ -118,6 +118,18 @@ button:active {
   transform: translateY(1px);
 }
 
+.btn {
+  @apply rounded-lg px-4 py-2 text-sm font-medium transition;
+}
+
+.btn-primary-modern {
+  @apply bg-black text-white hover:opacity-90;
+}
+
+.btn-secondary-modern {
+  @apply border border-gray-300 text-gray-700 hover:bg-gray-100;
+}
+
 /* ---------- Images ---------- */
 img {
   display: block;
