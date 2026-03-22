@@ -108,7 +108,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-300 ${
         scrolled
           ? "bg-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-black/5"
           : "bg-white/60 border-transparent"
@@ -266,7 +266,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-[var(--brand-primary)] text-white hover:opacity-90 transition"
+            className="group relative inline-flex items-center gap-2 btn btn-primary-modern"
             aria-label="Open shopping cart"
           >
             🛒{" "}
