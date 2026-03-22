@@ -156,7 +156,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-            className={`object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-115 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
             onError={() => setImgError(true)}
             onLoad={() => setImgLoaded(true)}
             priority={false}
@@ -168,12 +168,12 @@ export default function ProductCard({ product }: { product: Product }) {
               alt={`${product.title} secondary`}
               fill
               sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 90vw"
-              className="object-cover opacity-0 scale-105 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:scale-100"
+              className="object-cover opacity-0 scale-105 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100 group-hover:scale-100"
             />
           ) : null}
         </div>
 
-        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 translate-y-4 transition-all duration-400 ease-out group-hover:opacity-100 group-hover:translate-y-0">
           <button
             data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
