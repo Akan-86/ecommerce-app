@@ -39,13 +39,13 @@ export default function HeroSection({ products }: { products: Product[] }) {
 
         {/* RIGHT */}
         <div className="flex justify-center">
-          <div className="w-[420px] h-[420px] relative">
+          <div className="w-[380px] h-[380px] md:w-[420px] md:h-[420px] relative">
             {heroProduct?.image ? (
               <Image
                 src={heroProduct.image}
                 alt={heroProduct.title}
                 fill
-                className="object-contain"
+                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-105"
               />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm">
