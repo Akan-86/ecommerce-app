@@ -5,17 +5,28 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata = {
+  title: "VELORA — Modern E-commerce Store",
+  description: "Minimal products. Maximum quality.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
+
 interface RootLayoutProps {
   children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="h-full scroll-smooth">
+    <html lang="en" className="h-full scroll-smooth bg-white">
       <body
         className={`${inter.className} min-h-screen bg-white text-gray-900 antialiased`}
       >
         <Providers>
+          <div className="fixed top-4 left-6 z-50 text-lg font-semibold tracking-tight">
+            VELORA
+          </div>
           <main data-testid="main-content" className="flex-1 pt-16">
             <section
               data-testid="page-container"
