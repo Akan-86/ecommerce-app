@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import AdminLayoutClient from "@/components/admin/AdminLayoutClient";
+import AdminLayoutClient from "./AdminLayoutClient";
 
 export const metadata = {
   title: "Admin Panel",
