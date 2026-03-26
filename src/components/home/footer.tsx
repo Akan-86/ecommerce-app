@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="mt-24 bg-black text-white">
       {/* TOP TRUST BAR */}
