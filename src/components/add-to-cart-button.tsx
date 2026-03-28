@@ -3,11 +3,10 @@
 import { useCart } from "@/context/cart-context";
 import type { Product } from "@/lib/types";
 import { useState } from "react";
-import { useLanguage } from "@/app/layout";
+const lang = "en";
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { add } = useCart();
-  const { lang } = useLanguage();
   const [state, setState] = useState<"idle" | "loading" | "success">("idle");
   const [showToast, setShowToast] = useState(false);
 
