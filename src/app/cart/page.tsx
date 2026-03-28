@@ -8,8 +8,8 @@ import { useCart } from "@/context/cart-context";
 import { RemoveFromCartButton } from "@/components/remove-from-cart-button";
 import { useAuth } from "@/context/auth-context";
 import Spinner from "@/components/Spinner";
-import { useLanguage } from "@/app/layout";
 
+const lang = "en";
 export default function CartPage() {
   const {
     displayItems: items,
@@ -21,7 +21,6 @@ export default function CartPage() {
   } = useCart();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { lang } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const FREE_SHIPPING_THRESHOLD = 100;
