@@ -4,13 +4,15 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "VELORA — Modern E-commerce Store",
-  description: "Minimal products. Maximum quality.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
+export async function generateMetadata() {
+  return {
+    title: "VELORA — Modern E-commerce Store",
+    description: "Minimal products. Maximum quality.",
+    icons: {
+      icon: "/favicon.ico",
+    },
+  };
+}
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -25,6 +27,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div className="fixed top-4 left-6 z-50 text-lg font-semibold tracking-tight">
           VELORA
         </div>
+
         <main data-testid="main-content" className="flex-1 pt-16">
           <section
             data-testid="page-container"
