@@ -118,18 +118,30 @@ button:active {
   transform: translateY(1px);
 }
 
-@layer components {
-  .btn {
-    @apply rounded-lg px-4 py-2 text-sm font-medium transition;
-  }
+.btn {
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
 
-  .btn-primary-modern {
-    @apply bg-black text-white hover:opacity-90;
-  }
+.btn-primary-modern {
+  background: black;
+  color: white;
+}
 
-  .btn-secondary-modern {
-    @apply border border-gray-300 text-gray-700 hover:bg-gray-100;
-  }
+.btn-primary-modern:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary-modern {
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btn-secondary-modern:hover {
+  background: #f3f4f6;
 }
 
 /* ---------- Images ---------- */
