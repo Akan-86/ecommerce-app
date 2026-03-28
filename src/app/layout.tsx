@@ -4,16 +4,6 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export async function generateMetadata() {
-  return {
-    title: "VELORA — Modern E-commerce Store",
-    description: "Minimal products. Maximum quality.",
-    icons: {
-      icon: "/favicon.ico",
-    },
-  };
-}
-
 interface RootLayoutProps {
   children: ReactNode;
 }
