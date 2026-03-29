@@ -16,11 +16,19 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-  const res = await fetch(`${baseUrl}/api/products`, {
-    next: { revalidate: 60 },
+  const res = await fetch("/api/products", {
+    cache: "no-store",
   });
+
+  if (!res.ok) {
+    console.error("API ERROR:", await res.text());
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-sm text-gray-500">API Error</p>
+      </main>
+    );
+  }
+
   const products = await res.json();
 
   if (!Array.isArray(products)) {
