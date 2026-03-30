@@ -72,9 +72,9 @@ export default function ProductCard({ product }: { product: Product }) {
       : "/placeholder.png";
 
   const formatPrice = (value: number) =>
-    new Intl.NumberFormat("de-DE", {
+    new Intl.NumberFormat(lang === "tr" ? "tr-TR" : "de-DE", {
       style: "currency",
-      currency: "EUR",
+      currency: lang === "tr" ? "TRY" : "EUR",
     }).format(value);
 
   const handleAddToCart = async (e?: React.MouseEvent) => {
@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <article
       data-testid="product-card"
-      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200/70 bg-white/90 backdrop-blur shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       {/* Image */}
       <Link
@@ -144,7 +144,7 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         </button>
 
-        <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
+        <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden rounded-t-2xl">
           {!imgLoaded && (
             <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100" />
           )}
@@ -177,7 +177,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <button
             data-testid="quick-add"
             onClick={(e) => handleAddToCart(e)}
-            className="btn btn-primary-modern mb-4 shadow-lg hover:scale-105 hover:shadow-xl active:scale-[0.96] transition-all duration-300"
+            className="btn btn-primary-modern mb-4 shadow-lg hover:scale-105 hover:shadow-2xl active:scale-[0.96] transition-all duration-300"
           >
             {lang === "tr" ? "Hızlı ekle" : "Quick add"}
           </button>
@@ -192,7 +192,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 text-sm font-medium leading-snug text-gray-900 transition-all duration-200 group-hover:text-brand-700 group-hover:translate-x-[1px]">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 tracking-tight transition-all duration-200 group-hover:text-brand-700">
             {product.title}
           </h3>
 
@@ -228,7 +228,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center btn btn-primary-modern shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300"
+            className="flex-1 inline-flex items-center justify-center btn btn-primary-modern shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] transition-all duration-300"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -267,7 +267,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="mt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="text-base font-semibold tracking-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+              className="text-lg font-bold tracking-tight"
               style={{ color: "var(--brand-primary)" }}
             >
               {formatPrice(product.price)}
@@ -319,11 +319,11 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-all duration-500 group-hover:opacity-100 bg-gradient-to-t from-black/[0.03] via-transparent to-transparent"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-all duration-500 group-hover:opacity-100 bg-gradient-to-t from-black/[0.04] via-transparent to-transparent"
         style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-3 py-1.5 text-[11px] font-medium text-white shadow-lg animate-fade-in">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/90 backdrop-blur px-4 py-2 text-[11px] font-medium text-white shadow-xl animate-fade-in">
           {lang === "tr" ? "Sepete eklendi" : "Added to cart"} ✓
         </div>
       )}
