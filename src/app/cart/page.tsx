@@ -106,7 +106,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto mt-20 max-w-6xl px-4">
+    <div className="mx-auto mt-24 max-w-6xl px-4">
       {showToast && lastAction && (
         <div className="fixed bottom-6 right-6 z-50 rounded-xl bg-gray-900 px-4 py-3 text-sm text-white shadow-lg animate-fadeIn">
           {lastAction.type === "add" &&
@@ -121,7 +121,7 @@ export default function CartPage() {
             (lang === "tr" ? "Sepet temizlendi" : "Cart cleared")}
         </div>
       )}
-      <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
+      <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900">
         {lang === "tr" ? "Alışveriş Sepeti" : "Shopping Cart"}
       </h1>
       <div className="mb-8 flex items-center justify-between">
@@ -140,11 +140,11 @@ export default function CartPage() {
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
         {/* Cart items */}
-        <div className="md:col-span-2 rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+        <div className="md:col-span-2 rounded-3xl border border-gray-200 bg-white p-8 shadow-sm hover:shadow-md transition">
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col gap-6 border-b border-gray-100 py-6 last:border-b-0 sm:flex-row sm:items-center sm:justify-between animate-fadeIn"
+              className="flex flex-col gap-6 border-b border-gray-100 py-6 last:border-b-0 sm:flex-row sm:items-center sm:justify-between animate-fadeIn hover:bg-gray-50 rounded-xl px-3 transition"
             >
               <div className="flex items-center gap-4">
                 <Link
@@ -207,7 +207,7 @@ export default function CartPage() {
         </div>
 
         {/* Order summary */}
-        <div className="sticky top-28 h-fit rounded-3xl border border-gray-200 bg-gradient-to-b from-white to-gray-50 p-8 shadow-md">
+        <div className="sticky top-28 h-fit rounded-3xl border border-gray-200 bg-gradient-to-b from-white to-gray-50 p-8 shadow-lg hover:shadow-xl transition">
           <h3 className="mb-6 text-lg font-semibold text-gray-900">
             {lang === "tr" ? "Sipariş Özeti" : "Order Summary"}
           </h3>
@@ -301,6 +301,10 @@ export default function CartPage() {
                 ? "📦 Hızlı gönderim"
                 : "📦 Fast worldwide shipping"}
             </p>
+          </div>
+          <div className="mt-6 border-t border-gray-200 pt-4 text-center text-xs text-gray-400">
+            <p>🚚 Free returns within 30 days</p>
+            <p>⭐ Trusted by 10,000+ customers</p>
           </div>
         </div>
       </div>
