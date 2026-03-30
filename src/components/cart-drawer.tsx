@@ -49,14 +49,14 @@ export function CartDrawer() {
       {/* Backdrop */}
       <div
         onClick={close}
-        className={`fixed inset-0 bg-black/40 backdrop-blur-md transition-all duration-250 ease-out z-40 ${
+        className={`fixed inset-0 bg-black/50 backdrop-blur-lg transition-all duration-300 ease-out z-40 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       {/* Drawer */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-modal z-50 transform transition-all duration-250 ease-out flex flex-col ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-modal z-50 transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -106,7 +106,7 @@ export function CartDrawer() {
             items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-250 hover:bg-brand-100 hover:border-brand-200"
+                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-300 hover:bg-brand-100 hover:border-brand-200 hover:scale-[1.02]"
                 style={{
                   transitionDelay: `${index * 60}ms`,
                   opacity: isOpen ? 1 : 0,
@@ -137,7 +137,7 @@ export function CartDrawer() {
                     </Link>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-xs text-red-500 hover:underline transition active:scale-95"
+                      className="text-xs text-gray-400 hover:text-red-500 transition"
                     >
                       Remove
                     </button>
@@ -150,7 +150,7 @@ export function CartDrawer() {
                           if (item.quantity <= 1) return;
                           updateQuantity(item.id, item.quantity - 1);
                         }}
-                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-95"
+                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-90 font-semibold"
                       >
                         -
                       </button>
@@ -159,7 +159,7 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
                         }
-                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-95"
+                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-90 font-semibold"
                       >
                         +
                       </button>
@@ -194,7 +194,7 @@ export function CartDrawer() {
                   </p>
                   <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-brand-500 transition-all duration-500"
+                      className="h-full bg-brand-500 transition-all duration-700 ease-out"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -223,7 +223,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-250 hover:-translate-y-0.5 hover:shadow-card active:scale-95"
+              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-95"
             >
               Proceed to Checkout
             </Link>
