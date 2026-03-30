@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <article
       data-testid="product-card"
-      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200/70 bg-white/90 backdrop-blur shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-xl shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-gray-300/80"
     >
       {/* Image */}
       <Link
@@ -172,6 +172,7 @@ export default function ProductCard({ product }: { product: Product }) {
             />
           ) : null}
         </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
 
         <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 translate-y-4 transition-all duration-400 ease-out group-hover:opacity-100 group-hover:translate-y-0">
           <button
@@ -192,7 +193,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 tracking-tight transition-all duration-200 group-hover:text-brand-700">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 tracking-tight transition-all duration-300 group-hover:text-brand-700 group-hover:tracking-normal">
             {product.title}
           </h3>
 
@@ -228,7 +229,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={(e) => handleAddToCart(e)}
             disabled={adding}
             aria-busy={adding}
-            className="flex-1 inline-flex items-center justify-center btn btn-primary-modern shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] transition-all duration-300"
+            className="flex-1 inline-flex items-center justify-center btn btn-primary-modern shadow-md hover:shadow-2xl hover:scale-[1.04] active:scale-[0.96] transition-all duration-300"
           >
             {adding ? (
               <span className="flex items-center gap-2">
@@ -267,7 +268,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="mt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="text-lg font-bold tracking-tight"
+              className="text-lg font-bold tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]"
               style={{ color: "var(--brand-primary)" }}
             >
               {formatPrice(product.price)}
@@ -323,7 +324,7 @@ export default function ProductCard({ product }: { product: Product }) {
         style={{ boxShadow: "inset 0 0 0 1px rgba(15,23,42,0.08)" }}
       />
       {showToast && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/90 backdrop-blur px-4 py-2 text-[11px] font-medium text-white shadow-xl animate-fade-in">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/90 backdrop-blur-xl px-4 py-2 text-[11px] font-medium text-white shadow-2xl animate-fade-in">
           {lang === "tr" ? "Sepete eklendi" : "Added to cart"} ✓
         </div>
       )}
