@@ -108,10 +108,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-300 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-2xl transition-all duration-500 ${
         scrolled
-          ? "bg-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-black/5"
-          : "bg-white/60 border-transparent"
+          ? "bg-white/80 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-black/5"
+          : "bg-white/40 border-transparent"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 relative">
@@ -121,7 +121,7 @@ export default function Navbar() {
           className="group font-black tracking-tight text-xl flex items-center gap-2"
         >
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black shadow-md">
               V
             </div>
             <span className="text-lg font-semibold tracking-tight">
@@ -157,7 +157,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-64 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 transition-all duration-200 focus:w-72"
+              className="w-64 rounded-xl border border-brand-200 bg-white/80 backdrop-blur px-4 py-2 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-72 shadow-sm"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
@@ -235,7 +235,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-transform duration-300 ease-out group-hover:opacity-100 opacity-80 ${
+                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-600 via-purple-500 to-fuchsia-600 transition-transform duration-300 ease-out group-hover:opacity-100 opacity-80 ${
                       active
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
@@ -266,7 +266,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 btn btn-primary-modern"
+            className="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-600 text-white px-4 py-2 text-sm font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -286,7 +286,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm font-medium border border-brand-200 bg-white hover:shadow-sm transition"
+            className="relative inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm font-medium border border-brand-200 bg-white/80 backdrop-blur hover:shadow-md transition"
             aria-label="Toggle account menu"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-white text-xs font-black">
@@ -305,7 +305,7 @@ export default function Navbar() {
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-60 rounded-3xl bg-white text-brand-900 shadow-elevated border border-brand-200 z-50 overflow-hidden backdrop-blur-xl">
+            <div className="absolute right-0 top-full mt-3 w-60 rounded-2xl bg-white/90 backdrop-blur-xl text-brand-900 shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-brand-200 z-50 overflow-hidden">
               <div className="p-2">
                 {!user ? (
                   <>
