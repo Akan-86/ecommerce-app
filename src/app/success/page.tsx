@@ -106,21 +106,27 @@ export default function SuccessPage() {
           </>
         ) : (
           <>
-            <div className="mx-auto mb-6 h-20 w-20 rounded-3xl bg-green-50 flex items-center justify-center shadow-inner">
-              <span className="text-3xl">✓</span>
+            <div className="mx-auto mb-8 h-24 w-24 rounded-[2rem] bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.08),0_10px_30px_rgba(0,0,0,0.08)] animate-[scaleIn_0.4s_ease-out]">
+              <span className="text-4xl">✓</span>
             </div>
-            <h1 className="text-4xl font-semibold tracking-tight text-gray-900 mb-3">
-              Payment Successful
+
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
+              Order Confirmed
             </h1>
-            <p className="text-gray-600 text-base leading-relaxed mb-4">
-              Thanks for your order! We’ve received your payment and your order
-              is being processed.
+
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 max-w-md mx-auto">
+              Your payment has been successfully processed. We’re preparing your
+              order and will keep you updated every step of the way.
             </p>
-            <p className="text-sm text-gray-500 mb-6">
-              Redirecting to your orders in {redirectCountdown}s...
+
+            <p className="text-sm text-gray-400 mb-8">
+              Redirecting to your orders in{" "}
+              <span className="font-medium text-gray-700">
+                {redirectCountdown}s
+              </span>
             </p>
             {orderId && (
-              <div className="bg-gray-50 border border-black/5 rounded-2xl py-4 px-6 mb-8 shadow-sm">
+              <div className="bg-gradient-to-b from-gray-50 to-white border border-black/5 rounded-2xl py-5 px-6 mb-10 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
                 <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
                   Order ID
                 </p>
@@ -128,16 +134,16 @@ export default function SuccessPage() {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-2">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center rounded-2xl bg-black px-6 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_10px_25px_-10px_rgba(0,0,0,0.6)] active:scale-[0.98]"
+                className="inline-flex items-center justify-center rounded-2xl bg-black px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] active:scale-[0.97]"
               >
                 Continue Shopping
               </Link>
               <Link
                 href="/orders"
-                className="inline-flex items-center justify-center rounded-2xl border border-black/10 px-6 py-3.5 text-sm font-medium transition-all duration-300 hover:bg-gray-50 hover:shadow-sm active:scale-[0.98]"
+                className="inline-flex items-center justify-center rounded-2xl border border-black/10 px-7 py-3.5 text-sm font-medium transition-all duration-300 hover:bg-gray-50 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] active:scale-[0.97]"
               >
                 View Orders
               </Link>
