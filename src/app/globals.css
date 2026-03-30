@@ -11,6 +11,21 @@
   --brand-gradient-start: #ecfdf5;
   --brand-gradient-end: #f0fdf4;
   --brand-glow: rgba(16, 185, 129, 0.35);
+
+  --brand-text-primary: #0f172a;
+  --brand-text-secondary: #64748b;
+  --brand-border: #e5e7eb;
+
+  /* Dark mode tokens */
+  --brand-dark-bg: #0b0f1a;
+  --brand-dark-surface: #111827;
+  --brand-dark-border: #1f2937;
+  --brand-dark-text: #e5e7eb;
+}
+
+.dark {
+  --brand-bg-soft: var(--brand-dark-bg);
+  --brand-text-primary: var(--brand-dark-text);
 }
 
 /* ---------- Base Reset ---------- */
@@ -28,7 +43,7 @@ body {
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
-  color: #0f172a; /* brand-900 aligned */
+  color: var(--brand-text-primary);
   font-family:
     ui-sans-serif,
     system-ui,
@@ -90,21 +105,22 @@ input,
 select,
 textarea {
   border-radius: 0.75rem;
-  border: 1px solid #e2e8f0; /* brand-200 */
+  border: 1px solid var(--brand-border);
   background-color: #ffffff;
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   transition:
     box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    background-color 0.25s ease;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--brand-dark-surface);
+  border: 1px solid var(--brand-dark-border);
+  color: var(--brand-dark-text);
 }
 
 /* ---------- Buttons (global feel) ---------- */
@@ -155,15 +171,17 @@ img {
 .surface-card {
   background: #ffffff;
   border-radius: 1rem;
-  border: 1px solid #e2e8f0; /* brand-200 */
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15); /* shadow-card */
+  border: 1px solid var(--brand-border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
   transition:
     box-shadow 0.25s ease,
-    transform 0.25s ease;
+    transform 0.25s ease,
+    background-color 0.25s ease;
 }
 
-.surface-card:hover {
-  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.25); /* shadow-elevated */
+.dark .surface-card {
+  background: var(--brand-dark-surface);
+  border: 1px solid var(--brand-dark-border);
 }
 
 /* ---------- Soft Fade Animation ---------- */
@@ -229,6 +247,11 @@ img {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 1rem;
+}
+
+.dark .glass-surface {
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ---------- Premium Button Variant ---------- */
@@ -307,4 +330,8 @@ img {
   100% {
     transform: translateX(100%);
   }
+}
+
+.fade-in-soft {
+  animation: fadeIn 0.4s ease-out forwards;
 }
