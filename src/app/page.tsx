@@ -16,7 +16,13 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const res = await fetch("/api/products", {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+
+  const res = await fetch(`${baseUrl}/api/products`, {
     cache: "no-store",
   });
 
