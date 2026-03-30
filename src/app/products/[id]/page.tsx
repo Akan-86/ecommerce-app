@@ -158,7 +158,7 @@ export default function ProductDetail() {
       <div className="grid grid-cols-1 gap-12 md:gap-16 md:grid-cols-2 items-start">
         {/* Product Image */}
         <div className="space-y-6">
-          <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 shadow-2xl group">
+          <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.35)] group">
             {safeProduct?.sale && (
               <div className="absolute top-4 left-4 z-10 rounded-full bg-red-500 text-white text-xs font-bold px-3 py-1 shadow">
                 SALE
@@ -242,10 +242,21 @@ export default function ProductDetail() {
               <li>✔ Fast worldwide shipping</li>
               <li>✔ 30‑day money‑back guarantee</li>
             </ul>
+            <div className="flex flex-wrap gap-3 pt-3 text-xs">
+              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+                Free returns
+              </span>
+              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+                Secure checkout
+              </span>
+              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+                Fast delivery
+              </span>
+            </div>
           </div>
 
           {/* Pricing Card */}
-          <div className="rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.15)] hover:shadow-[0_40px_90px_-20px_rgba(0,0,0,0.18)] transition-shadow space-y-6 sm:space-y-8">
+          <div className="rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.25)] hover:shadow-[0_50px_120px_-30px_rgba(0,0,0,0.3)] transition-all duration-300 space-y-6 sm:space-y-8">
             <div className="flex items-end gap-4">
               <span
                 className="text-5xl font-extrabold tracking-tight"
@@ -311,8 +322,14 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col gap-3">
                 <AddToCartButton product={safeProduct} />
+                <Link
+                  href="/checkout"
+                  className="w-full text-center rounded-xl border border-black/10 py-3 text-sm font-medium hover:bg-gray-50 transition"
+                >
+                  Buy now
+                </Link>
               </div>
             </div>
           </div>
@@ -412,7 +429,7 @@ export default function ProductDetail() {
       {/* Related Products */}
       {related.length > 0 && (
         <div className="mt-28">
-          <h2 className="text-3xl font-extrabold mb-12 text-gray-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-12 text-gray-900 tracking-tight">
             You may also like
           </h2>
 
@@ -449,7 +466,7 @@ export default function ProductDetail() {
       )}
 
       {showStickyCart && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur-xl shadow-[0_-20px_60px_rgba(0,0,0,0.15)] transition-all">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex items-center justify-between gap-6">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">{safeProduct.title}</span>
@@ -485,7 +502,7 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              <div className="min-w-[180px]">
+              <div className="min-w-[200px]">
                 <AddToCartButton product={safeProduct} />
               </div>
             </div>
