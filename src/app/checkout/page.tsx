@@ -42,14 +42,19 @@ export default function CheckoutPage() {
     }
   };
 
-  /* ---------------- Loading State ---------------- */
-  if (loading || !user) {
+  /* ---------------- Loading & Auth State ---------------- */
+  if (loading) {
     return (
       <div className="mt-40 flex flex-col items-center gap-4 text-sm text-gray-500">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
         <span aria-live="polite">Preparing secure checkout…</span>
       </div>
     );
+  }
+
+  if (!user) {
+    router.push("/login");
+    return null;
   }
 
   /* ---------------- Empty State ---------------- */
@@ -76,7 +81,9 @@ export default function CheckoutPage() {
   return (
     <div
       className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24 lg:py-32 fade-in"
-      style={{ backgroundColor: "var(--brand-bg-soft)" }}
+      style={{
+        background: "linear-gradient(to bottom, var(--brand-bg-soft), #ffffff)",
+      }}
     >
       {processing && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
@@ -133,7 +140,7 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-3">
         {/* Checkout Form */}
-        <section className="lg:col-span-2 rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)] transition-all duration-300">
+        <section className="lg:col-span-2 rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_25px_70px_-25px_rgba(0,0,0,0.2)] transition-all duration-300 hover:shadow-[0_35px_90px_-25px_rgba(0,0,0,0.25)]">
           <CheckoutForm
             items={items}
             userId={user.uid}
@@ -148,7 +155,7 @@ export default function CheckoutPage() {
         </section>
 
         {/* Order Summary */}
-        <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_30px_80px_-25px_rgba(0,0,0,0.25)] lg:sticky lg:top-32 h-fit transition-all duration-300">
+        <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.3)] lg:sticky lg:top-32 h-fit transition-all duration-300 hover:shadow-[0_50px_120px_-30px_rgba(0,0,0,0.35)]">
           <h2 className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
             Order Summary
           </h2>
@@ -206,7 +213,7 @@ export default function CheckoutPage() {
 
           <Link
             href={processing ? "#" : "/cart"}
-            className={`mt-8 block text-center text-sm link-accent transition-opacity duration-300 hover:opacity-70 ${processing ? "pointer-events-none opacity-40" : ""}`}
+            className={`mt-8 block text-center text-sm font-medium tracking-wide link-accent transition-all duration-300 hover:opacity-70 hover:translate-x-[-2px] ${processing ? "pointer-events-none opacity-40" : ""}`}
           >
             ← Back to cart
           </Link>
