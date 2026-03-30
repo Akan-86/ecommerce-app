@@ -50,7 +50,7 @@ export default async function Page() {
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-b from-white via-white to-gray-50">
         <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(600px_300px_at_80%_20%,rgba(99,102,241,0.15),transparent),radial-gradient(500px_250px_at_20%_60%,rgba(217,70,239,0.12),transparent)]" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-20 md:py-24 grid md:grid-cols-2 items-center gap-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-24 md:py-28 grid md:grid-cols-2 items-center gap-12">
           {/* LEFT */}
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 backdrop-blur px-3 py-1 text-xs font-medium text-gray-600 shadow-sm">
@@ -84,18 +84,32 @@ export default async function Page() {
                 New arrivals
               </Link>
             </div>
+
+            <div className="flex items-center gap-6 pt-4 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                ⭐ <span className="font-medium text-gray-700">4.9/5</span>
+              </div>
+              <div>10K+ customers</div>
+              <div>Free worldwide shipping</div>
+            </div>
           </div>
 
           {/* RIGHT */}
-          <div className="flex justify-center">
-            <div className="w-[380px] h-[380px] relative rounded-3xl bg-white/70 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.12)] border border-black/5 p-6">
+          <div className="flex justify-center relative">
+            <div className="absolute -inset-10 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-fuchsia-500/20 blur-3xl opacity-40" />
+            <div className="w-[380px] h-[380px] relative rounded-3xl bg-white/70 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.12)] border border-black/5 p-6 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_40px_100px_rgba(0,0,0,0.18)]">
               {products?.[0]?.image ? (
-                <Image
-                  src={products[0].image}
-                  alt={products[0].title}
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                />
+                <>
+                  <Image
+                    src={products[0].image}
+                    alt={products[0].title}
+                    fill
+                    className="object-contain drop-shadow-2xl"
+                  />
+                  <div className="absolute top-4 left-4 rounded-full bg-black/80 text-white text-[10px] px-3 py-1 backdrop-blur">
+                    Best pick
+                  </div>
+                </>
               ) : (
                 <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm">
                   Product preview
