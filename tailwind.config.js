@@ -9,18 +9,27 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
+          50: "#f9fafb",
+          100: "#f3f4f6",
+          200: "#e5e7eb",
+          300: "#d1d5db",
+          400: "#9ca3af",
+          500: "#6b7280",
+          600: "#4b5563",
+          700: "#374151",
+          800: "#1f2937",
+          900: "#111827",
+          primary: "#0f172a",
+          secondary: "#1e293b",
           accent: "#f59e0b",
+          success: "#10b981",
+          danger: "#ef4444",
         },
+      },
+
+      backgroundColor: {
+        "brand-soft": "#f8fafc",
+        "brand-dark": "#0b0f1a",
       },
 
       fontFamily: {
@@ -41,8 +50,9 @@ module.exports = {
 
       boxShadow: {
         card: "0 10px 30px -10px rgba(0,0,0,0.15)",
-        elevated: "0 20px 60px -15px rgba(0,0,0,0.25)",
-        modal: "0 30px 80px -20px rgba(0,0,0,0.35)",
+        elevated: "0 25px 70px -20px rgba(0,0,0,0.3)",
+        modal: "0 40px 120px -30px rgba(0,0,0,0.35)",
+        glow: "0 0 0 1px rgba(255,255,255,0.05), 0 10px 40px rgba(0,0,0,0.25)",
       },
 
       transitionDuration: {
@@ -58,3 +68,17 @@ module.exports = {
   },
   plugins: [],
 };
+
+      backdropBlur: {
+        xs: "2px",
+      },
+
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0, transform: "translateY(10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.4s ease-out",
+      },
