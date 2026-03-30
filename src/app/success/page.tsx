@@ -85,7 +85,7 @@ export default function SuccessPage() {
               <span className="text-2xl">⏳</span>
             </div>
             <p className="text-gray-600 text-base" aria-live="polite">
-              Processing your order...
+              Finalizing your order securely...
             </p>
           </>
         ) : error ? (
@@ -107,7 +107,16 @@ export default function SuccessPage() {
         ) : (
           <>
             <div className="mx-auto mb-8 h-24 w-24 rounded-[2rem] bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.08),0_10px_30px_rgba(0,0,0,0.08)] animate-[scaleIn_0.4s_ease-out]">
-              <span className="text-4xl">✓</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                className="h-10 w-10 text-green-600"
+              >
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
@@ -115,18 +124,22 @@ export default function SuccessPage() {
             </h1>
 
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 max-w-md mx-auto">
-              Your payment has been successfully processed. We’re preparing your
-              order and will keep you updated every step of the way.
+              Your order has been successfully placed. A confirmation email has
+              been sent, and we’re already preparing your items for shipment.
+            </p>
+
+            <p className="text-xs text-gray-400 mb-6">
+              🔒 Secure payment · 📦 Fast processing · 💬 24/7 support
             </p>
 
             <p className="text-sm text-gray-400 mb-8">
-              Redirecting to your orders in{" "}
-              <span className="font-medium text-gray-700">
+              Redirecting you to your orders in{" "}
+              <span className="font-semibold text-gray-800">
                 {redirectCountdown}s
               </span>
             </p>
             {orderId && (
-              <div className="bg-gradient-to-b from-gray-50 to-white border border-black/5 rounded-2xl py-5 px-6 mb-10 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+              <div className="bg-gradient-to-b from-gray-50 to-white border border-black/5 rounded-2xl py-5 px-6 mb-10 shadow-lg">
                 <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
                   Order ID
                 </p>
@@ -147,6 +160,12 @@ export default function SuccessPage() {
               >
                 View Orders
               </Link>
+              <button
+                onClick={() => router.push("/orders")}
+                className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-green-700 hover:shadow-xl active:scale-[0.97]"
+              >
+                Go to Orders Now
+              </button>
             </div>
           </>
         )}
