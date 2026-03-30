@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/context/cart-context";
+import confetti from "canvas-confetti";
 
 export default function SuccessPage() {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,20 @@ export default function SuccessPage() {
 
   useEffect(() => {
     if (!loading && !error) {
+      // 🎉 Confetti burst
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 60,
+          spread: 100,
+          origin: { y: 0.7 },
+        });
+      }, 300);
+
       const interval = setInterval(() => {
         setRedirectCountdown((prev) => {
           if (prev <= 1) {
