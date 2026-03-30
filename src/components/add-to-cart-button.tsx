@@ -34,7 +34,7 @@ export function AddToCartButton({ product }: { product: Product }) {
         setState("idle");
         setShowToast(false);
       }, 1500);
-    }, 400);
+    }, 250);
   };
 
   return (
@@ -42,14 +42,14 @@ export function AddToCartButton({ product }: { product: Product }) {
       <button
         onClick={handleAdd}
         disabled={state === "loading"}
-        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.95] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[2px] ${state === "loading" ? "opacity-90" : ""}`}
+        aria-busy={state === "loading"}
+        aria-live="polite"
+        className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.95] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${state === "loading" ? "opacity-90 cursor-not-allowed" : ""}`}
         style={{
-          backgroundColor:
-            state === "success"
-              ? "var(--brand-primary)"
-              : "var(--brand-primary)",
+          backgroundColor: "var(--brand-primary)",
           boxShadow:
             state === "success" ? "0 0 0 4px rgba(5,150,105,0.15)" : undefined,
+          transform: state === "success" ? "scale(1.02)" : undefined,
         }}
       >
         {state === "loading" && (
@@ -90,7 +90,7 @@ export function AddToCartButton({ product }: { product: Product }) {
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
-            className="h-4 w-4 animate-[pop_0.3s_ease]"
+            className="h-4 w-4 animate-[pop_0.35s_ease]"
           >
             <path d="M20 6L9 17l-5-5" />
           </svg>
@@ -108,18 +108,18 @@ export function AddToCartButton({ product }: { product: Product }) {
               : "Add to Cart"}
       </button>
       {showToast && (
-        <div className="fixed bottom-6 right-6 bg-black text-white text-sm px-5 py-3 rounded-xl shadow-2xl animate-[toastIn_0.4s_ease]">
-          <span className="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              className="h-4 w-4"
-            >
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
+        <div className="fixed bottom-6 right-6 bg-black text-white text-sm px-5 py-3 rounded-xl shadow-2xl animate-[toastIn_0.4s_ease] flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            className="h-4 w-4"
+          >
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+          <span>
             {lang === "tr" ? "Ürün sepete eklendi" : "Product added to cart"}
           </span>
         </div>
