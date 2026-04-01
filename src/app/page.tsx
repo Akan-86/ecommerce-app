@@ -16,19 +16,15 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-
   let products: any[] = [];
 
   try {
-    const res = await fetch(`${baseUrl}/api/products`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/products`,
+      {
+        cache: "no-store",
+      }
+    );
 
     const data = await res.json();
 
@@ -43,10 +39,10 @@ export default async function Page() {
 
   console.log("PRODUCT COUNT:", products?.length);
 
-  if (!Array.isArray(products) || products.length === 0) {
+  if (!Array.isArray(products)) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-gray-500">No products found.</p>
+        <p className="text-sm text-gray-500">Data error.</p>
       </main>
     );
   }

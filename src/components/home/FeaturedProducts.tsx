@@ -5,6 +5,7 @@ type Product = {
   title: string;
   price: number;
   image?: string;
+  imageUrl?: string;
 };
 
 export default function FeaturedProducts({
@@ -13,6 +14,14 @@ export default function FeaturedProducts({
   products: Product[];
 }) {
   const featured = products?.slice(0, 8) || [];
+
+  if (!featured.length) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 py-20 text-center">
+        <p className="text-sm text-gray-500">Ürün bulunamadı.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="relative mx-auto max-w-7xl px-6 py-20 md:py-24">
@@ -44,7 +53,9 @@ export default function FeaturedProducts({
             key={product.id}
             className="group transition duration-500 hover:-translate-y-1"
           >
-            <ProductCard product={product} />
+            <ProductCard
+              product={{ ...product, image: product.image || product.imageUrl }}
+            />
 
             <div className="mt-2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition duration-300 tracking-wide">
               Hızlı teslimat · Güvenli ödeme
