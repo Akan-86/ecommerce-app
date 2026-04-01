@@ -50,71 +50,63 @@ export default async function Page() {
   return (
     <main className="relative z-0">
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-white to-gray-50">
-        <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(600px_300px_at_80%_20%,rgba(99,102,241,0.15),transparent),radial-gradient(500px_250px_at_20%_60%,rgba(217,70,239,0.12),transparent)]" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-24 md:py-28 grid md:grid-cols-2 items-center gap-12">
+      <section className="relative overflow-hidden bg-white dark:bg-black">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50 to-transparent dark:via-white/5" />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-24 md:py-28 grid md:grid-cols-2 items-center gap-16">
           {/* LEFT */}
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 backdrop-blur px-3 py-1 text-xs font-medium text-gray-600 shadow-sm">
-              ✨ Premium curated store
-            </div>
-            <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 leading-[1.05]">
-              Minimal products.
+            <span className="inline-block text-xs font-semibold tracking-wider text-gray-500 dark:text-white/60 uppercase">
+              Premium Collection
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 dark:text-white leading-tight">
+              Discover products
               <br />
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-500 to-fuchsia-600 bg-clip-text text-transparent">
-                Maximum quality.
-              </span>
+              that elevate your life
             </h1>
 
-            <p className="text-gray-500 text-lg max-w-md leading-relaxed">
-              Carefully curated essentials for everyday life. Built for quality
-              and simplicity with a premium touch.
+            <p className="text-gray-500 dark:text-white/60 text-lg max-w-md leading-relaxed">
+              Modern essentials designed for comfort, quality and style. Built
+              for people who value simplicity.
             </p>
 
             <div className="flex gap-4 pt-2">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-600 text-white px-6 py-3 text-sm font-semibold shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
               >
                 Shop now
               </Link>
 
               <Link
                 href="/products?sort=new"
-                className="inline-flex items-center justify-center rounded-xl border border-black/10 bg-white/80 backdrop-blur px-6 py-3 text-sm font-medium hover:bg-white transition"
+                className="inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-6 py-3 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition"
               >
                 New arrivals
               </Link>
             </div>
 
-            <div className="flex items-center gap-6 pt-4 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                ⭐ <span className="font-medium text-gray-700">4.9/5</span>
-              </div>
-              <div>10K+ customers</div>
-              <div>Free worldwide shipping</div>
+            <div className="flex items-center gap-6 pt-4 text-xs text-gray-500 dark:text-white/60">
+              <div>✔ Free shipping</div>
+              <div>✔ 30-day returns</div>
+              <div>✔ Secure checkout</div>
             </div>
           </div>
 
           {/* RIGHT */}
           <div className="flex justify-center relative">
-            <div className="absolute -inset-10 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-fuchsia-500/20 blur-3xl opacity-40" />
-            <div className="w-[380px] h-[380px] relative rounded-3xl bg-white/70 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.12)] border border-black/5 p-6 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_40px_100px_rgba(0,0,0,0.18)]">
+            <div className="relative w-[320px] sm:w-[380px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
               {products?.[0]?.imageUrl ? (
-                <>
-                  <Image
-                    src={products[0].imageUrl}
-                    alt={products[0].title}
-                    fill
-                    className="object-contain drop-shadow-2xl"
-                  />
-                  <div className="absolute top-4 left-4 rounded-full bg-black/80 text-white text-[10px] px-3 py-1 backdrop-blur">
-                    Best pick
-                  </div>
-                </>
+                <Image
+                  src={products[0].imageUrl}
+                  alt={products[0].title}
+                  fill
+                  className="object-cover"
+                />
               ) : (
                 <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm">
-                  Product preview
+                  Preview
                 </div>
               )}
             </div>
