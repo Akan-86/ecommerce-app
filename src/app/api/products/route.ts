@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { NextResponse, NextRequest } from "next/server";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
@@ -17,6 +19,17 @@ const db = getFirestore(adminApp);
 
 export async function GET(req: NextRequest) {
   try {
+    if (
+      !process.env.FIREBASE_PROJECT_ID ||
+      !process.env.FIREBASE_CLIENT_EMAIL ||
+      !process.env.FIREBASE_PRIVATE_KEY
+    ) {
+      console.error("Missing Firebase env vars");
+      return NextResponse.json(
+        { error: "Server misconfigured (Firebase env missing)" },
+        { status: 500 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
     const minPrice = Number(searchParams.get("minPrice") || 0);
@@ -90,12 +103,19 @@ export async function GET(req: NextRequest) {
       products = products.sort((a, b) => Number(b.price) - Number(a.price));
     }
     if (sort === "new") {
-      products = products.sort(
-        (a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0)
-      );
+      products = products.sort((a, b) => {
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
     }
 
-    return NextResponse.json(products);
+    return NextResponse.json(products, {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+      },
+    });
   } catch (error) {
     console.error("GET PRODUCTS ERROR:", error);
     return NextResponse.json(
