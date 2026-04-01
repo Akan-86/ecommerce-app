@@ -110,12 +110,12 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl ${
         scrolled
-          ? "bg-white/70 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-b border-black/5"
-          : "bg-white/40 border-b border-transparent"
+          ? "bg-white/70 dark:bg-black/60 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-b border-black/5 dark:border-white/10"
+          : "bg-white/40 dark:bg-black/40 border-b border-transparent"
       }`}
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 dark:text-white relative">
         <Link
           href="/"
           data-testid="site-logo"
@@ -158,14 +158,14 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-64 rounded-2xl border border-brand-200/60 bg-white/70 backdrop-blur-xl px-4 py-2 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-72 shadow-[0_8px_25px_rgba(0,0,0,0.06)]"
+              className="w-64 rounded-2xl border border-brand-200/60 bg-white/70 dark:bg-black/50 backdrop-blur-xl px-4 py-2 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-72 shadow-[0_8px_25px_rgba(0,0,0,0.06)]"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
               🔍
             </span>
             {showSuggestions && (
-              <div className="absolute left-0 right-0 mt-3 rounded-2xl border border-brand-200/60 bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50">
+              <div className="absolute left-0 right-0 mt-3 rounded-2xl border border-brand-200/60 bg-white/90 dark:bg-black/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50">
                 {loadingSuggestions && (
                   <div className="px-4 py-3 text-sm text-brand-600">
                     {lang === "tr" ? "Aranıyor..." : "Searching..."}
@@ -230,8 +230,8 @@ export default function Navbar() {
                   href={link.href}
                   className={`group relative transition-colors duration-300${
                     active
-                      ? " text-brand-900"
-                      : " text-brand-600 hover:text-brand-900"
+                      ? " text-brand-900 dark:text-white"
+                      : " text-brand-600 hover:text-brand-900 dark:text-white/70 dark:hover:text-white"
                   } hover:opacity-90`}
                 >
                   {link.label}
@@ -306,7 +306,7 @@ export default function Navbar() {
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-60 rounded-2xl bg-white/90 backdrop-blur-2xl text-brand-900 shadow-[0_30px_80px_rgba(0,0,0,0.18)] border border-brand-200/60 z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-3 w-60 rounded-2xl bg-white/90 dark:bg-black/80 backdrop-blur-2xl text-brand-900 dark:text-white shadow-[0_30px_80px_rgba(0,0,0,0.18)] border border-brand-200/60 z-50 overflow-hidden">
               <div className="p-2">
                 {!user ? (
                   <>
@@ -365,7 +365,7 @@ export default function Navbar() {
         </div>
       </div>
       {mobileOpen && (
-        <div className="md:hidden border-t border-brand-200 bg-white/90 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+        <div className="md:hidden border-t border-brand-200 bg-white/90 dark:bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
             <button
               onClick={() => {
