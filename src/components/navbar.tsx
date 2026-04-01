@@ -108,7 +108,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl ${
+      className={`sticky top-0 z-50 transition-all duration-500 backdrop-blur-xl ${
         scrolled
           ? "bg-white/70 dark:bg-black/60 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-b border-black/5 dark:border-white/10"
           : "bg-white/40 dark:bg-black/40 border-b border-transparent"
@@ -122,16 +122,16 @@ export default function Navbar() {
           className="group font-black tracking-tight text-xl flex items-center gap-2 transition-transform duration-300 hover:scale-[1.03]"
         >
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black shadow-md">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black shadow-sm">
               V
             </div>
-            <span className="text-lg font-semibold tracking-tight">
+            <span className="text-xl font-bold tracking-tight">
               Velora<span className="text-[var(--brand-primary)]">.</span>
             </span>
           </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-6">
           {/* Search */}
           <div className="relative">
             <input
@@ -158,7 +158,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-64 rounded-2xl border border-brand-200/60 bg-white/70 dark:bg-black/50 backdrop-blur-xl px-4 py-2 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-72 shadow-[0_8px_25px_rgba(0,0,0,0.06)]"
+              className="w-56 rounded-xl border border-brand-200/50 bg-white/60 dark:bg-black/40 backdrop-blur-md px-3 py-1.5 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-64 shadow-sm"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
@@ -211,7 +211,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <nav className="flex items-center gap-6 text-sm font-medium">
+          <nav className="flex items-center gap-4 text-sm font-medium">
             {[
               {
                 href: "/products",
@@ -228,20 +228,13 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`group relative transition-colors duration-300${
+                  className={`transition-all duration-200 px-3 py-1 rounded-lg ${
                     active
-                      ? " text-brand-900 dark:text-white"
-                      : " text-brand-600 hover:text-brand-900 dark:text-white/70 dark:hover:text-white"
-                  } hover:opacity-90`}
+                      ? "bg-brand-100 text-brand-900 dark:bg-white/10 dark:text-white"
+                      : "text-brand-600 hover:bg-brand-100 dark:text-white/70 dark:hover:bg-white/10"
+                  }`}
                 >
                   {link.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-600 via-purple-500 to-fuchsia-600 transition-transform duration-300 ease-out group-hover:opacity-100 opacity-80 ${
-                      active
-                        ? "scale-x-100"
-                        : "scale-x-0 group-hover:scale-x-100"
-                    }`}
-                  />
                 </Link>
               );
             })}
@@ -252,7 +245,7 @@ export default function Navbar() {
           {/* Language Toggle */}
           <button
             onClick={() => setLang(lang === "tr" ? "en" : "tr")}
-            className="hidden sm:inline-flex items-center rounded-md border border-brand-200 px-2 py-1 text-xs font-medium hover:bg-brand-100 transition"
+            className="hidden sm:inline-flex items-center rounded-lg border border-brand-200/50 px-2 py-1 text-xs font-medium hover:bg-brand-100 transition"
             aria-label="Toggle language"
           >
             {lang === "tr" ? "EN" : "TR"}
@@ -267,7 +260,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-600 text-white px-4 py-2 text-sm font-semibold shadow-[0_10px_30px_rgba(99,102,241,0.4)] hover:shadow-[0_15px_40px_rgba(99,102,241,0.5)] hover:scale-[1.04] active:scale-[0.97] transition-all duration-300"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-4 py-2 text-sm font-semibold hover:opacity-90 transition-all duration-200"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -287,7 +280,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm font-medium border border-brand-200/60 bg-white/70 backdrop-blur-xl hover:shadow-md hover:scale-[1.02] transition-all duration-300"
+            className="relative inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-medium border border-brand-200/50 bg-white/60 backdrop-blur-md hover:bg-brand-100 transition-all duration-200"
             aria-label="Toggle account menu"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-white text-xs font-black">
@@ -365,7 +358,7 @@ export default function Navbar() {
         </div>
       </div>
       {mobileOpen && (
-        <div className="md:hidden border-t border-brand-200 bg-white/90 dark:bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+        <div className="md:hidden border-t border-brand-200 bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-md">
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
             <button
               onClick={() => {
