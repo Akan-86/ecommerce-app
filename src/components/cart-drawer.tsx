@@ -56,7 +56,7 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-modal z-50 transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-black shadow-modal z-50 transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -119,7 +119,7 @@ export function CartDrawer() {
                   className="relative w-20 h-24 rounded-lg overflow-hidden bg-gray-100 block"
                 >
                   <Image
-                    src={item.thumbnail}
+                    src={item.imageUrl || item.thumbnail || "/placeholder.png"}
                     alt={item.title}
                     fill
                     className="object-cover"
@@ -131,13 +131,13 @@ export function CartDrawer() {
                     <Link
                       href={`/products/${item.id}`}
                       onClick={close}
-                      className="text-sm font-semibold text-gray-900 line-clamp-1 hover:underline"
+                      className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1 hover:underline"
                     >
                       {item.title}
                     </Link>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-xs text-gray-400 hover:text-red-500 transition"
+                      className="text-xs text-gray-400 hover:text-red-500 dark:text-white/50 transition"
                     >
                       Remove
                     </button>
@@ -180,7 +180,7 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-brand-200 px-6 py-6 space-y-5 bg-white">
+          <div className="border-t border-brand-200 px-6 py-6 space-y-5 bg-white dark:bg-black">
             <div className="space-y-4">
               {total < FREE_SHIPPING_THRESHOLD ? (
                 <div className="space-y-2">
