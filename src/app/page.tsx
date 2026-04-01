@@ -18,6 +18,7 @@ export const metadata = {
 export default async function Page() {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXT_PUBLIC_BASE_URL ||
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
@@ -36,11 +37,12 @@ export default async function Page() {
   }
 
   const products = await res.json();
+  console.log("PRODUCT COUNT:", products?.length);
 
-  if (!Array.isArray(products)) {
+  if (!Array.isArray(products) || products.length === 0) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-gray-500">Unable to load products.</p>
+        <p className="text-sm text-gray-500">No products found.</p>
       </main>
     );
   }
@@ -98,10 +100,10 @@ export default async function Page() {
           <div className="flex justify-center relative">
             <div className="absolute -inset-10 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-fuchsia-500/20 blur-3xl opacity-40" />
             <div className="w-[380px] h-[380px] relative rounded-3xl bg-white/70 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.12)] border border-black/5 p-6 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_40px_100px_rgba(0,0,0,0.18)]">
-              {products?.[0]?.image ? (
+              {products?.[0]?.imageUrl ? (
                 <>
                   <Image
-                    src={products[0].image}
+                    src={products[0].imageUrl}
                     alt={products[0].title}
                     fill
                     className="object-contain drop-shadow-2xl"
