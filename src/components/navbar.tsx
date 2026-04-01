@@ -108,14 +108,16 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-500 backdrop-blur-xl ${
+      className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-xl ${
         scrolled
           ? "bg-white/70 dark:bg-black/60 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-b border-black/5 dark:border-white/10"
           : "bg-white/40 dark:bg-black/40 border-b border-transparent"
       }`}
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between text-brand-900 dark:text-white relative">
+      <div
+        className={`mx-auto max-w-7xl px-4 sm:px-6 ${scrolled ? "h-16" : "h-20"} flex items-center justify-between text-brand-900 dark:text-white relative transition-all duration-300`}
+      >
         <Link
           href="/"
           data-testid="site-logo"
@@ -228,7 +230,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`transition-all duration-200 px-3 py-1 rounded-lg ${
+                  className={`transition-all duration-200 px-3 py-1 rounded-lg hover:scale-[1.04] active:scale-[0.98] ${
                     active
                       ? "bg-brand-100 text-brand-900 dark:bg-white/10 dark:text-white"
                       : "text-brand-600 hover:bg-brand-100 dark:text-white/70 dark:hover:bg-white/10"
@@ -260,7 +262,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-4 py-2 text-sm font-semibold hover:opacity-90 transition-all duration-200"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-4 py-2 text-sm font-semibold hover:opacity-90 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
             aria-label="Open shopping cart"
           >
             🛒{" "}
