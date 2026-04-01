@@ -18,49 +18,43 @@ export default function FeaturedProducts({
   if (!featured.length) {
     return (
       <section className="mx-auto max-w-7xl px-6 py-20 text-center">
-        <p className="text-sm text-gray-500">Ürün bulunamadı.</p>
+        <p className="text-sm text-gray-500 dark:text-white/60">
+          No products found.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="relative mx-auto max-w-7xl px-6 py-20 md:py-24">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50/60 to-transparent" />
+    <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50/60 to-transparent dark:via-white/5" />
       <div className="flex items-end justify-between mb-10">
         <div>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">
-            Öne Çıkan Ürünler
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+            Featured Products
           </h2>
-          <p className="text-sm text-gray-500 mt-3 max-w-md">
-            Senin için seçtiğimiz premium ürünler
+          <p className="text-sm text-gray-500 dark:text-white/60 mt-3 max-w-md">
+            Curated premium picks just for you
           </p>
         </div>
 
         <a
           href="/products"
-          className="text-sm font-medium text-gray-900 hidden md:inline-flex items-center gap-1 group"
+          className="text-sm font-medium text-gray-900 dark:text-white hidden md:inline-flex items-center gap-1 group"
         >
-          Tümünü gör
+          View all
           <span className="transition-transform group-hover:translate-x-1">
             →
           </span>
         </a>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
         {featured.map((product) => (
-          <div
+          <ProductCard
             key={product.id}
-            className="group transition duration-500 hover:-translate-y-1"
-          >
-            <ProductCard
-              product={{ ...product, image: product.image || product.imageUrl }}
-            />
-
-            <div className="mt-2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition duration-300 tracking-wide">
-              Hızlı teslimat · Güvenli ödeme
-            </div>
-          </div>
+            product={{ ...product, image: product.image || product.imageUrl }}
+          />
         ))}
       </div>
     </section>
