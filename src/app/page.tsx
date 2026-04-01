@@ -23,20 +23,24 @@ export default async function Page() {
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
 
-  const res = await fetch(`${baseUrl}/api/products`, {
-    cache: "no-store",
-  });
+  let products: any[] = [];
 
-  if (!res.ok) {
-    console.error("API ERROR:", await res.text());
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-gray-500">API Error</p>
-      </main>
-    );
+  try {
+    const res = await fetch(`${baseUrl}/api/products`, {
+      cache: "no-store",
+    });
+
+    const data = await res.json();
+
+    if (Array.isArray(data)) {
+      products = data;
+    } else {
+      console.error("Invalid product data:", data);
+    }
+  } catch (err) {
+    console.error("Fetch error:", err);
   }
 
-  const products = await res.json();
   console.log("PRODUCT COUNT:", products?.length);
 
   if (!Array.isArray(products) || products.length === 0) {
