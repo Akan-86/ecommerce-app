@@ -15,14 +15,37 @@ export default function FeaturedProducts({
 }) {
   const featured = products?.slice(0, 8) || [];
 
-  if (!featured.length) {
-    return (
-      <section className="mx-auto max-w-7xl px-6 py-20 text-center">
-        <p className="text-sm text-gray-500 dark:text-white/60">
-          No products found.
-        </p>
-      </section>
-    );
+  const fallback = [
+    {
+      id: "1",
+      title: "Black Sunglass",
+      price: 89,
+      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083",
+    },
+    {
+      id: "2",
+      title: "Modern Desk Lamp",
+      price: 49.9,
+      image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    },
+    {
+      id: "3",
+      title: "Blue Denim Jean",
+      price: 109,
+      image: "https://images.unsplash.com/photo-1542272604-787c3835535d",
+    },
+    {
+      id: "4",
+      title: "Wireless Headphones",
+      price: 199,
+      image: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd",
+    },
+  ];
+
+  const displayProducts = featured.length ? featured : fallback;
+
+  if (!displayProducts.length) {
+    return null;
   }
 
   return (
@@ -50,7 +73,7 @@ export default function FeaturedProducts({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8">
-        {featured.map((product) => (
+        {displayProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={{ ...product, image: product.image || product.imageUrl }}
