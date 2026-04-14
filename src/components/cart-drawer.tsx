@@ -61,7 +61,7 @@ export function CartDrawer() {
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-brand-200">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-black/5 dark:border-white/10">
           <div className="flex items-center gap-2 font-semibold">
             <ShoppingBag size={18} />
             Your Cart
@@ -95,7 +95,7 @@ export function CartDrawer() {
                   <Link
                     href="/products"
                     onClick={close}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold btn-primary transition-all duration-250 active:scale-[0.97]"
+                    className="px-4 py-2 rounded-full text-sm font-semibold bg-black text-white dark:bg-white dark:text-black transition-all duration-300 hover:opacity-90 active:scale-[0.97]"
                   >
                     Browse Products
                   </Link>
@@ -106,7 +106,7 @@ export function CartDrawer() {
             items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-300 hover:bg-brand-100 hover:border-brand-200 hover:scale-[1.02]"
+                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/5 hover:scale-[1.02]"
                 style={{
                   transitionDelay: `${index * 60}ms`,
                   opacity: isOpen ? 1 : 0,
@@ -150,7 +150,7 @@ export function CartDrawer() {
                           if (item.quantity <= 1) return;
                           updateQuantity(item.id, item.quantity - 1);
                         }}
-                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-90 font-semibold"
+                        className="hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 active:scale-[0.9] font-semibold px-3 py-1"
                       >
                         -
                       </button>
@@ -159,16 +159,13 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
                         }
-                        className="px-3 py-1 hover:bg-gray-100 transition active:scale-90 font-semibold"
+                        className="hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 active:scale-[0.9] font-semibold px-3 py-1"
                       >
                         +
                       </button>
                     </div>
 
-                    <span
-                      className="text-sm font-semibold"
-                      style={{ color: "var(--brand-primary)" }}
-                    >
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
@@ -194,7 +191,7 @@ export function CartDrawer() {
                   </p>
                   <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-brand-500 transition-all duration-700 ease-out"
+                      className="h-full bg-black dark:bg-white transition-all duration-700 ease-out"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -207,10 +204,7 @@ export function CartDrawer() {
 
               <div className="flex justify-between text-sm font-medium">
                 <span>Subtotal</span>
-                <span
-                  className="text-lg font-semibold"
-                  style={{ color: "var(--brand-primary)" }}
-                >
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">
                   ${total.toFixed(2)}
                 </span>
               </div>
@@ -223,7 +217,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="block text-center px-5 py-3 rounded-xl text-sm font-semibold text-white btn-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-95"
+              className="block text-center px-5 py-3 rounded-full text-sm font-semibold bg-black text-white dark:bg-white dark:text-black transition-all duration-300 hover:opacity-90 active:scale-[0.97]"
             >
               Proceed to Checkout
             </Link>
