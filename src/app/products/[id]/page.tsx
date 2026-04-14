@@ -210,7 +210,7 @@ export default function ProductDetail() {
               </span>
             )}
 
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 leading-tight">
               {safeProduct.title}
             </h1>
             <div className="flex items-center gap-2 text-sm">
@@ -234,7 +234,7 @@ export default function ProductDetail() {
               <span className="text-gray-600">4.8 · 124 reviews</span>
             </div>
 
-            <p className="text-base leading-relaxed text-gray-600 max-w-lg">
+            <p className="text-base leading-relaxed text-gray-500 max-w-md">
               {safeProduct.description}
             </p>
             <ul className="text-sm text-gray-500 space-y-1 pt-2">
@@ -258,10 +258,7 @@ export default function ProductDetail() {
           {/* Pricing Card */}
           <div className="rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.25)] hover:shadow-[0_50px_120px_-30px_rgba(0,0,0,0.3)] transition-all duration-300 space-y-6 sm:space-y-8">
             <div className="flex items-end gap-4">
-              <span
-                className="text-5xl font-extrabold tracking-tight"
-                style={{ color: "var(--brand-primary)" }}
-              >
+              <span className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-white">
                 {Number(safeProduct.price).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
@@ -307,7 +304,7 @@ export default function ProductDetail() {
               <div className="flex items-center border border-black/10 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-4 py-2 text-lg hover:bg-gray-100"
+                  className="px-4 py-2 text-lg transition hover:bg-black/5 active:scale-95"
                 >
                   −
                 </button>
@@ -316,17 +313,18 @@ export default function ProductDetail() {
                 </span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="px-4 py-2 text-lg hover:bg-gray-100"
+                  className="px-4 py-2 text-lg transition hover:bg-black/5 active:scale-95"
                 >
                   +
                 </button>
               </div>
-
               <div className="flex-1 flex flex-col gap-3">
-                <AddToCartButton product={safeProduct} />
+                <div className="opacity-90">
+                  <AddToCartButton product={safeProduct} />
+                </div>
                 <Link
                   href="/checkout"
-                  className="w-full text-center rounded-xl border border-black/10 py-3 text-sm font-medium hover:bg-gray-50 transition"
+                  className="w-full text-center rounded-full bg-black text-white dark:bg-white dark:text-black py-3 text-sm font-semibold hover:opacity-90 transition-all duration-300"
                 >
                   Buy now
                 </Link>
@@ -345,28 +343,28 @@ export default function ProductDetail() {
         <div className="flex gap-6 border-b border-black/10 mb-8 text-sm font-semibold">
           <button
             onClick={() => setActiveTab("description")}
-            className={`pb-3 transition ${activeTab === "description" ? "border-b-2 border-black text-black" : "text-gray-500 hover:text-black"}`}
+            className={`pb-3 transition-all duration-300 ${activeTab === "description" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"}`}
           >
             Description
           </button>
 
           <button
             onClick={() => setActiveTab("details")}
-            className={`pb-3 transition ${activeTab === "details" ? "border-b-2 border-black text-black" : "text-gray-500 hover:text-black"}`}
+            className={`pb-3 transition-all duration-300 ${activeTab === "details" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"}`}
           >
             Details
           </button>
 
           <button
             onClick={() => setActiveTab("shipping")}
-            className={`pb-3 transition ${activeTab === "shipping" ? "border-b-2 border-black text-black" : "text-gray-500 hover:text-black"}`}
+            className={`pb-3 transition-all duration-300 ${activeTab === "shipping" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"}`}
           >
             Shipping
           </button>
 
           <button
             onClick={() => setActiveTab("reviews")}
-            className={`pb-3 transition ${activeTab === "reviews" ? "border-b-2 border-black text-black" : "text-gray-500 hover:text-black"}`}
+            className={`pb-3 transition-all duration-300 ${activeTab === "reviews" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"}`}
           >
             Reviews
           </button>
@@ -429,7 +427,7 @@ export default function ProductDetail() {
       {/* Related Products */}
       {related.length > 0 && (
         <div className="mt-28">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-12 text-gray-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-12 text-gray-900 tracking-tight">
             You may also like
           </h2>
 
@@ -466,14 +464,11 @@ export default function ProductDetail() {
       )}
 
       {showStickyCart && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur-xl shadow-[0_-20px_60px_rgba(0,0,0,0.15)] transition-all">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur-xl shadow-[0_-20px_60px_rgba(0,0,0,0.15)] transition-all duration-300 backdrop-blur-xl">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex items-center justify-between gap-6">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">{safeProduct.title}</span>
-              <span
-                className="text-lg font-bold"
-                style={{ color: "var(--brand-primary)" }}
-              >
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
                 {Number(safeProduct.price).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
@@ -485,7 +480,7 @@ export default function ProductDetail() {
               <div className="flex items-center border border-black/10 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-4 py-2 text-lg hover:bg-gray-100"
+                  className="px-4 py-2 text-lg transition hover:bg-black/5 active:scale-95"
                 >
                   −
                 </button>
@@ -496,14 +491,16 @@ export default function ProductDetail() {
 
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="px-4 py-2 text-lg hover:bg-gray-100"
+                  className="px-4 py-2 text-lg transition hover:bg-black/5 active:scale-95"
                 >
                   +
                 </button>
               </div>
 
               <div className="min-w-[200px]">
-                <AddToCartButton product={safeProduct} />
+                <div className="opacity-90">
+                  <AddToCartButton product={safeProduct} />
+                </div>
               </div>
             </div>
           </div>
