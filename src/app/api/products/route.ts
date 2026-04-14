@@ -24,11 +24,33 @@ export async function GET(req: NextRequest) {
       !process.env.FIREBASE_CLIENT_EMAIL ||
       !process.env.FIREBASE_PRIVATE_KEY
     ) {
-      console.error("Missing Firebase env vars");
-      return NextResponse.json(
-        { error: "Server misconfigured (Firebase env missing)" },
-        { status: 500 }
-      );
+      console.warn("Firebase env missing → returning mock products");
+      return NextResponse.json([
+        {
+          id: "1",
+          title: "Black Sunglass",
+          price: 89,
+          category: "accessories",
+          thumbnail:
+            "https://images.unsplash.com/photo-1511499767150-a48a237f0083",
+        },
+        {
+          id: "2",
+          title: "Modern Desk Lamp",
+          price: 49.9,
+          category: "home",
+          thumbnail:
+            "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+        },
+        {
+          id: "3",
+          title: "Blue Denim Jean",
+          price: 109,
+          category: "fashion",
+          thumbnail:
+            "https://images.unsplash.com/photo-1542272604-787c3835535d",
+        },
+      ]);
     }
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
@@ -40,6 +62,37 @@ export async function GET(req: NextRequest) {
     const search = (searchParams.get("search") || "").toLowerCase();
 
     const snapshot = await db.collection("products").get();
+
+    if (snapshot.empty) {
+      console.warn("No products in DB → returning mock data");
+      return NextResponse.json([
+        {
+          id: "1",
+          title: "Black Sunglass",
+          price: 89,
+          category: "accessories",
+          thumbnail:
+            "https://images.unsplash.com/photo-1511499767150-a48a237f0083",
+        },
+        {
+          id: "2",
+          title: "Modern Desk Lamp",
+          price: 49.9,
+          category: "home",
+          thumbnail:
+            "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+        },
+        {
+          id: "3",
+          title: "Blue Denim Jean",
+          price: 109,
+          category: "fashion",
+          thumbnail:
+            "https://images.unsplash.com/photo-1542272604-787c3835535d",
+        },
+      ]);
+    }
+
     let products = snapshot.docs.map((doc) => {
       const data = doc.data() as any;
 
