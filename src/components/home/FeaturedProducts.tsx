@@ -26,21 +26,21 @@ export default function FeaturedProducts({
   }
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50/60 to-transparent dark:via-white/5" />
-      <div className="flex items-end justify-between mb-10">
+    <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50/40 to-transparent dark:via-white/3" />
+      <div className="flex items-end justify-between mb-16">
         <div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white">
             Featured Products
           </h2>
-          <p className="text-sm text-gray-500 dark:text-white/60 mt-3 max-w-md">
+          <p className="text-sm text-gray-400 dark:text-white/50 mt-4 max-w-sm">
             Curated premium picks just for you
           </p>
         </div>
 
         <a
           href="/products"
-          className="text-sm font-medium text-gray-900 dark:text-white hidden md:inline-flex items-center gap-1 group"
+          className="text-sm font-medium text-gray-900 dark:text-white hidden md:inline-flex items-center gap-2 group hover:opacity-80 transition"
         >
           View all
           <span className="transition-transform group-hover:translate-x-1">
@@ -49,7 +49,7 @@ export default function FeaturedProducts({
         </a>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8">
         {featured.map((product) => (
           <ProductCard
             key={product.id}
