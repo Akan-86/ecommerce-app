@@ -79,14 +79,9 @@ export default function CheckoutPage() {
 
   /* ---------------- Checkout Layout ---------------- */
   return (
-    <div
-      className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24 lg:py-32 fade-in animate-[fadeIn_0.6s_ease]"
-      style={{
-        background: "linear-gradient(to bottom, var(--brand-bg-soft), #ffffff)",
-      }}
-    >
+    <div className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24 lg:py-32 fade-in animate-[fadeIn_0.6s_ease]">
       {processing && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-md">
           <div className="flex flex-col items-center gap-3 text-sm text-gray-700">
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
             <span>Processing your order securely…</span>
@@ -98,33 +93,21 @@ export default function CheckoutPage() {
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 leading-tight">
           Secure Checkout
         </h1>
-        <p className="mt-3 text-base text-gray-500">
+        <p className="mt-3 text-sm text-gray-400">
           Complete your purchase with confidence.
         </p>
       </div>
 
       <div className="mb-10 sm:mb-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-xs font-medium text-center animate-[fadeIn_0.8s_ease]">
-        <div
-          className="flex items-center gap-2"
-          style={{ color: "var(--brand-primary)" }}
-        >
-          <span
-            className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px]"
-            style={{ backgroundColor: "var(--brand-primary)" }}
-          >
+        <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <span className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px] bg-black dark:bg-white dark:text-black">
             1
           </span>
           Cart
         </div>
         <div className="h-px w-10 bg-gray-300" />
-        <div
-          className="flex items-center gap-2"
-          style={{ color: "var(--brand-primary)" }}
-        >
-          <span
-            className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px]"
-            style={{ backgroundColor: "var(--brand-primary)" }}
-          >
+        <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <span className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[11px] bg-black dark:bg-white dark:text-black">
             2
           </span>
           Checkout
@@ -140,7 +123,7 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-3">
         {/* Checkout Form */}
-        <section className="lg:col-span-2 rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_45px_110px_-30px_rgba(0,0,0,0.3)] hover:-translate-y-[2px]">
+        <section className="lg:col-span-2 rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.25)]">
           <CheckoutForm
             items={items}
             userId={user.uid}
@@ -155,7 +138,7 @@ export default function CheckoutPage() {
         </section>
 
         {/* Order Summary */}
-        <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_45px_120px_-40px_rgba(0,0,0,0.35)] lg:sticky lg:top-32 h-fit transition-all duration-300 hover:shadow-[0_60px_140px_-40px_rgba(0,0,0,0.4)] hover:-translate-y-[2px]">
+        <aside className="rounded-3xl border border-black/5 bg-white p-6 sm:p-8 shadow-[0_45px_120px_-40px_rgba(0,0,0,0.35)] lg:sticky lg:top-32 h-fit transition-all duration-300 hover:shadow-[0_60px_140px_-40px_rgba(0,0,0,0.35)]">
           <h2 className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
             Order Summary
           </h2>
@@ -168,7 +151,7 @@ export default function CheckoutPage() {
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between gap-4 pt-4 first:pt-0 transition-all duration-200 hover:bg-gray-50 rounded-xl px-2"
+                className="flex items-center justify-between gap-4 pt-4 first:pt-0 transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl px-2"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <img
@@ -197,7 +180,7 @@ export default function CheckoutPage() {
 
           <div className="mt-6 sm:mt-8 flex justify-between border-t border-black/10 pt-6 sm:pt-8 text-lg sm:text-xl font-semibold text-gray-900 items-center">
             <span>Total</span>
-            <span style={{ color: "var(--brand-primary)" }}>
+            <span className="text-gray-900 dark:text-white">
               {new Intl.NumberFormat("de-DE", {
                 style: "currency",
                 currency: "EUR",
@@ -205,7 +188,7 @@ export default function CheckoutPage() {
             </span>
           </div>
 
-          <div className="mt-10 rounded-3xl border border-black/5 bg-gradient-to-br from-gray-50 to-white p-6 text-sm text-gray-600 space-y-3 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="mt-10 rounded-3xl border border-black/5 bg-white dark:bg-black p-6 text-sm text-gray-600 space-y-3 shadow-md hover:shadow-lg transition-all duration-300">
             <p>✔ Free returns within 14 days</p>
             <p>✔ Fast & secure checkout</p>
             <p className="pt-2 text-gray-400">Powered by Stripe</p>
@@ -213,7 +196,7 @@ export default function CheckoutPage() {
 
           <Link
             href={processing ? "#" : "/cart"}
-            className={`mt-8 block text-center text-sm font-medium tracking-wide link-accent transition-all duration-300 hover:opacity-70 hover:-translate-x-1 ${processing ? "pointer-events-none opacity-40" : ""}`}
+            className={`mt-8 block text-center text-sm font-medium tracking-wide link-accent transition-all duration-300 hover:opacity-70 ${processing ? "pointer-events-none opacity-40" : ""}`}
           >
             ← Back to cart
           </Link>
