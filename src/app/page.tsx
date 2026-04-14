@@ -53,37 +53,30 @@ export default async function Page() {
       <section className="relative overflow-hidden bg-white dark:bg-black">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50 to-transparent dark:via-white/5" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-24 md:py-28 grid md:grid-cols-2 items-center gap-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-28 md:py-36 grid md:grid-cols-2 items-center gap-16">
           {/* LEFT */}
-          <div className="space-y-6">
+          <div className="space-y-6 max-w-xl">
             <span className="inline-block text-xs font-semibold tracking-wider text-gray-500 dark:text-white/60 uppercase">
               Premium Collection
             </span>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 dark:text-white leading-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-gray-900 dark:text-white leading-[1.05]">
               Discover products
               <br />
               that elevate your life
             </h1>
 
-            <p className="text-gray-500 dark:text-white/60 text-lg max-w-md leading-relaxed">
+            <p className="text-gray-500 dark:text-white/60 text-base sm:text-lg max-w-md leading-relaxed">
               Modern essentials designed for comfort, quality and style. Built
               for people who value simplicity.
             </p>
 
-            <div className="flex gap-4 pt-2">
+            <div className="flex gap-4 pt-4">
               <Link
                 href="/products"
                 className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
               >
                 Shop now
-              </Link>
-
-              <Link
-                href="/products?sort=new"
-                className="inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-6 py-3 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition"
-              >
-                New arrivals
               </Link>
             </div>
 
@@ -96,7 +89,7 @@ export default async function Page() {
 
           {/* RIGHT */}
           <div className="flex justify-center relative">
-            <div className="relative w-[320px] sm:w-[380px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+            <div className="relative w-[360px] sm:w-[440px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_30px_80px_rgba(0,0,0,0.12)] transition-transform duration-500 hover:scale-[1.03]">
               {products?.[0]?.imageUrl ? (
                 <Image
                   src={products[0].imageUrl}
