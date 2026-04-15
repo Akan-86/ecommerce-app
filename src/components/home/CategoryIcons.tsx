@@ -26,8 +26,10 @@ export default function CategoryIcons() {
   ];
 
   return (
-    <section className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 grid grid-cols-2 sm:grid-cols-4 gap-6">
+    <section className="relative py-20 md:py-28">
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-neutral-900 dark:to-black" />
+
+      <div className="mx-auto max-w-7xl px-6 grid grid-cols-2 sm:grid-cols-4 gap-8">
         {categories.map((cat) => {
           const Icon = cat.icon;
 
@@ -35,12 +37,17 @@ export default function CategoryIcons() {
             <Link
               key={cat.name}
               href={cat.href}
-              className="group flex flex-col items-center justify-center gap-3 rounded-2xl border bg-white p-6 hover:shadow-md transition"
+              className="group relative flex flex-col items-center justify-center gap-4 rounded-3xl border border-black/5 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
             >
-              <Icon className="h-8 w-8 text-gray-700 group-hover:text-black" />
-              <span className="text-sm font-semibold text-gray-700 group-hover:text-black">
+              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gray-100 dark:bg-white/10 group-hover:scale-110 transition">
+                <Icon className="h-7 w-7 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white" />
+              </div>
+
+              <span className="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">
                 {cat.name}
               </span>
+
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition pointer-events-none border border-black/10 dark:border-white/10" />
             </Link>
           );
         })}
