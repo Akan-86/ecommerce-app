@@ -10,6 +10,8 @@ import BestSellers from "@/components/home/BestSellers";
 import CategoryBanners from "@/components/home/CategoryBanners";
 import NewsletterSection from "@/components/home/NewsletterSection";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Ecommerce Store",
   description: "Premium fashion, tech and lifestyle products.",
