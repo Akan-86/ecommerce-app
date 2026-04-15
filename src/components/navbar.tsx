@@ -116,7 +116,7 @@ export default function Navbar() {
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
       <div
-        className={`mx-auto max-w-7xl px-4 sm:px-6 ${scrolled ? "h-16" : "h-20"} flex items-center justify-between text-brand-900 dark:text-white relative transition-all duration-300`}
+        className={`mx-auto max-w-7xl px-4 sm:px-6 ${scrolled ? "h-14" : "h-16"} flex items-center justify-between text-brand-900 dark:text-white relative transition-all duration-300`}
       >
         <Link
           href="/"
@@ -127,7 +127,7 @@ export default function Navbar() {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black shadow-sm">
               V
             </div>
-            <span className="text-xl font-bold tracking-tight">
+            <span className="text-lg font-semibold tracking-wide">
               Velora<span className="text-[var(--brand-primary)]">.</span>
             </span>
           </div>
@@ -160,7 +160,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-56 rounded-xl border border-brand-200/50 bg-white/60 dark:bg-black/40 backdrop-blur-md px-3 py-1.5 text-sm outline-none focus:ring-2 transition-all duration-300 focus:w-64 shadow-sm"
+              className="w-48 rounded-full border border-black/10 dark:border-white/20 bg-white/70 dark:bg-black/40 backdrop-blur-md px-4 py-2 text-sm outline-none focus:ring-2 focus:w-56 transition-all duration-300 shadow-sm"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
@@ -230,7 +230,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`transition-all duration-200 px-3 py-1 rounded-lg hover:scale-[1.04] active:scale-[0.98] ${
+                  className={`transition-all duration-200 px-2 py-1 rounded-lg relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:scale-[1.04] active:scale-[0.98] ${
                     active
                       ? "bg-brand-100 text-brand-900 dark:bg-white/10 dark:text-white"
                       : "text-brand-600 hover:bg-brand-100 dark:text-white/70 dark:hover:bg-white/10"
@@ -262,7 +262,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-4 py-2 text-sm font-semibold hover:opacity-90 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-semibold hover:opacity-90 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -282,7 +282,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-medium border border-brand-200/50 bg-white/60 backdrop-blur-md hover:bg-brand-100 transition-all duration-200"
+            className="relative inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-medium border border-brand-200/50 bg-white/70 dark:bg-white/10 backdrop-blur-xl hover:bg-brand-100 transition-all duration-200"
             aria-label="Toggle account menu"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-white text-xs font-black">
