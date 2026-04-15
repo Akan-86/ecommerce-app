@@ -3,24 +3,24 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="mt-24 bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-neutral-900 to-black opacity-80" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-neutral-900/90 to-black" />
       {/* TOP TRUST BAR */}
       <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm text-white/70 tracking-wide">
+        <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-xs text-white/60 tracking-wide">
           <div className="flex items-center gap-2">
-            <span>🚚</span>
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>Free shipping over $75</span>
           </div>
           <div className="flex items-center gap-2">
-            <span>↩️</span>
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>30‑day returns</span>
           </div>
           <div className="flex items-center gap-2">
-            <span>🔒</span>
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>Secure checkout</span>
           </div>
           <div className="flex items-center gap-2">
-            <span>⭐</span>
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>Premium quality</span>
           </div>
         </div>
@@ -32,7 +32,7 @@ export function Footer() {
         <div className="space-y-5">
           <h3 className="text-2xl font-black tracking-tight flex items-center gap-1">
             <span>Vento</span>
-            <span style={{ color: "var(--brand-primary)" }}>Shop</span>
+            <span className="text-white/80">Shop</span>
           </h3>
 
           <p className="text-white/60 text-sm leading-relaxed max-w-sm">
@@ -44,19 +44,19 @@ export function Footer() {
           <div className="flex gap-4 text-white/60 text-sm">
             <a
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Instagram
             </a>
             <a
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Twitter
             </a>
             <a
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Facebook
             </a>
@@ -70,7 +70,7 @@ export function Footer() {
             <li>
               <Link
                 href="/products"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 All Products
               </Link>
@@ -78,7 +78,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 New Arrivals
               </a>
@@ -86,7 +86,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Best Sellers
               </a>
@@ -94,7 +94,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Sale
               </a>
@@ -111,7 +111,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Help Center
               </a>
@@ -119,7 +119,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Returns
               </a>
@@ -127,7 +127,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Shipping
               </a>
@@ -135,7 +135,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-white transition duration-300 hover:translate-x-0.5"
+                className="hover:text-white transition duration-300 hover:opacity-80"
               >
                 Contact
               </a>
@@ -157,13 +157,13 @@ export function Footer() {
             <input
               type="email"
               placeholder="Your email"
-              className="flex-1 px-4 py-3 rounded-l-xl bg-white/10 border border-white/10 text-sm focus:outline-none focus:ring-2 backdrop-blur-xl"
+              className="flex-1 px-4 py-3 rounded-l-full bg-white/10 border border-white/10 text-sm focus:outline-none focus:ring-2 backdrop-blur-xl"
               style={{ outlineColor: "var(--brand-primary)" }}
             />
 
             <button
               type="submit"
-              className="px-5 py-3 rounded-r-xl text-sm font-semibold btn-primary shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] transition-all duration-300"
+              className="px-5 py-3 rounded-r-full text-sm font-semibold btn-primary transition-all duration-300 hover:opacity-90"
             >
               Subscribe
             </button>
@@ -181,25 +181,25 @@ export function Footer() {
 
       {/* BOTTOM */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-xs text-white/50 gap-4 tracking-wide">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-xs text-white/50 gap-6 tracking-wide">
           <p>© {new Date().getFullYear()} VentoShop. Crafted with precision.</p>
 
           <div className="flex gap-6">
             <Link
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Privacy
             </Link>
             <Link
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Terms
             </Link>
             <Link
               href="#"
-              className="hover:text-white transition duration-300 hover:translate-x-0.5"
+              className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Cookies
             </Link>
