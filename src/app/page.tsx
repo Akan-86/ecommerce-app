@@ -20,7 +20,7 @@ export default async function Page() {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/products`,
+      `${process.env.NEXT_PUBLIC_APP_URL || "https://ecommerce-app-flame-sigma.vercel.app"}/api/products`,
       {
         cache: "no-store",
       }
