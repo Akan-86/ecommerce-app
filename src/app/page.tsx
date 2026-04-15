@@ -10,7 +10,7 @@ import BestSellers from "@/components/home/BestSellers";
 import CategoryBanners from "@/components/home/CategoryBanners";
 import NewsletterSection from "@/components/home/NewsletterSection";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Ecommerce Store",
@@ -53,7 +53,7 @@ export default async function Page() {
     <main className="relative z-0">
       {/* HERO */}
       <section className="relative overflow-hidden bg-white dark:bg-black">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50 to-transparent dark:via-white/5" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-gray-100 via-white to-gray-200 dark:from-black dark:via-neutral-900 dark:to-black" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-28 md:py-36 grid md:grid-cols-2 items-center gap-16">
           {/* LEFT */}
@@ -76,7 +76,7 @@ export default async function Page() {
             <div className="flex gap-4 pt-4">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
+                className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-8 py-3 text-sm font-semibold tracking-wide shadow-lg hover:opacity-90 hover:scale-105 transition-all duration-300"
               >
                 Shop now
               </Link>
@@ -91,7 +91,7 @@ export default async function Page() {
 
           {/* RIGHT */}
           <div className="flex justify-center relative">
-            <div className="relative w-[360px] sm:w-[440px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_30px_80px_rgba(0,0,0,0.12)] transition-transform duration-500 hover:scale-[1.03]">
+            <div className="relative w-[360px] sm:w-[440px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_50px_120px_rgba(0,0,0,0.25)] transition-all duration-500 hover:scale-[1.05]">
               {products?.[0]?.imageUrl ? (
                 <Image
                   src={products[0].imageUrl}
