@@ -110,8 +110,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-xl ${
         scrolled
-          ? "bg-white/70 dark:bg-black/60 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border-b border-black/5 dark:border-white/10"
-          : "bg-white/40 dark:bg-black/40 border-b border-transparent"
+          ? "bg-white/80 dark:bg-black/70 shadow-sm border-b border-black/5 dark:border-white/10"
+          : "bg-white/60 dark:bg-black/50 border-b border-transparent"
       }`}
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
@@ -124,11 +124,11 @@ export default function Navbar() {
           className="group font-black tracking-tight text-xl flex items-center gap-2 transition-transform duration-300 hover:scale-[1.03]"
         >
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-600 flex items-center justify-center text-white text-sm font-black shadow-sm">
+            <div className="h-8 w-8 rounded-lg bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-sm font-bold">
               V
             </div>
             <span className="text-lg font-semibold tracking-wide">
-              Velora<span className="text-[var(--brand-primary)]">.</span>
+              Velora<span className="text-black/40 dark:text-white/40">.</span>
             </span>
           </div>
         </Link>
@@ -160,14 +160,13 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-48 rounded-full border border-black/10 dark:border-white/20 bg-white/70 dark:bg-black/40 backdrop-blur-md px-4 py-2 text-sm outline-none focus:ring-2 focus:w-56 transition-all duration-300 shadow-sm"
-              style={{ outlineColor: "var(--brand-primary)" }}
+              className="w-48 rounded-full border border-black/10 dark:border-white/20 bg-white/80 dark:bg-black/50 backdrop-blur px-4 py-2 text-sm outline-none focus:ring-2 focus:w-56 transition-all duration-300"
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
               🔍
             </span>
             {showSuggestions && (
-              <div className="absolute left-0 right-0 mt-3 rounded-2xl border border-brand-200/60 bg-white/90 dark:bg-black/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50">
+              <div className="absolute left-0 right-0 mt-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50">
                 {loadingSuggestions && (
                   <div className="px-4 py-3 text-sm text-brand-600">
                     {lang === "tr" ? "Aranıyor..." : "Searching..."}
@@ -181,7 +180,7 @@ export default function Navbar() {
                       setSearchQuery("");
                       router.push(`/products/${p.id}`);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-brand-100 flex items-center gap-3"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10 flex items-center gap-3"
                   >
                     {(p.thumbnail || p.image) && (
                       <img
@@ -205,7 +204,7 @@ export default function Navbar() {
                       `/products?search=${encodeURIComponent(searchQuery)}`
                     );
                   }}
-                  className="w-full text-left px-4 py-2 text-sm font-semibold border-t hover:bg-brand-100"
+                  className="w-full text-left px-4 py-2 text-sm font-semibold border-t hover:bg-black/5 dark:hover:bg-white/10"
                 >
                   {lang === "tr" ? "Tüm sonuçları gör" : "View all results"}
                 </button>
@@ -230,11 +229,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`transition-all duration-200 px-2 py-1 rounded-lg relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:scale-[1.04] active:scale-[0.98] ${
-                    active
-                      ? "bg-brand-100 text-brand-900 dark:bg-white/10 dark:text-white"
-                      : "text-brand-600 hover:bg-brand-100 dark:text-white/70 dark:hover:bg-white/10"
-                  }`}
+                  className={`relative px-2 py-1 text-sm transition-all after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full ${active ? "text-black dark:text-white" : "text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white"}`}
                 >
                   {link.label}
                 </Link>
@@ -247,14 +242,14 @@ export default function Navbar() {
           {/* Language Toggle */}
           <button
             onClick={() => setLang(lang === "tr" ? "en" : "tr")}
-            className="hidden sm:inline-flex items-center rounded-lg border border-brand-200/50 px-2 py-1 text-xs font-medium hover:bg-brand-100 transition"
+            className="hidden sm:inline-flex items-center rounded-full border border-black/10 dark:border-white/20 px-3 py-1 text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10 transition"
             aria-label="Toggle language"
           >
             {lang === "tr" ? "EN" : "TR"}
           </button>
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden inline-flex items-center justify-center rounded-md border border-brand-200 px-2 py-2 text-sm hover:bg-brand-100 transition"
+            className="md:hidden inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/20 px-2 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10 transition"
             aria-label="Toggle mobile menu"
           >
             ☰
@@ -262,7 +257,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-semibold hover:opacity-90 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-[0.97] transition-all duration-200"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -282,10 +277,10 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-medium border border-brand-200/50 bg-white/70 dark:bg-white/10 backdrop-blur-xl hover:bg-brand-100 transition-all duration-200"
+            className="relative inline-flex items-center gap-2 rounded-full px-3 py-1 border border-black/10 dark:border-white/20 bg-white/70 dark:bg-white/10 backdrop-blur"
             aria-label="Toggle account menu"
           >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-white text-xs font-black">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-black to-gray-700 dark:from-white dark:to-gray-300 text-white dark:text-black text-xs font-black">
               {initials || "U"}
             </span>
             {user && (
@@ -301,21 +296,21 @@ export default function Navbar() {
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-full mt-3 w-60 rounded-2xl bg-white/90 dark:bg-black/80 backdrop-blur-2xl text-brand-900 dark:text-white shadow-[0_30px_80px_rgba(0,0,0,0.18)] border border-brand-200/60 z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-3 w-60 rounded-2xl bg-white/90 dark:bg-black/80 backdrop-blur-2xl text-brand-900 dark:text-white shadow-[0_30px_80px_rgba(0,0,0,0.18)] border border-black/10 dark:border-white/10 z-50 overflow-hidden">
               <div className="p-2">
                 {!user ? (
                   <>
                     <Link
                       href="/login"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       {lang === "tr" ? "Giriş" : "Login"}
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       {lang === "tr" ? "Kayıt Ol" : "Register"}
                     </Link>
@@ -325,21 +320,21 @@ export default function Navbar() {
                     <Link
                       href="/account"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       {lang === "tr" ? "Hesabım" : "My Account"}
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       {lang === "tr" ? "Siparişler" : "Orders"}
                     </Link>
                     <Link
                       href="/account/settings"
                       onClick={() => setAccountOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-brand-100"
+                      className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       {lang === "tr" ? "Ayarlar" : "Settings"}
                     </Link>
@@ -360,35 +355,35 @@ export default function Navbar() {
         </div>
       </div>
       {mobileOpen && (
-        <div className="md:hidden border-t border-brand-200 bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-md">
+        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-md">
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
             <button
               onClick={() => {
                 setLang(lang === "tr" ? "en" : "tr");
                 setMobileOpen(false);
               }}
-              className="rounded-lg px-3 py-2 text-left hover:bg-brand-100"
+              className="rounded-lg px-3 py-2 text-left hover:bg-black/5 dark:hover:bg-white/10"
             >
               {lang === "tr" ? "Switch to English" : "Türkçe'ye geç"}
             </button>
             <Link
               href="/products"
               onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+              className="rounded-lg px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10"
             >
               {lang === "tr" ? "Ürünler" : "Products"}
             </Link>
             <Link
               href="/about"
               onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+              className="rounded-lg px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10"
             >
               {lang === "tr" ? "Hakkında" : "About"}
             </Link>
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2 hover:bg-brand-100"
+              className="rounded-lg px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10"
             >
               {lang === "tr" ? "İletişim" : "Contact"}
             </Link>
