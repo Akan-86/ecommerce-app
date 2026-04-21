@@ -24,6 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     const initial = saved || (prefersDark ? "dark" : "light");
     setTheme(initial);
 
+    document.documentElement.classList.remove("dark");
     if (initial === "dark") {
       document.documentElement.classList.add("dark");
     }
@@ -34,15 +35,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
     setTheme(next);
     localStorage.setItem("theme", next);
 
+    document.documentElement.classList.remove("dark");
     if (next === "dark") {
       document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
     }
   };
 
   return (
-    <html lang="en" className="h-full scroll-smooth">
+    <html
+      lang="en"
+      className={`h-full scroll-smooth ${theme === "dark" ? "dark" : ""}`}
+      suppressHydrationWarning
+    >
       <body
         className={`${inter.className} min-h-screen bg-[var(--brand-bg-soft)] text-[var(--brand-text-primary)] antialiased transition-colors duration-300`}
       >
