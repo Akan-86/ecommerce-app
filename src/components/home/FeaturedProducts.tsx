@@ -1,4 +1,6 @@
+"use client";
 import ProductCard from "@/components/product-card";
+import { useEffect, useRef, useState } from "react";
 
 type Product = {
   id: number | string;
@@ -48,6 +50,25 @@ export default function FeaturedProducts({
     return null;
   }
 
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-gray-50/40 to-transparent dark:via-white/3" />
@@ -72,12 +93,22 @@ export default function FeaturedProducts({
         </a>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8">
-        {displayProducts.map((product) => (
-          <ProductCard
+      <div
+        ref={ref}
+        className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8"
+      >
+        {displayProducts.map((product, i) => (
+          <div
             key={product.id}
-            product={{ ...product, image: product.image || product.imageUrl }}
-          />
+            className={`transform transition-all duration-700 ${
+              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+            style={{ transitionDelay: `${i * 80}ms` }}
+          >
+            <ProductCard
+              product={{ ...product, image: product.image || product.imageUrl }}
+            />
+          </div>
         ))}
       </div>
     </section>
