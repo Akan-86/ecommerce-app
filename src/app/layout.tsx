@@ -49,9 +49,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body
-        className={`${inter.className} min-h-screen bg-[var(--brand-bg-soft)] text-[var(--brand-text-primary)] antialiased transition-colors duration-300 tracking-tight`}
+        className={`${inter.className} min-h-screen bg-[var(--brand-bg-soft)] text-[var(--brand-text-primary)] antialiased transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] tracking-tight`}
       >
         <ProvidersWrapper>
+          <div className="fixed inset-0 -z-10 bg-gradient-to-br from-transparent via-white/40 to-transparent dark:via-white/5 pointer-events-none" />
           <div className="fixed top-4 left-6 z-50 flex items-center gap-4 backdrop-blur-md bg-white/60 dark:bg-black/40 px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
             <div
               className={`${playfair.className} text-lg font-semibold tracking-tight`}
@@ -71,7 +72,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
               data-testid="page-container"
               className="mx-auto max-w-7xl px-4 sm:px-6 section min-w-0"
             >
-              <div className="fade-in-soft">{children}</div>
+              <div className="animate-[fadeIn_0.6s_ease] will-change-[opacity,transform]">
+                {children}
+              </div>
             </section>
           </main>
         </ProvidersWrapper>
