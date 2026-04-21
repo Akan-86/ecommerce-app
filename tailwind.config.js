@@ -64,10 +64,6 @@ module.exports = {
         section: "6rem",
         "section-sm": "4rem",
       },
-    },
-  },
-  plugins: [],
-};
 
       backdropBlur: {
         xs: "2px",
@@ -79,6 +75,11 @@ module.exports = {
           "100%": { opacity: 1, transform: "translateY(0)" },
         },
       },
+
       animation: {
         fadeIn: "fadeIn 0.4s ease-out",
       },
+    },
+  },
+  plugins: [],
+};
