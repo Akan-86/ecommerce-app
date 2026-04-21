@@ -10,6 +10,12 @@ import BestSellers from "@/components/home/BestSellers";
 import CategoryBanners from "@/components/home/CategoryBanners";
 import NewsletterSection from "@/components/home/NewsletterSection";
 
+import { Playfair_Display } from "next/font/google";
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const dynamic = "force-dynamic";
 
 export const metadata = {
@@ -55,30 +61,39 @@ export default async function Page() {
       <section className="relative overflow-hidden bg-white dark:bg-black">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-gray-100 via-white to-gray-200 dark:from-black dark:via-neutral-900 dark:to-black" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-28 md:py-36 grid md:grid-cols-2 items-center gap-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-32 md:py-40 grid md:grid-cols-2 items-center gap-16">
           {/* LEFT */}
           <div className="space-y-6 max-w-xl">
             <span className="inline-block text-xs font-semibold tracking-wider text-gray-500 dark:text-white/60 uppercase">
               Premium Collection
             </span>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-gray-900 dark:text-white leading-[1.05]">
+            <h1
+              className={`${playfair.className} text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-gray-900 dark:text-white leading-[1.05]`}
+            >
               Discover products
               <br />
               that elevate your life
             </h1>
 
-            <p className="text-gray-500 dark:text-white/60 text-base sm:text-lg max-w-md leading-relaxed">
+            <p className="text-gray-600 dark:text-white/70 text-base sm:text-lg max-w-md leading-relaxed">
               Modern essentials designed for comfort, quality and style. Built
               for people who value simplicity.
             </p>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-4 pt-6">
               <Link
                 href="/products"
                 className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-8 py-3 text-sm font-semibold tracking-wide shadow-lg hover:opacity-90 hover:scale-105 transition-all duration-300"
               >
                 Shop now
+              </Link>
+
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/20 px-8 py-3 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition"
+              >
+                Explore
               </Link>
             </div>
 
@@ -91,7 +106,7 @@ export default async function Page() {
 
           {/* RIGHT */}
           <div className="flex justify-center relative">
-            <div className="relative w-[360px] sm:w-[440px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-black shadow-[0_50px_120px_rgba(0,0,0,0.25)] transition-all duration-500 hover:scale-[1.05]">
+            <div className="relative w-[420px] sm:w-[520px] md:w-[600px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 backdrop-blur-sm bg-white dark:bg-black shadow-[0_50px_120px_rgba(0,0,0,0.25)] transition-all duration-500 hover:scale-[1.05]">
               {products?.[0]?.imageUrl ? (
                 <Image
                   src={products[0].imageUrl}
