@@ -237,6 +237,9 @@ export default function ProductDetail() {
             <p className="text-base leading-relaxed text-gray-500 max-w-md">
               {safeProduct.description}
             </p>
+            <h3 className="text-sm font-semibold text-gray-900 pt-2">
+              Why you’ll love it
+            </h3>
             <ul className="text-sm text-gray-500 space-y-1 pt-2">
               <li>✔ Premium quality materials</li>
               <li>✔ Fast worldwide shipping</li>
@@ -273,11 +276,8 @@ export default function ProductDetail() {
             </div>
 
             <div className="text-sm text-gray-600">
-              <span
-                className="font-semibold"
-                style={{ color: "var(--brand-primary)" }}
-              >
-                In stock
+              <span className="font-semibold text-green-600">
+                In stock • Only {Math.max(3, 12 - quantity)} left
               </span>{" "}
               — ships within 24 hours • {quantity} item{quantity > 1 ? "s" : ""}{" "}
               selected
@@ -328,6 +328,11 @@ export default function ProductDetail() {
                 >
                   Buy now
                 </Link>
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-500 pt-2">
+                  <span>🔒 Secure</span>
+                  <span>↩ Easy returns</span>
+                  <span>⚡ Fast shipping</span>
+                </div>
               </div>
             </div>
           </div>
@@ -392,7 +397,7 @@ export default function ProductDetail() {
           )}
 
           {activeTab === "reviews" && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <span
                   className="text-3xl font-bold"
@@ -408,12 +413,22 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              <div className="space-y-1 text-xs">
-                <p>★★★★★ — 82%</p>
-                <p>★★★★☆ — 12%</p>
-                <p>★★★☆☆ — 4%</p>
-                <p>★★☆☆☆ — 1%</p>
-                <p>★☆☆☆☆ — 1%</p>
+              <div className="space-y-4">
+                {[1, 2, 3].map((r) => (
+                  <div
+                    key={r}
+                    className="p-4 rounded-xl border border-black/5 bg-white shadow-sm"
+                  >
+                    <p className="text-sm font-semibold text-gray-900">
+                      Great product
+                    </p>
+                    <p className="text-xs text-gray-500">Verified buyer</p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Really impressed with the quality and delivery speed.
+                      Would definitely recommend.
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -427,10 +442,10 @@ export default function ProductDetail() {
       {/* Related Products */}
       {related.length > 0 && (
         <div className="mt-28">
-          <h2 className="text-3xl sm:text-4xl font-semibold mb-12 text-gray-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-4 text-gray-900 tracking-tight">
             You may also like
           </h2>
-
+          <p className="text-gray-500 mb-12">Customers also bought these</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-10">
             {related.map((item) => (
               <ProductCard key={item.id} product={item} />
