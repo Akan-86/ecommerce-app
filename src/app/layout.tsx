@@ -3,10 +3,11 @@
 import "./globals.css";
 import { type ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import ProvidersWrapper from "./providers-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"] });
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -48,11 +49,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body
-        className={`${inter.className} min-h-screen bg-[var(--brand-bg-soft)] text-[var(--brand-text-primary)] antialiased transition-colors duration-300`}
+        className={`${inter.className} min-h-screen bg-[var(--brand-bg-soft)] text-[var(--brand-text-primary)] antialiased transition-colors duration-300 tracking-tight`}
       >
         <ProvidersWrapper>
-          <div className="fixed top-4 left-6 z-50 flex items-center gap-4">
-            <div className="text-lg font-semibold tracking-tight">VELORA</div>
+          <div className="fixed top-4 left-6 z-50 flex items-center gap-4 backdrop-blur-md bg-white/60 dark:bg-black/40 px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
+            <div
+              className={`${playfair.className} text-lg font-semibold tracking-tight`}
+            >
+              VELORA
+            </div>
             <button
               onClick={toggleTheme}
               className="text-xs px-3 py-1.5 rounded-full border border-black/10 dark:border-white/10 hover:scale-105 transition"
@@ -61,10 +66,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </button>
           </div>
 
-          <main data-testid="main-content" className="flex-1 pt-16">
+          <main data-testid="main-content" className="flex-1 pt-20">
             <section
               data-testid="page-container"
-              className="mx-auto max-w-7xl px-4 sm:px-6 py-8 md:py-10 min-w-0"
+              className="mx-auto max-w-7xl px-4 sm:px-6 section min-w-0"
             >
               <div className="fade-in-soft">{children}</div>
             </section>
