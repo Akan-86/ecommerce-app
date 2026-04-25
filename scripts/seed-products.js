@@ -1,7 +1,13 @@
 // scripts/seed-products.js
 // Usage: node scripts/seed-products.js
 
+require("dotenv").config({ path: ".env.local" });
+
 const admin = require("firebase-admin");
+
+if (!process.env.FIREBASE_PROJECT_ID) {
+  console.error("Missing FIREBASE_PROJECT_ID in .env.local");
+}
 
 // Initialize Firebase Admin using env vars
 admin.initializeApp({
