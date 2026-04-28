@@ -5,30 +5,37 @@ import type { Product } from "@/lib/types";
 import { useState } from "react";
 const lang = "en";
 
-export function AddToCartButton({ product }: { product: Product }) {
+export function AddToCartButton({
+  product,
+  quantity = 1,
+}: {
+  product: Product;
+  quantity?: number;
+}) {
   const { add } = useCart();
   const [state, setState] = useState<"idle" | "loading" | "success">("idle");
   const [showToast, setShowToast] = useState(false);
 
   const handleAdd = async () => {
     if (state !== "idle") return;
+    const safeQty = Math.min(Math.max(1, Number(quantity) || 1), 999);
 
     setState("loading");
 
     // Simulate slight delay for smoother UX feel
     setTimeout(() => {
-      const normalizedProduct = {
+      const normalizedProduct: Product = {
         ...product,
         image:
           (product as any).image ||
           (product as any).thumbnail ||
           (product as any).imageUrl,
-      };
+      } as Product;
 
-      add(normalizedProduct as Product);
+      add(normalizedProduct, safeQty);
       window.dispatchEvent(new CustomEvent("cart:open"));
       setState("success");
-      setShowToast(true);
+      if (!showToast) setShowToast(true);
 
       setTimeout(() => {
         setState("idle");
@@ -41,9 +48,11 @@ export function AddToCartButton({ product }: { product: Product }) {
     <>
       <button
         onClick={handleAdd}
+        type="button"
         disabled={state === "loading"}
         aria-busy={state === "loading"}
         aria-live="polite"
+        aria-label={lang === "tr" ? "Sepete ekle" : "Add to cart"}
         className={`relative px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg active:scale-[0.95] flex items-center justify-center gap-2 w-full hover:shadow-xl hover:-translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${state === "loading" ? "opacity-90 cursor-not-allowed" : ""}`}
         style={{
           backgroundColor: "var(--brand-primary)",
