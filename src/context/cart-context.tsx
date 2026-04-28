@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import type { Product } from "@/lib/types";
 
+const CART_STORAGE_KEY = "cart:v1";
+
 type CartItem = { product: Product; quantity: number };
 
 type State = {
@@ -93,7 +95,8 @@ function reducer(state: State, action: Action): State {
       return { items: [], lastAction: { type: "CLEAR" }, isOpen: state.isOpen };
     case "SET_QTY": {
       const { id, quantity } = action.payload;
-      if (quantity <= 0) {
+      const safeQty = Math.min(Math.max(0, quantity), 999);
+      if (safeQty <= 0) {
         return {
           items: state.items.filter((i) => i.product.id !== id),
           lastAction: { type: "SET_QTY", productId: id },
@@ -102,7 +105,7 @@ function reducer(state: State, action: Action): State {
       }
       return {
         items: state.items.map((i) =>
-          i.product.id === id ? { ...i, quantity } : i
+          i.product.id === id ? { ...i, quantity: safeQty } : i
         ),
         lastAction: { type: "SET_QTY", productId: id },
         isOpen: state.isOpen,
@@ -123,7 +126,6 @@ type CartContextValue = {
   removeOne: (id: string) => void;
   removeAll: (id: string) => void;
   clear: () => void;
-  clearCart: () => void;
   count: number;
   total: number;
   getStripeItems: () => {
@@ -140,7 +142,7 @@ type CartContextValue = {
     quantity: number;
   }[];
   updateQuantity: (id: string, quantity: number) => void;
-  formatPrice: (price: number) => string;
+  formatPrice: (price: number, locale?: string, currency?: string) => string;
   lastAction?: { type: string; productId?: string };
   displayItems: {
     id: string;
@@ -159,24 +161,32 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Load from localStorage
+  // Load from localStorage (safe)
   useEffect(() => {
+    if (typeof window === "undefined") return;
     try {
-      const raw = localStorage.getItem("cart");
-      if (raw) {
-        const parsed: { items: CartItem[] } = JSON.parse(raw);
-        if (Array.isArray(parsed.items)) {
-          dispatch({ type: "HYDRATE", payload: parsed.items });
-        }
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.items)) {
+        dispatch({ type: "HYDRATE", payload: parsed.items });
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Cart hydrate failed", e);
+    }
   }, []);
 
-  // Persist to localStorage
+  // Persist to localStorage (safe)
   useEffect(() => {
+    if (typeof window === "undefined") return;
     try {
-      localStorage.setItem("cart", JSON.stringify({ items: state.items }));
-    } catch {}
+      localStorage.setItem(
+        CART_STORAGE_KEY,
+        JSON.stringify({ items: state.items })
+      );
+    } catch (e) {
+      console.warn("Cart persist failed", e);
+    }
   }, [state.items]);
 
   const value = useMemo<CartContextValue>(() => {
@@ -188,16 +198,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const displayItems = state.items.map((i) => ({
       id: i.product.id,
-      name: i.product.title || i.product.name || "",
-      price: i.product.price,
+      name: i.product.title || i.product.name || "Product",
+      price: Number(i.product.price) || 0,
       image: i.product.imageUrl || i.product.thumbnail || "/placeholder.png",
       quantity: i.quantity,
     }));
 
-    function formatPrice(price: number) {
-      return new Intl.NumberFormat("de-DE", {
+    function formatPrice(price: number, locale = "tr-TR", currency = "TRY") {
+      return new Intl.NumberFormat(locale, {
         style: "currency",
-        currency: "EUR",
+        currency,
       }).format(price);
     }
 
@@ -207,7 +217,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeOne: (id) => dispatch({ type: "REMOVE_ONE", payload: id }),
       removeAll: (id) => dispatch({ type: "REMOVE_ALL", payload: id }),
       clear: () => dispatch({ type: "CLEAR" }),
-      clearCart: () => dispatch({ type: "CLEAR" }),
       isOpen: state.isOpen,
       open: () => dispatch({ type: "OPEN" }),
       close: () => dispatch({ type: "CLOSE" }),
@@ -218,12 +227,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           price_data: {
             currency: "eur",
             product_data: {
-              name: i.product.title || i.product.name || "Product",
-              description:
+              name: (i.product.title || i.product.name || "Product").trim(),
+              description: (
                 i.product.description ||
                 i.product.title ||
                 i.product.name ||
-                "Product",
+                "Product"
+              ).trim(),
               images: [
                 i.product.imageUrl ||
                   i.product.thumbnail ||
@@ -233,7 +243,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 productId: i.product.id, // 🔑 Firestore’daki ürün ID’si
               },
             },
-            unit_amount: Math.round((Number(i.product.price) || 0) * 100),
+            unit_amount: Math.round(
+              Math.max(0, Number(i.product.price) || 0) * 100
+            ),
           },
           quantity: i.quantity,
         })),
