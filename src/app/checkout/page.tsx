@@ -13,9 +13,15 @@ import { useToast } from "@/context/toast-context";
 export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { items, total, clearCart } = useCart();
+  const { items, total, clear, displayItems, formatPrice } = useCart();
   const [processing, setProcessing] = useState(false);
   const { addToast } = useToast();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [loading, user, router]);
 
   const handleOrderSuccess = async () => {
     if (!user || processing) return;
@@ -32,7 +38,7 @@ export default function CheckoutPage() {
         createdAt: serverTimestamp(),
       });
 
-      clearCart();
+      clear();
       addToast({ type: "success", message: "Order placed successfully" });
       router.push("/success");
     } catch (error) {
@@ -52,10 +58,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (!user) {
-    router.push("/login");
-    return null;
-  }
+  if (!user) return null;
 
   /* ---------------- Empty State ---------------- */
   if (!items.length) {
@@ -144,24 +147,25 @@ export default function CheckoutPage() {
           </h2>
 
           <p className="mb-6 text-xs text-gray-400">
-            {items.reduce((sum, item) => sum + item.quantity, 0)} items in cart
+            {displayItems.reduce((sum, item) => sum + item.quantity, 0)} items
+            in cart
           </p>
 
           <div className="space-y-5 text-sm text-gray-700 divide-y divide-black/5">
-            {items.map((item) => (
+            {displayItems.map((item) => (
               <div
                 key={item.id}
                 className="flex items-center justify-between gap-4 pt-4 first:pt-0 transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl px-2"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <img
-                    src={item.thumbnail}
-                    alt={item.title}
+                    src={item.image}
+                    alt={item.name}
                     className="h-12 w-12 rounded-md object-cover border border-black/5"
                   />
 
                   <span className="truncate">
-                    {item.title}
+                    {item.name}
                     <span className="block text-xs text-gray-400">
                       Qty {item.quantity}
                     </span>
@@ -169,10 +173,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <span className="font-medium whitespace-nowrap">
-                  {new Intl.NumberFormat("de-DE", {
-                    style: "currency",
-                    currency: "EUR",
-                  }).format(item.price * item.quantity)}
+                  {formatPrice(item.price * item.quantity)}
                 </span>
               </div>
             ))}
@@ -181,10 +182,7 @@ export default function CheckoutPage() {
           <div className="mt-6 sm:mt-8 flex justify-between border-t border-black/10 pt-6 sm:pt-8 text-lg sm:text-xl font-semibold text-gray-900 items-center">
             <span>Total</span>
             <span className="text-gray-900 dark:text-white">
-              {new Intl.NumberFormat("de-DE", {
-                style: "currency",
-                currency: "EUR",
-              }).format(total)}
+              {formatPrice(total)}
             </span>
           </div>
 
