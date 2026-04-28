@@ -4,7 +4,7 @@ import { fetchProduct, fetchRelatedProducts } from "@/lib/api";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import ProductCard from "@/components/product-card";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
@@ -12,11 +12,11 @@ export default function ProductDetail() {
   const params = useParams();
   const id = params?.id as string;
 
-  const [product, setProduct] = useState<any>(null);
-  const [relatedRaw, setRelatedRaw] = useState<any[]>([]);
+  const [product, setProduct] = useState<Record<string, any> | null>(null);
+  const [relatedRaw, setRelatedRaw] = useState<Record<string, any>[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const sanitizeProduct = (data: any) => {
+  const sanitizeProduct = (data: Record<string, any> | null) => {
     if (!data) return null;
 
     const createdAt =
@@ -69,6 +69,7 @@ export default function ProductDetail() {
         setLoading(false);
       } catch (err) {
         console.error("Failed to load product", err);
+        setProduct(null);
         setLoading(false);
       }
     }
@@ -76,14 +77,13 @@ export default function ProductDetail() {
     loadProduct();
   }, [id]);
 
-  const safeProduct = sanitizeProduct(product);
+  const safeProduct = useMemo(() => sanitizeProduct(product), [product]);
 
-  const gallery = [
-    safeProduct?.thumbnail,
-    ...(safeProduct?.images || []),
-  ].filter(
-    (img, index, arr) => typeof img === "string" && arr.indexOf(img) === index
-  );
+  const gallery = useMemo(() => {
+    return [safeProduct?.thumbnail, ...(safeProduct?.images || [])].filter(
+      (img, index, arr) => typeof img === "string" && arr.indexOf(img) === index
+    );
+  }, [safeProduct]);
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -166,7 +166,7 @@ export default function ProductDetail() {
             )}
             <Image
               src={selectedImage || "/placeholder.png"}
-              alt={safeProduct.title}
+              alt={safeProduct?.title || "Product image"}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 group-hover:scale-110 cursor-zoom-in"
@@ -262,9 +262,9 @@ export default function ProductDetail() {
           <div className="rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.25)] hover:shadow-[0_50px_120px_-30px_rgba(0,0,0,0.3)] transition-all duration-300 space-y-6 sm:space-y-8">
             <div className="flex items-end gap-4">
               <span className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                {Number(safeProduct.price).toLocaleString("en-US", {
+                {Number(safeProduct.price || 0).toLocaleString("en-US", {
                   style: "currency",
-                  currency: "USD",
+                  currency: safeProduct.currency || "USD",
                 })}
               </span>
 
@@ -320,7 +320,7 @@ export default function ProductDetail() {
               </div>
               <div className="flex-1 flex flex-col gap-3">
                 <div className="opacity-90">
-                  <AddToCartButton product={safeProduct} />
+                  <AddToCartButton product={safeProduct} quantity={quantity} />
                 </div>
                 <Link
                   href="/checkout"
@@ -462,7 +462,7 @@ export default function ProductDetail() {
           <div className="relative max-w-5xl w-full h-[80vh]">
             <Image
               src={selectedImage || "/placeholder.png"}
-              alt={safeProduct.title}
+              alt={safeProduct?.title || "Product image"}
               fill
               sizes="100vw"
               className="object-contain"
@@ -484,9 +484,9 @@ export default function ProductDetail() {
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">{safeProduct.title}</span>
               <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                {Number(safeProduct.price).toLocaleString("en-US", {
+                {Number(safeProduct.price || 0).toLocaleString("en-US", {
                   style: "currency",
-                  currency: "USD",
+                  currency: safeProduct.currency || "USD",
                 })}
               </span>
             </div>
@@ -514,7 +514,7 @@ export default function ProductDetail() {
 
               <div className="min-w-[200px]">
                 <div className="opacity-90">
-                  <AddToCartButton product={safeProduct} />
+                  <AddToCartButton product={safeProduct} quantity={quantity} />
                 </div>
               </div>
             </div>
