@@ -10,6 +10,8 @@ import BestSellers from "@/components/home/BestSellers";
 import CategoryBanners from "@/components/home/CategoryBanners";
 import NewsletterSection from "@/components/home/NewsletterSection";
 
+import type { Product } from "@/lib/types";
+
 import { Playfair_Display } from "next/font/google";
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -24,7 +26,7 @@ export const metadata = {
 };
 
 export default async function Page() {
-  let products: any[] = [];
+  let products: Product[] = [];
 
   try {
     const res = await fetch(
@@ -34,7 +36,7 @@ export default async function Page() {
       }
     );
 
-    const data = await res.json();
+    const data: unknown = await res.json();
 
     if (Array.isArray(data)) {
       products = data;
@@ -45,12 +47,10 @@ export default async function Page() {
     console.error("Fetch error:", err);
   }
 
-  console.log("PRODUCT COUNT:", products?.length);
-
-  if (!Array.isArray(products)) {
+  if (!products || products.length === 0) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-gray-500">Data error.</p>
+        <p className="text-sm text-gray-500">No products available.</p>
       </main>
     );
   }
@@ -109,13 +109,14 @@ export default async function Page() {
           {/* RIGHT */}
           <div className="flex justify-center relative">
             <div className="relative w-[420px] sm:w-[520px] md:w-[600px] aspect-square rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 backdrop-blur-sm bg-white dark:bg-black shadow-[0_60px_140px_rgba(0,0,0,0.35)] ring-1 ring-white/10 dark:ring-white/10 transition-all duration-500 hover:scale-[1.05]">
-              {products?.[0]?.imageUrl ? (
+              {products?.[0]?.image ? (
                 <>
                   <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/20 opacity-60 pointer-events-none" />
                   <Image
-                    src={products[0].imageUrl}
-                    alt={products[0].title}
+                    src={products[0].image}
+                    alt={products[0].title || "Featured product"}
                     fill
+                    priority
                     className="object-cover"
                   />
                 </>
