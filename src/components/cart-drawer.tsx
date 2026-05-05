@@ -49,14 +49,14 @@ export function CartDrawer() {
       {/* Backdrop */}
       <div
         onClick={close}
-        className={`fixed inset-0 bg-black/50 backdrop-blur-lg transition-all duration-300 ease-out z-40 ${
+        className={`fixed inset-0 bg-black/40 transition-opacity duration-300 z-40 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       {/* Drawer */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-black shadow-modal z-50 transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-black border-l border-black/10 dark:border-white/10 z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -73,7 +73,7 @@ export function CartDrawer() {
           </div>
           <button
             onClick={close}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/10"
           >
             <X size={18} />
           </button>
@@ -81,8 +81,8 @@ export function CartDrawer() {
 
         {/* Content */}
         <div
-          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 transition-all duration-500 ease-out ${
-            isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 ${
+            isOpen ? "opacity-100" : "opacity-0"
           }`}
         >
           {items.length === 0 ? (
@@ -95,7 +95,7 @@ export function CartDrawer() {
                   <Link
                     href="/products"
                     onClick={close}
-                    className="px-4 py-2 rounded-full text-sm font-semibold bg-black text-white dark:bg-white dark:text-black transition-all duration-300 hover:opacity-90 active:scale-[0.97]"
+                    className="px-4 py-2 rounded-md text-sm font-medium bg-black text-white dark:bg-white dark:text-black"
                   >
                     Browse Products
                   </Link>
@@ -103,20 +103,15 @@ export function CartDrawer() {
               />
             </div>
           ) : (
-            items.map((item, index) => (
+            items.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-4 rounded-2xl p-3 border border-transparent transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/5 hover:scale-[1.02]"
-                style={{
-                  transitionDelay: `${index * 60}ms`,
-                  opacity: isOpen ? 1 : 0,
-                  transform: isOpen ? "translateY(0px)" : "translateY(10px)",
-                }}
+                className="flex gap-4 rounded-2xl p-3 border border-black/5 dark:border-white/10"
               >
                 <Link
                   href={`/products/${item.id}`}
                   onClick={close}
-                  className="relative w-20 h-24 rounded-lg overflow-hidden bg-gray-100 block"
+                  className="relative w-20 h-24 rounded-xl overflow-hidden bg-gray-100 block"
                 >
                   <Image
                     src={item.imageUrl || item.thumbnail || "/placeholder.png"}
@@ -131,26 +126,26 @@ export function CartDrawer() {
                     <Link
                       href={`/products/${item.id}`}
                       onClick={close}
-                      className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1 hover:underline"
+                      className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1"
                     >
                       {item.title}
                     </Link>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-xs text-gray-400 hover:text-red-500 dark:text-white/50 transition"
+                      className="text-xs text-gray-400 hover:text-gray-600 dark:text-white/50"
                     >
                       Remove
                     </button>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center border border-brand-200 rounded-lg overflow-hidden text-sm">
+                    <div className="flex items-center border border-black/10 dark:border-white/20 rounded-md overflow-hidden text-sm">
                       <button
                         onClick={() => {
                           if (item.quantity <= 1) return;
                           updateQuantity(item.id, item.quantity - 1);
                         }}
-                        className="hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 active:scale-[0.9] font-semibold px-3 py-1"
+                        className="px-3 py-1 hover:bg-black/5 dark:hover:bg-white/10"
                       >
                         -
                       </button>
@@ -159,7 +154,7 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
                         }
-                        className="hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 active:scale-[0.9] font-semibold px-3 py-1"
+                        className="px-3 py-1 hover:bg-black/5 dark:hover:bg-white/10"
                       >
                         +
                       </button>
@@ -177,7 +172,7 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-brand-200 px-6 py-6 space-y-5 bg-white dark:bg-black">
+          <div className="border-t border-black/10 dark:border-white/10 px-6 py-6 space-y-5 bg-white dark:bg-black">
             <div className="space-y-4">
               {total < FREE_SHIPPING_THRESHOLD ? (
                 <div className="space-y-2">
@@ -189,7 +184,7 @@ export function CartDrawer() {
                     away from
                     <span className="font-semibold"> free shipping</span> 🚚
                   </p>
-                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-black dark:bg-white transition-all duration-700 ease-out"
                       style={{ width: `${progress}%` }}
@@ -217,7 +212,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="block text-center px-5 py-3 rounded-full text-sm font-semibold bg-black text-white dark:bg-white dark:text-black transition-all duration-300 hover:opacity-90 active:scale-[0.97]"
+              className="block text-center px-5 py-3 rounded-md text-sm font-medium bg-black text-white dark:bg-white dark:text-black"
             >
               Proceed to Checkout
             </Link>
