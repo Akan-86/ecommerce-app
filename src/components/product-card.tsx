@@ -3,20 +3,22 @@
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
+import type { Product } from "@/lib/types";
 
-export default function ProductCard({ product }: any) {
+export default function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
   const { add } = useCart();
   const { lang } = useLanguage();
 
-  const imageSrc = product?.imageUrl || product?.image || "/placeholder.png";
+  const imageSrc = product.image || product.thumbnail || "/placeholder.png";
 
   const handleAddToCart = () => {
     add({
       id: product.id,
       name: product.title,
       price: product.price,
-      imageUrl: imageSrc,
+      image: imageSrc,
+      quantity: 1,
     });
   };
 
@@ -28,7 +30,7 @@ export default function ProductCard({ product }: any) {
         <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700 bg-gradient-to-tr from-white/10 via-transparent to-white/20" />
         <img
           src={imageSrc}
-          alt={product.title}
+          alt={product.title || "Product image"}
           className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
         />
       </div>
@@ -40,12 +42,16 @@ export default function ProductCard({ product }: any) {
         </h3>
 
         <p className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-          €{product.price}
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: product.currency || "USD",
+          }).format(product.price)}
         </p>
 
         {/* BUTTONS */}
         <div className="mt-4 flex flex-col gap-2">
           <button
+            type="button"
             onClick={() => router.push(`/products/${product.id}`)}
             className="w-full rounded-full border border-black/10 dark:border-white/20 py-2 text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/20"
           >
@@ -53,6 +59,7 @@ export default function ProductCard({ product }: any) {
           </button>
 
           <button
+            type="button"
             onClick={handleAddToCart}
             className="w-full rounded-full bg-black text-white dark:bg-white dark:text-black py-2.5 text-sm font-semibold transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-90 active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/30"
           >
