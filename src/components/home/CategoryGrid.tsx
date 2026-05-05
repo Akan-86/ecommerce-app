@@ -26,35 +26,33 @@ export default function CategoryGrid() {
   ];
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
+    <section className="mx-auto max-w-6xl px-4 py-20">
       <div className="mb-10">
-        <h2 className="text-2xl font-bold">Shop by Category</h2>
-        <p className="text-sm text-gray-500">
-          Browse our most popular categories
-        </p>
+        <h2 className="text-3xl font-semibold text-neutral-900 dark:text-white">
+          Shop by category
+        </h2>
+        <p className="text-neutral-500 mt-2">Explore curated collections</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
         {categories.map((cat) => (
           <Link
             key={cat.name}
             href={cat.href}
-            className="group relative overflow-hidden rounded-2xl"
+            className="group relative overflow-hidden rounded-3xl"
           >
-            <div className="relative h-40 w-full">
+            <div className="relative aspect-[4/5] w-full">
               <Image
                 src={cat.image}
                 alt={cat.name}
                 fill
                 sizes="(max-width:768px) 50vw, 25vw"
-                className="object-cover group-hover:scale-105 transition duration-300"
+                className="object-cover transition duration-500 group-hover:scale-[1.03]"
               />
             </div>
 
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span className="text-white font-semibold text-lg">
-                {cat.name}
-              </span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex items-end p-4">
+              <span className="text-white font-medium text-sm">{cat.name}</span>
             </div>
           </Link>
         ))}
