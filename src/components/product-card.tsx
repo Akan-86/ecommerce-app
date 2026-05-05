@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 import type { Product } from "@/lib/types";
+import { Star } from "lucide-react";
 
 export default function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
@@ -28,21 +29,39 @@ export default function ProductCard({ product }: { product: Product }) {
       onClick={() => router.push(`/products/${product.id}`)}
     >
       {/* IMAGE */}
-      <div className="aspect-square bg-neutral-100 dark:bg-neutral-900 rounded-xl overflow-hidden">
+      <div className="aspect-square bg-neutral-100 dark:bg-neutral-900 rounded-2xl overflow-hidden">
         <img
           src={imageSrc}
           alt={product.title || "Product image"}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
         />
       </div>
 
       {/* CONTENT */}
-      <div className="mt-3 space-y-1">
-        <h3 className="text-sm font-medium text-neutral-900 dark:text-white line-clamp-1">
+      <div className="mt-3 space-y-1.5">
+        <p className="text-xs text-neutral-400 uppercase tracking-wide">
+          {product.brand || "Velora"}
+        </p>
+        <h3 className="text-sm font-medium text-neutral-900 dark:text-white leading-snug line-clamp-1">
           {product.title}
         </h3>
-
-        <p className="text-sm text-neutral-500">
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              size={12}
+              className={
+                i < Math.round(product.rating || 4.6)
+                  ? "fill-black text-black dark:fill-white dark:text-white"
+                  : "text-neutral-300"
+              }
+            />
+          ))}
+          <span className="text-xs text-neutral-400 ml-1">
+            {(product.rating || 4.6).toFixed(1)}
+          </span>
+        </div>
+        <p className="text-sm font-semibold text-neutral-900 dark:text-white">
           {new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: product.currency || "USD",
@@ -57,7 +76,7 @@ export default function ProductCard({ product }: { product: Product }) {
           e.stopPropagation();
           handleAddToCart();
         }}
-        className="mt-3 w-full rounded-md bg-black text-white dark:bg-white dark:text-black py-2 text-sm font-medium opacity-0 group-hover:opacity-100 transition"
+        className="mt-3 w-full rounded-md bg-black text-white dark:bg-white dark:text-black py-2 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
       >
         {lang === "tr" ? "Sepete ekle" : "Add"}
       </button>
