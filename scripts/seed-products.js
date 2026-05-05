@@ -1,6 +1,10 @@
 // scripts/seed-products.js
 // Usage: node scripts/seed-products.js
 
+// NOTE:
+// Using optimized Unsplash images with consistent sizing.
+// For production, replace with curated or hosted assets.
+
 require("dotenv").config({ path: ".env.local" });
 
 const admin = require("firebase-admin");
@@ -27,57 +31,81 @@ const products = [
     title: "Wireless Noise Cancelling Headphones",
     price: 299,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd",
-    description: "Immersive sound with active noise cancellation.",
+    image:
+      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Mechanical Keyboard Pro",
     price: 189,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-    description: "Precision typing with premium switches.",
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Ergonomic Wireless Mouse",
     price: 79,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04",
-    description: "Comfort and control for long sessions.",
+    image:
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "4K Ultra Monitor",
     price: 499,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1527443224154-c4c9b9a9b2a3",
-    description: "Crisp visuals for work and play.",
+    image:
+      "https://images.unsplash.com/photo-1527443224154-c4c9b9a9b2a3?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Bluetooth Speaker",
     price: 129,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1585386959984-a41552231658",
-    description: "Rich sound in a compact design.",
+    image:
+      "https://images.unsplash.com/photo-1585386959984-a41552231658?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "USB-C Hub",
     price: 59,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1587202372775-9893a6f6a7b2",
-    description: "Expand your setup.",
+    image:
+      "https://images.unsplash.com/photo-1587202372775-9893a6f6a7b2?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Portable SSD",
     price: 199,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd",
-    description: "Speed and reliability.",
+    image:
+      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "HD Webcam",
     price: 89,
     category: "electronics",
-    thumbnail: "https://images.unsplash.com/photo-1587614382346-ac1d8b7d2f84",
-    description: "Clear video calls.",
+    image:
+      "https://images.unsplash.com/photo-1587614382346-ac1d8b7d2f84?auto=format&fit=crop&w=800&q=80",
+    description: "High-performance design with premium materials.",
+    brand: "Velora",
+    rating: 4.6,
   },
 
   // Fashion
@@ -85,36 +113,51 @@ const products = [
     title: "Minimal Hoodie",
     price: 89,
     category: "fashion",
-    thumbnail: "https://images.unsplash.com/photo-1520975922284-9d3c1e6e4b8a",
-    description: "Clean look, everyday comfort.",
+    image:
+      "https://images.unsplash.com/photo-1520975922284-9d3c1e6e4b8a?auto=format&fit=crop&w=800&q=80",
+    description: "Minimal design with everyday comfort.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Essential T-Shirt",
     price: 39,
     category: "fashion",
-    thumbnail: "https://images.unsplash.com/photo-1520975693411-3f3c1a7c9f4d",
-    description: "Soft fabric, timeless style.",
+    image:
+      "https://images.unsplash.com/photo-1520975693411-3f3c1a7c9f4d?auto=format&fit=crop&w=800&q=80",
+    description: "Minimal design with everyday comfort.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Modern Jacket",
     price: 159,
     category: "fashion",
-    thumbnail: "https://images.unsplash.com/photo-1516822003754-cca485356ecb",
-    description: "Layer up with precision.",
+    image:
+      "https://images.unsplash.com/photo-1516822003754-cca485356ecb?auto=format&fit=crop&w=800&q=80",
+    description: "Minimal design with everyday comfort.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Slim Fit Pants",
     price: 99,
     category: "fashion",
-    thumbnail: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246",
-    description: "Modern tailoring.",
+    image:
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80",
+    description: "Minimal design with everyday comfort.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Minimal Sneakers",
     price: 129,
     category: "fashion",
-    thumbnail: "https://images.unsplash.com/photo-1519741497674-611481863552",
-    description: "Everyday performance.",
+    image:
+      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+    description: "Minimal design with everyday comfort.",
+    brand: "Velora",
+    rating: 4.6,
   },
 
   // Home
@@ -122,36 +165,51 @@ const products = [
     title: "Modern Desk Lamp",
     price: 129,
     category: "home",
-    thumbnail: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-    description: "Focused lighting for productivity.",
+    image:
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
+    description: "Designed to elevate your space.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Ergonomic Chair",
     price: 349,
     category: "home",
-    thumbnail: "https://images.unsplash.com/photo-1582582429416-8a1c1d9a6f8f",
-    description: "Comfort meets design.",
+    image:
+      "https://images.unsplash.com/photo-1582582429416-8a1c1d9a6f8f?auto=format&fit=crop&w=800&q=80",
+    description: "Designed to elevate your space.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Minimal Wall Clock",
     price: 59,
     category: "home",
-    thumbnail: "https://images.unsplash.com/photo-1503387762-592deb58ef4e",
-    description: "Time, simplified.",
+    image:
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
+    description: "Designed to elevate your space.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Desk Organizer",
     price: 49,
     category: "home",
-    thumbnail: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
-    description: "Declutter your space.",
+    image:
+      "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80",
+    description: "Designed to elevate your space.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Ambient Light Bar",
     price: 89,
     category: "home",
-    thumbnail: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
-    description: "Set the mood.",
+    image:
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
+    description: "Designed to elevate your space.",
+    brand: "Velora",
+    rating: 4.6,
   },
 
   // Accessories
@@ -159,36 +217,51 @@ const products = [
     title: "Tech Backpack",
     price: 149,
     category: "accessories",
-    thumbnail: "https://images.unsplash.com/photo-1514474959185-1472d4c4e0b3",
-    description: "Carry essentials with style.",
+    image:
+      "https://images.unsplash.com/photo-1514474959185-1472d4c4e0b3?auto=format&fit=crop&w=800&q=80",
+    description: "Refined essentials for modern life.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Smart Watch",
     price: 249,
     category: "accessories",
-    thumbnail: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b",
-    description: "Stay connected on the go.",
+    image:
+      "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=800&q=80",
+    description: "Refined essentials for modern life.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Leather Wallet",
     price: 79,
     category: "accessories",
-    thumbnail: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-    description: "Minimal and refined.",
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+    description: "Refined essentials for modern life.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Tech Pouch",
     price: 39,
     category: "accessories",
-    thumbnail: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f",
-    description: "Organize cables and gear.",
+    image:
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
+    description: "Refined essentials for modern life.",
+    brand: "Velora",
+    rating: 4.6,
   },
   {
     title: "Premium Sunglasses",
     price: 119,
     category: "accessories",
-    thumbnail: "https://images.unsplash.com/photo-1511499767150-a48a237f0083",
-    description: "Sharp look, UV protection.",
+    image:
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80",
+    description: "Refined essentials for modern life.",
+    brand: "Velora",
+    rating: 4.6,
   },
 ];
 
