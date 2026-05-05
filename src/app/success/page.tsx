@@ -90,13 +90,13 @@ export default function SuccessPage() {
   }, [sessionId, clearCart, router]);
 
   return (
-    <main className="min-h-[80vh] flex items-center justify-center px-6 py-24 bg-gradient-to-b from-white to-gray-50">
+    <main className="min-h-[80vh] flex items-center justify-center px-6 py-24 bg-white">
       <div
-        className={`w-full max-w-xl bg-white border border-black/5 rounded-3xl shadow-[0_30px_80px_-25px_rgba(0,0,0,0.25)] p-10 text-center transition-all duration-500 ${loading ? "opacity-90" : "opacity-100"}`}
+        className={`w-full max-w-lg bg-white border border-black/10 rounded-2xl p-10 text-center transition-all duration-500 ${loading ? "opacity-90" : "opacity-100"}`}
       >
         {loading ? (
           <>
-            <div className="mx-auto mb-6 h-16 w-16 rounded-2xl bg-gray-100 flex items-center justify-center animate-pulse">
+            <div className="mx-auto mb-6 h-16 w-16 rounded-xl bg-gray-100 flex items-center justify-center">
               <span className="text-2xl">⏳</span>
             </div>
             <p className="text-gray-600 text-base" aria-live="polite">
@@ -114,14 +114,14 @@ export default function SuccessPage() {
             <p className="text-gray-700 mb-6">{error}</p>
             <Link
               href="/"
-              className="inline-flex items-center justify-center rounded-2xl bg-black px-6 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_10px_25px_-10px_rgba(0,0,0,0.6)] active:scale-[0.98]"
+              className="inline-flex items-center justify-center rounded-md bg-black px-5 py-2.5 text-sm font-medium text-white"
             >
               Back to Home
             </Link>
           </>
         ) : (
           <>
-            <div className="mx-auto mb-8 h-24 w-24 rounded-[2rem] bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.08),0_10px_30px_rgba(0,0,0,0.08)] animate-[scaleIn_0.4s_ease-out]">
+            <div className="bg-green-50 rounded-2xl flex items-center justify-center h-24 w-24 mx-auto mb-8">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -134,11 +134,11 @@ export default function SuccessPage() {
               </svg>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-gray-900 mb-3">
               Order Confirmed
             </h1>
 
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 max-w-md mx-auto">
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 max-w-sm mx-auto">
               Your order has been successfully placed. A confirmation email has
               been sent, and we’re already preparing your items for shipment.
             </p>
@@ -147,40 +147,34 @@ export default function SuccessPage() {
               🔒 Secure payment · 📦 Fast processing · 💬 24/7 support
             </p>
 
-            <p className="text-sm text-gray-400 mb-8">
+            <p className="text-xs text-gray-400 mb-6">
               Redirecting you to your orders in{" "}
               <span className="font-semibold text-gray-800">
                 {redirectCountdown}s
               </span>
             </p>
             {orderId && (
-              <div className="bg-gradient-to-b from-gray-50 to-white border border-black/5 rounded-2xl py-5 px-6 mb-10 shadow-lg">
+              <div className="border border-black/10 rounded-xl py-4 px-5 mb-8 mx-auto max-w-sm">
                 <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
                   Order ID
                 </p>
-                <p className="font-mono text-sm">{orderId}</p>
+                <p className="font-mono text-sm break-all">{orderId}</p>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-2">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center rounded-2xl bg-black px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-gray-900 hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] active:scale-[0.97]"
+                className="rounded-md bg-black px-6 py-2.5 text-sm font-medium text-white text-center"
               >
                 Continue Shopping
               </Link>
               <Link
                 href="/orders"
-                className="inline-flex items-center justify-center rounded-2xl border border-black/10 px-7 py-3.5 text-sm font-medium transition-all duration-300 hover:bg-gray-50 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] active:scale-[0.97]"
+                className="rounded-md border border-black/10 px-6 py-2.5 text-sm font-medium text-center"
               >
                 View Orders
               </Link>
-              <button
-                onClick={() => router.push("/orders")}
-                className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-green-700 hover:shadow-xl active:scale-[0.97]"
-              >
-                Go to Orders Now
-              </button>
             </div>
           </>
         )}
