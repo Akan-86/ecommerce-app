@@ -6,6 +6,7 @@ import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
 import { usePathname, useRouter } from "next/navigation";
 import { useLanguage } from "@/context/language-context";
+import type { Product } from "@/lib/types";
 
 export default function Navbar() {
   const { items, open } = useCart();
@@ -21,7 +22,7 @@ export default function Navbar() {
   const router = useRouter();
   const { lang, setLang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
@@ -86,7 +87,7 @@ export default function Navbar() {
         const res = await fetch(
           `/api/products?search=${encodeURIComponent(q)}`
         );
-        const data = await res.json();
+        const data: unknown = await res.json();
 
         if (Array.isArray(data)) {
           setSuggestions(data.slice(0, 5));
@@ -166,26 +167,34 @@ export default function Navbar() {
               🔍
             </span>
             {showSuggestions && (
-              <div className="absolute left-0 right-0 mt-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50">
+              <div
+                role="listbox"
+                className="absolute left-0 right-0 mt-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden z-50"
+              >
                 {loadingSuggestions && (
-                  <div className="px-4 py-3 text-sm text-brand-600">
+                  <div
+                    aria-live="polite"
+                    className="px-4 py-3 text-sm text-brand-600"
+                  >
                     {lang === "tr" ? "Aranıyor..." : "Searching..."}
                   </div>
                 )}
-                {suggestions.map((p: any) => (
+                {suggestions.map((p) => (
                   <button
-                    key={p.id}
+                    type="button"
+                    role="option"
+                    key={String(p.id)}
                     onClick={() => {
                       setShowSuggestions(false);
                       setSearchQuery("");
-                      router.push(`/products/${p.id}`);
+                      if (p.id) router.push(`/products/${p.id}`);
                     }}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10 flex items-center gap-3"
                   >
                     {(p.thumbnail || p.image) && (
                       <img
                         src={p.thumbnail || p.image}
-                        alt={p.title}
+                        alt={p.title || "Product"}
                         className="h-8 w-8 rounded object-cover"
                       />
                     )}
