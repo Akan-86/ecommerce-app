@@ -3,6 +3,7 @@ export const revalidate = 0;
 import { NextResponse, NextRequest } from "next/server";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import type { Product } from "@/lib/types";
 
 const adminApp =
   getApps().length === 0
@@ -17,7 +18,7 @@ const adminApp =
 
 const db = getFirestore(adminApp);
 
-const MOCK_PRODUCTS = [
+const MOCK_PRODUCTS: Product[] = [
   // Electronics
   {
     id: "tech-1",
@@ -242,23 +243,13 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(MOCK_PRODUCTS);
     }
 
-    let products = snapshot.docs.map((doc) => {
-      const data = doc.data() as any;
-
-      const createdAt =
-        data.createdAt && typeof data.createdAt.toDate === "function"
-          ? data.createdAt.toDate().toISOString()
-          : data.createdAt || null;
-
-      const updatedAt =
-        data.updatedAt && typeof data.updatedAt.toDate === "function"
-          ? data.updatedAt.toDate().toISOString()
-          : data.updatedAt || null;
+    let products: Product[] = snapshot.docs.map((doc) => {
+      const data = doc.data() as Record<string, any>;
 
       const thumbnail =
         typeof data.thumbnail === "string" && data.thumbnail.trim().length > 0
           ? data.thumbnail
-          : null;
+          : undefined;
 
       const images = Array.isArray(data.images)
         ? data.images.filter(
@@ -268,13 +259,17 @@ export async function GET(req: NextRequest) {
 
       return {
         id: doc.id,
-        ...data,
+        title: String(data.title || "Untitled"),
+        description: String(data.description || ""),
+        price: Number(data.price || 0),
+        currency: data.currency || "USD",
+        category: data.category || "uncategorized",
+        stock: Number(data.stock || 0),
         thumbnail,
         images,
-        createdAt,
-        updatedAt,
-      };
-    }) as any[];
+        image: thumbnail || images[0],
+      } as Product;
+    });
 
     // Search by title or description
     if (search) {
@@ -330,7 +325,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, description, price, category, stock, thumbnail } = body;
+    const { title, description, price, category, stock, thumbnail, currency } =
+      body;
 
     if (!title || title.length < 3) {
       return NextResponse.json(
@@ -339,12 +335,20 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!price || Number(price) <= 0) {
+      return NextResponse.json(
+        { error: "Price must be greater than 0." },
+        { status: 400 }
+      );
+    }
+
     const docRef = await db.collection("products").add({
       title,
       description,
-      price,
+      price: Number(price),
+      currency: currency || "USD",
       category,
-      stock,
+      stock: Number(stock || 0),
       thumbnail: thumbnail || "",
       images: thumbnail ? [thumbnail] : [],
       createdAt: Date.now(),
