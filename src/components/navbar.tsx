@@ -14,7 +14,6 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const [scrolled, setScrolled] = useState(false);
   const [cartBump, setCartBump] = useState(false);
   const prevCartCount = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -49,16 +48,6 @@ export default function Navbar() {
     }
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -108,30 +97,17 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-xl ${
-        scrolled
-          ? "bg-white/80 dark:bg-black/70 shadow-sm border-b border-black/5 dark:border-white/10"
-          : "bg-white/60 dark:bg-black/50 border-b border-transparent"
-      }`}
-    >
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-      <div
-        className={`mx-auto max-w-7xl px-4 sm:px-6 ${scrolled ? "h-14" : "h-16"} flex items-center justify-between text-brand-900 dark:text-white relative transition-all duration-300`}
-      >
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-black/70 backdrop-blur border-b border-black/5 dark:border-white/10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-14 flex items-center justify-between text-brand-900 dark:text-white">
         <Link
           href="/"
           data-testid="site-logo"
-          className="group font-black tracking-tight text-xl flex items-center gap-2 transition-transform duration-300 hover:scale-[1.03]"
+          className="flex items-center gap-2 font-semibold text-lg"
         >
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-sm font-bold">
-              V
-            </div>
-            <span className="text-lg font-semibold tracking-wide">
-              Velora<span className="text-black/40 dark:text-white/40">.</span>
-            </span>
+          <div className="h-7 w-7 rounded-md bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-xs font-bold">
+            V
           </div>
+          Velora
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
@@ -161,7 +137,7 @@ export default function Navbar() {
               onBlur={() => {
                 setTimeout(() => setShowSuggestions(false), 150);
               }}
-              className="w-48 rounded-full border border-black/10 dark:border-white/20 bg-white/80 dark:bg-black/50 backdrop-blur px-4 py-2 text-sm outline-none focus:ring-2 focus:w-56 transition-all duration-300"
+              className="w-56 rounded-full border border-black/10 dark:border-white/20 bg-white dark:bg-black px-4 py-2 text-sm outline-none focus:ring-2"
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
               🔍
@@ -238,7 +214,11 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-2 py-1 text-sm transition-all after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full ${active ? "text-black dark:text-white" : "text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white"}`}
+                  className={`px-2 py-1 text-sm ${
+                    active
+                      ? "text-black dark:text-white"
+                      : "text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white"
+                  }`}
                 >
                   {link.label}
                 </Link>
@@ -266,7 +246,7 @@ export default function Navbar() {
 
           <button
             onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-[0.97] transition-all duration-200"
+            className="relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-medium"
             aria-label="Open shopping cart"
           >
             🛒{" "}
@@ -286,7 +266,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setAccountOpen((v) => !v)}
-            className="relative inline-flex items-center gap-2 rounded-full px-3 py-1 border border-black/10 dark:border-white/20 bg-white/70 dark:bg-white/10 backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1 border border-black/10 dark:border-white/20"
             aria-label="Toggle account menu"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-black to-gray-700 dark:from-white dark:to-gray-300 text-white dark:text-black text-xs font-black">
