@@ -12,47 +12,49 @@ export default function HeroSection({ products }: { products: Product[] }) {
   const heroProduct = products?.[0];
 
   return (
-    <section className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-24 grid md:grid-cols-2 items-center gap-12">
+    <section className="py-20">
+      <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-2 gap-12 items-center">
         {/* LEFT */}
         <div className="space-y-6">
-          <h1 className="text-5xl font-bold tracking-tight text-black leading-tight">
-            Minimal products.
-            <br />
-            Maximum quality.
+          <h1 className="text-5xl font-semibold leading-tight text-neutral-900 dark:text-white">
+            Designed for modern living
           </h1>
 
-          <p className="text-gray-500 text-lg max-w-md">
-            Carefully curated essentials for everyday life. Designed to last.
+          <p className="text-neutral-500 max-w-md">
+            Minimal, functional and premium products curated for everyday life.
           </p>
 
           <div className="flex gap-4">
-            <Link href="/products" className="btn btn-primary-modern">
+            <Link
+              href="/products"
+              className="bg-black text-white dark:bg-white dark:text-black px-6 py-3 rounded-md text-sm font-medium"
+            >
               Shop now
             </Link>
 
-            <Link href="/categories" className="btn btn-secondary-modern">
+            <Link
+              href="/products"
+              className="border border-neutral-200 dark:border-white/20 px-6 py-3 rounded-md text-sm"
+            >
               Explore
             </Link>
           </div>
         </div>
 
         {/* RIGHT */}
-        <div className="flex justify-center">
-          <div className="w-[380px] h-[380px] md:w-[420px] md:h-[420px] relative">
-            {heroProduct?.image ? (
-              <Image
-                src={heroProduct.image}
-                alt={heroProduct.title}
-                fill
-                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-105"
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm">
-                Product preview
-              </div>
-            )}
-          </div>
+        <div className="aspect-square bg-neutral-100 dark:bg-neutral-900 rounded-2xl overflow-hidden relative">
+          {heroProduct?.image ? (
+            <Image
+              src={heroProduct.image}
+              alt={heroProduct.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-neutral-400 text-sm">
+              Preview
+            </div>
+          )}
         </div>
       </div>
     </section>
