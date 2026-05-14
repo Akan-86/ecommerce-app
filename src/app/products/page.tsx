@@ -29,20 +29,32 @@ function Header({
   setSearch: (v: string) => void;
 }) {
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-40 border-b border-black/5 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-black/70">
+      <div className="container-modern flex items-center justify-between py-4">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-xl font-black tracking-tight">
-            VentoShop
+          <Link
+            href="/"
+            className="text-xl font-semibold tracking-[-0.04em] text-black dark:text-white"
+          >
+            Velora
           </Link>
-          <nav className="hidden md:flex gap-4 text-sm text-gray-600">
-            <Link href="/products" className="hover:text-black">
+          <nav className="hidden items-center gap-6 text-sm text-neutral-500 md:flex dark:text-neutral-300">
+            <Link
+              href="/products"
+              className="transition hover:text-black dark:hover:text-white"
+            >
               Products
             </Link>
-            <Link href="/categories" className="hover:text-black">
+            <Link
+              href="/categories"
+              className="transition hover:text-black dark:hover:text-white"
+            >
               Categories
             </Link>
-            <Link href="/about" className="hover:text-black">
+            <Link
+              href="/about"
+              className="transition hover:text-black dark:hover:text-white"
+            >
               About
             </Link>
           </nav>
@@ -69,12 +81,18 @@ function Header({
                 query ? `/products?${query}` : "/products"
               );
             }}
-            className="hidden md:block px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+            className="hidden rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-2.5 text-sm outline-none transition focus:border-black/20 focus:ring-2 focus:ring-black/5 dark:border-white/10 dark:bg-white/5 md:block"
           />
-          <Link href="/cart" className="relative text-lg">
-            🛒
+          <Link
+            href="/cart"
+            className="rounded-full border border-black/10 px-3 py-2 text-sm font-medium transition hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
+          >
+            Cart
           </Link>
-          <Link href="/login" className="text-sm font-medium">
+          <Link
+            href="/login"
+            className="text-sm font-medium text-neutral-700 transition hover:text-black dark:text-neutral-200 dark:hover:text-white"
+          >
             Account
           </Link>
         </div>
@@ -91,10 +109,10 @@ function ProductCard({ product }: { product: Product }) {
     product.image ||
     (Array.isArray(product.images) ? product.images[0] : undefined);
   return (
-    <div className="group bg-white rounded-2xl shadow-soft hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
+    <div className="group flex flex-col overflow-hidden rounded-[32px] border border-black/5 bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.18)] dark:border-white/10 dark:bg-neutral-900">
       <Link
         href={`/products/${product.id}`}
-        className="relative h-64 bg-gray-100 overflow-hidden block"
+        className="relative block aspect-[0.95] overflow-hidden bg-neutral-100 dark:bg-neutral-950"
       >
         {img ? (
           <>
@@ -103,7 +121,7 @@ function ProductCard({ product }: { product: Product }) {
               alt={product.title}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </>
         ) : (
@@ -112,24 +130,24 @@ function ProductCard({ product }: { product: Product }) {
           </div>
         )}
       </Link>
-      <div className="p-6 flex flex-col flex-1">
+      <div className="flex flex-1 flex-col p-7">
         <Link
           href={`/products/${product.id}`}
-          className="font-semibold text-lg mb-2 hover:text-brand-accent transition"
+          className="mb-3 text-xl font-semibold tracking-tight text-black transition hover:opacity-70 dark:text-white"
         >
           {product.title}
         </Link>
-        <p className="text-brand-accent font-bold mb-4 text-xl">
+        <p className="mb-6 text-2xl font-semibold tracking-tight text-black dark:text-white">
           €{product.price.toFixed(2)}
         </p>
-        <div className="mt-auto flex gap-3">
+        <div className="mt-auto flex gap-3 pt-2">
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 text-center text-sm border border-black/20 rounded-lg py-2 hover:bg-black/5 font-medium transition"
+            className="flex-1 rounded-2xl border border-black/10 py-3 text-center text-sm font-medium transition hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
           >
             View
           </Link>
-          <button className="flex-1 text-sm bg-brand text-white rounded-lg py-2 hover:opacity-90 font-medium transition">
+          <button className="flex-1 rounded-2xl bg-black py-3 text-sm font-medium text-white transition hover:opacity-90 dark:bg-white dark:text-black">
             Add to cart
           </button>
         </div>
@@ -202,9 +220,9 @@ export default function ProductsPage() {
 
   function ProductSkeleton() {
     return (
-      <div className="bg-white rounded-2xl shadow-soft overflow-hidden animate-pulse">
-        <div className="h-64 bg-gray-200" />
-        <div className="p-6 space-y-3">
+      <div className="overflow-hidden rounded-[32px] border border-black/5 bg-white animate-pulse dark:border-white/10 dark:bg-neutral-900">
+        <div className="aspect-[0.95] bg-neutral-200 dark:bg-neutral-800" />
+        <div className="space-y-4 p-7">
           <div className="h-4 bg-gray-200 rounded w-3/4" />
           <div className="h-4 bg-gray-200 rounded w-1/2" />
           <div className="h-10 bg-gray-200 rounded mt-4" />
@@ -214,28 +232,26 @@ export default function ProductsPage() {
   }
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--brand-bg-soft)" }}
-    >
+    <div className="min-h-screen bg-[#fafafa] dark:bg-black">
       <Header search={search} setSearch={setSearch} />
 
-      <section className="relative overflow-hidden bg-black text-white">
-        <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-black via-gray-900 to-black" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
+      <section className="relative overflow-hidden border-b border-black/5 bg-gradient-to-b from-neutral-100 to-[#fafafa] dark:border-white/10 dark:from-neutral-950 dark:to-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,0,0,0.06),transparent_45%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_40%)]" />
+        <div className="container-modern relative py-20 sm:py-24">
+          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-black dark:text-white md:text-7xl">
             Discover Our Collection
           </h1>
-          <p className="text-white/70 max-w-xl">
-            Curated premium essentials designed for modern lifestyles.
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-neutral-500 dark:text-neutral-300">
+            Explore curated premium essentials designed with a modern,
+            minimalist approach.
           </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 sm:gap-8">
+      <div className="container-modern grid grid-cols-1 gap-8 py-10 lg:grid-cols-[280px_1fr] lg:gap-10 lg:py-14">
         {/* Filters */}
-        <aside className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] h-fit lg:sticky lg:top-24 border border-black/5 transition-all duration-300">
-          <h2 className="text-lg font-extrabold tracking-tight mb-6">
+        <aside className="h-fit rounded-[32px] border border-black/5 bg-white p-7 shadow-[0_30px_100px_-40px_rgba(0,0,0,0.12)] transition-all duration-300 dark:border-white/10 dark:bg-neutral-900 lg:sticky lg:top-24">
+          <h2 className="mb-6 text-lg font-semibold tracking-tight text-black dark:text-white">
             Refine Results
           </h2>
 
@@ -246,7 +262,7 @@ export default function ProductsPage() {
               setMaxPrice(10000);
               setSort("new");
             }}
-            className="mb-4 w-full rounded-xl border border-black/10 py-2 text-sm font-semibold hover:bg-black/5 transition"
+            className="mb-5 w-full rounded-2xl border border-black/10 py-3 text-sm font-medium transition hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
           >
             Clear Filters
           </button>
@@ -255,7 +271,7 @@ export default function ProductsPage() {
             <div>
               <label className="text-sm font-semibold">Category</label>
               <select
-                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
+                className="mt-2 w-full rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm outline-none transition focus:border-black/20 focus:ring-2 focus:ring-black/5 dark:border-white/10 dark:bg-white/5"
                 value={category}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -283,7 +299,7 @@ export default function ProductsPage() {
               <label className="text-sm font-semibold">Min Price</label>
               <input
                 type="number"
-                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
+                className="mt-2 w-full rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm outline-none transition focus:border-black/20 focus:ring-2 focus:ring-black/5 dark:border-white/10 dark:bg-white/5"
                 value={minPrice}
                 onChange={(e) => setMinPrice(Number(e.target.value || 0))}
               />
@@ -293,7 +309,7 @@ export default function ProductsPage() {
               <label className="text-sm font-semibold">Max Price</label>
               <input
                 type="number"
-                className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
+                className="mt-2 w-full rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm outline-none transition focus:border-black/20 focus:ring-2 focus:ring-black/5 dark:border-white/10 dark:bg-white/5"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value || 10000))}
               />
@@ -304,12 +320,12 @@ export default function ProductsPage() {
         {/* Products */}
         <section>
           {/* Sort bar */}
-          <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10 bg-white/80 backdrop-blur rounded-2xl px-4 sm:px-6 py-4 border border-black/5 shadow-sm">
-            <p className="text-sm text-gray-600 font-medium flex items-center gap-2">
+          <div className="mb-10 flex flex-col gap-4 rounded-[28px] border border-black/5 bg-white px-5 py-5 shadow-sm dark:border-white/10 dark:bg-neutral-900 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+            <p className="flex items-center gap-2 text-sm font-medium text-neutral-500 dark:text-neutral-300">
               {loading ? (
                 <span className="inline-block h-4 w-10 rounded bg-gray-200 animate-pulse" />
               ) : (
-                <span className="text-gray-900 font-semibold">
+                <span className="font-semibold text-black dark:text-white">
                   {filtered.length}
                 </span>
               )}
@@ -318,7 +334,7 @@ export default function ProductsPage() {
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Sort:</span>
               <select
-                className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400"
+                className="rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm outline-none transition focus:border-black/20 focus:ring-2 focus:ring-black/5 dark:border-white/10 dark:bg-white/5"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as any)}
               >
@@ -329,7 +345,7 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 animate-[fadeUp_0.6s_ease]">
+          <div className="grid grid-cols-1 gap-6 animate-[fadeUp_0.6s_ease] sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {loading
               ? Array.from({ length: 12 }).map((_, i) => (
                   <ProductSkeleton key={i} />
