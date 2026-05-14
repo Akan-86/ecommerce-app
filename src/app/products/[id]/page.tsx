@@ -136,31 +136,37 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20">
+    <div className="container-modern py-14 sm:py-20">
       {/* Breadcrumb */}
-      <div className="mb-10 text-sm text-gray-500">
-        <Link href="/" className="hover:text-gray-900">
+      <div className="mb-12 flex flex-wrap items-center gap-1 text-sm text-neutral-400">
+        <Link
+          href="/"
+          className="transition hover:text-black dark:hover:text-white"
+        >
           Home
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/products" className="hover:text-gray-900">
+        <Link
+          href="/products"
+          className="transition hover:text-black dark:hover:text-white"
+        >
           Products
         </Link>
         {safeProduct?.category && (
           <>
             <span className="mx-2">/</span>
-            <span className="text-gray-700 font-medium">
+            <span className="font-medium text-black dark:text-white">
               {safeProduct.category}
             </span>
           </>
         )}
       </div>
-      <div className="grid grid-cols-1 gap-12 md:gap-16 md:grid-cols-2 items-start">
+      <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24">
         {/* Product Image */}
         <div className="space-y-6">
-          <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.35)] group">
+          <div className="group relative aspect-square w-full overflow-hidden rounded-[36px] border border-black/5 bg-neutral-100 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.25)] dark:border-white/10 dark:bg-neutral-900">
             {safeProduct?.sale && (
-              <div className="absolute top-4 left-4 z-10 rounded-full bg-red-500 text-white text-xs font-bold px-3 py-1 shadow">
+              <div className="absolute left-5 top-5 z-10 rounded-full bg-black px-4 py-1.5 text-[11px] font-semibold tracking-[0.18em] text-white shadow-lg">
                 SALE
               </div>
             )}
@@ -169,14 +175,14 @@ export default function ProductDetail() {
               alt={safeProduct?.title || "Product image"}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-110 cursor-zoom-in"
+              className="cursor-zoom-in object-cover transition-transform duration-700 group-hover:scale-105"
               onClick={() => setZoomOpen(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
           </div>
 
           {gallery.length > 1 && (
-            <div className="grid grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {gallery.map((img: string, index: number) => {
                 const isActive = selectedImage === img;
 
@@ -184,8 +190,8 @@ export default function ProductDetail() {
                   <div
                     key={index}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative aspect-square overflow-hidden rounded-xl cursor-pointer border transition-all duration-300
-                      ${isActive ? "border-black ring-2 ring-black/20 scale-105" : "border-black/10 hover:border-black/30 hover:scale-105"}`}
+                    className={`relative aspect-square cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300
+                      ${isActive ? "scale-[1.03] border-black ring-2 ring-black/10 dark:border-white" : "border-black/10 hover:border-black/30 hover:scale-[1.02] dark:border-white/10 dark:hover:border-white/30"}`}
                   >
                     <Image
                       src={img}
@@ -202,15 +208,15 @@ export default function ProductDetail() {
         </div>
 
         {/* Product Info */}
-        <div className="space-y-6 md:space-y-8 md:sticky md:top-28">
+        <div className="space-y-8 lg:sticky lg:top-28">
           <div className="space-y-4">
             {safeProduct.category && (
-              <span className="inline-block rounded-full bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1">
+              <span className="inline-flex items-center rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-700 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200">
                 {safeProduct.category}
               </span>
             )}
 
-            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 leading-tight">
+            <h1 className="max-w-xl text-4xl font-semibold leading-[1.05] tracking-tight text-black dark:text-white md:text-6xl">
               {safeProduct.title}
             </h1>
             <div className="flex items-center gap-2 text-sm">
@@ -234,7 +240,7 @@ export default function ProductDetail() {
               <span className="text-gray-600">4.8 · 124 reviews</span>
             </div>
 
-            <p className="text-base leading-relaxed text-gray-500 max-w-md">
+            <p className="max-w-xl text-[17px] leading-8 text-neutral-500 dark:text-neutral-300">
               {safeProduct.description}
             </p>
             <h3 className="text-sm font-semibold text-gray-900 pt-2">
@@ -245,23 +251,23 @@ export default function ProductDetail() {
               <li>✔ Fast worldwide shipping</li>
               <li>✔ 30‑day money‑back guarantee</li>
             </ul>
-            <div className="flex flex-wrap gap-3 pt-3 text-xs">
-              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+            <div className="flex flex-wrap gap-3 pt-4 text-xs">
+              <span className="rounded-full border border-black/10 bg-black/[0.03] px-4 py-2 text-neutral-700 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200">
                 Free returns
               </span>
-              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+              <span className="rounded-full border border-black/10 bg-black/[0.03] px-4 py-2 text-neutral-700 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200">
                 Secure checkout
               </span>
-              <span className="px-3 py-1 rounded-full bg-black/5 text-gray-700">
+              <span className="rounded-full border border-black/10 bg-black/[0.03] px-4 py-2 text-neutral-700 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200">
                 Fast delivery
               </span>
             </div>
           </div>
 
           {/* Pricing Card */}
-          <div className="rounded-3xl border border-black/5 bg-white p-6 sm:p-10 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.25)] hover:shadow-[0_50px_120px_-30px_rgba(0,0,0,0.3)] transition-all duration-300 space-y-6 sm:space-y-8">
+          <div className="space-y-8 rounded-[36px] border border-black/5 bg-white p-7 shadow-[0_50px_140px_-40px_rgba(0,0,0,0.18)] transition-all duration-300 hover:shadow-[0_60px_160px_-40px_rgba(0,0,0,0.22)] dark:border-white/10 dark:bg-neutral-900 sm:p-10">
             <div className="flex items-end gap-4">
-              <span className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-white">
+              <span className="text-5xl font-semibold tracking-tight text-black dark:text-white sm:text-6xl">
                 {Number(safeProduct.price || 0).toLocaleString("en-US", {
                   style: "currency",
                   currency: safeProduct.currency || "USD",
@@ -324,7 +330,7 @@ export default function ProductDetail() {
                 </div>
                 <Link
                   href="/checkout"
-                  className="w-full text-center rounded-full bg-black text-white dark:bg-white dark:text-black py-3 text-sm font-semibold hover:opacity-90 transition-all duration-300"
+                  className="btn-luxury btn-luxury-secondary w-full justify-center text-center"
                 >
                   Buy now
                 </Link>
@@ -375,7 +381,7 @@ export default function ProductDetail() {
           </button>
         </div>
 
-        <div className="rounded-3xl border border-black/5 bg-white p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.12)] text-sm text-gray-600 leading-relaxed">
+        <div className="rounded-[32px] border border-black/5 bg-white p-8 text-sm leading-8 text-neutral-600 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-neutral-900 dark:text-neutral-300">
           {activeTab === "description" && <p>{safeProduct.description}</p>}
 
           {activeTab === "details" && (
@@ -442,10 +448,12 @@ export default function ProductDetail() {
       {/* Related Products */}
       {related.length > 0 && (
         <div className="mt-28">
-          <h2 className="text-3xl sm:text-4xl font-semibold mb-4 text-gray-900 tracking-tight">
+          <h2 className="mb-4 text-4xl font-semibold tracking-tight text-black dark:text-white sm:text-5xl">
             You may also like
           </h2>
-          <p className="text-gray-500 mb-12">Customers also bought these</p>
+          <p className="mb-12 max-w-2xl text-lg text-neutral-500 dark:text-neutral-300">
+            Curated recommendations inspired by your selection.
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-10">
             {related.map((item) => (
               <ProductCard key={item.id} product={item} />
