@@ -7,6 +7,7 @@ import { useAuth } from "@/context/auth-context";
 import { usePathname, useRouter } from "next/navigation";
 import { useLanguage } from "@/context/language-context";
 import type { Product } from "@/lib/types";
+import { Globe2, Search, ShoppingBag } from "lucide-react";
 
 export default function Navbar() {
   const { items, open } = useCart();
@@ -97,17 +98,26 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-black/70 backdrop-blur border-b border-black/5 dark:border-white/10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-14 flex items-center justify-between text-brand-900 dark:text-white">
+    <header className="nav-blur sticky top-0 z-50">
+      <div className="container-modern flex h-16 items-center justify-between text-black dark:text-white">
         <Link
           href="/"
           data-testid="site-logo"
-          className="flex items-center gap-2 font-semibold text-lg"
+          className="flex items-center gap-3"
         >
-          <div className="h-7 w-7 rounded-md bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-xs font-bold">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-black text-sm font-bold tracking-tight text-white dark:bg-white dark:text-black">
             V
           </div>
-          Velora
+
+          <div className="flex flex-col leading-none">
+            <span className="text-[15px] font-semibold tracking-tight">
+              Velora
+            </span>
+
+            <span className="text-[10px] uppercase tracking-[0.24em] text-neutral-400">
+              Modern Essentials
+            </span>
+          </div>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
@@ -139,8 +149,8 @@ export default function Navbar() {
               }}
               className="w-56 rounded-full border border-black/10 dark:border-white/20 bg-white dark:bg-black px-4 py-2 text-sm outline-none focus:ring-2"
             />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm opacity-60">
-              🔍
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+              <Search size={16} />
             </span>
             {showSuggestions && (
               <div
@@ -214,7 +224,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-2 py-1 text-sm ${
+                  className={`rounded-full px-3 py-2 text-sm font-medium transition-all duration-200 ${
                     active
                       ? "text-black dark:text-white"
                       : "text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white"
@@ -231,25 +241,26 @@ export default function Navbar() {
           {/* Language Toggle */}
           <button
             onClick={() => setLang(lang === "tr" ? "en" : "tr")}
-            className="hidden sm:inline-flex items-center rounded-full border border-black/10 dark:border-white/20 px-3 py-1 text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10 transition"
+            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-2 text-xs font-medium text-neutral-700 backdrop-blur transition hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10"
             aria-label="Toggle language"
           >
-            {lang === "tr" ? "EN" : "TR"}
+            <Globe2 size={14} />
+            <span>{lang === "tr" ? "🇬🇧 EN" : "🇹🇷 TR"}</span>
           </button>
           <button
             onClick={() => setMobileOpen((v) => !v)}
             className="md:hidden inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/20 px-2 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10 transition"
             aria-label="Toggle mobile menu"
           >
-            ☰
+            <span className="text-base">☰</span>
           </button>
 
           <button
             onClick={open}
-            className="relative inline-flex items-center gap-2 rounded-full bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-medium"
+            className="relative inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition hover:scale-[1.02] hover:opacity-95 dark:bg-white dark:text-black"
             aria-label="Open shopping cart"
           >
-            🛒{" "}
+            <ShoppingBag size={16} />{" "}
             <span className="hidden sm:inline">
               {lang === "tr" ? "Sepet" : "Cart"}
             </span>
@@ -344,7 +355,7 @@ export default function Navbar() {
         </div>
       </div>
       {mobileOpen && (
-        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-md">
+        <div className="md:hidden border-t border-black/5 bg-white/90 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-black/85">
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-3 text-sm font-medium">
             <button
               onClick={() => {
@@ -353,7 +364,7 @@ export default function Navbar() {
               }}
               className="rounded-lg px-3 py-2 text-left hover:bg-black/5 dark:hover:bg-white/10"
             >
-              {lang === "tr" ? "Switch to English" : "Türkçe'ye geç"}
+              {lang === "tr" ? "🇬🇧 Switch to English" : "🇹🇷 Türkçe'ye geç"}
             </button>
             <Link
               href="/products"
