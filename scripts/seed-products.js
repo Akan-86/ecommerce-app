@@ -33,7 +33,8 @@ const products = [
     category: "electronics",
     image:
       "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -42,8 +43,9 @@ const products = [
     price: 189,
     category: "electronics",
     image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+      "https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -53,7 +55,8 @@ const products = [
     category: "electronics",
     image:
       "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -63,7 +66,8 @@ const products = [
     category: "electronics",
     image:
       "https://images.unsplash.com/photo-1527443224154-c4c9b9a9b2a3?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -73,7 +77,8 @@ const products = [
     category: "electronics",
     image:
       "https://images.unsplash.com/photo-1585386959984-a41552231658?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -83,7 +88,8 @@ const products = [
     category: "electronics",
     image:
       "https://images.unsplash.com/photo-1587202372775-9893a6f6a7b2?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -92,8 +98,9 @@ const products = [
     price: 199,
     category: "electronics",
     image:
-      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -102,8 +109,9 @@ const products = [
     price: 89,
     category: "electronics",
     image:
-      "https://images.unsplash.com/photo-1587614382346-ac1d8b7d2f84?auto=format&fit=crop&w=800&q=80",
-    description: "High-performance design with premium materials.",
+      "https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Precision-crafted technology designed for modern everyday performance.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -114,8 +122,9 @@ const products = [
     price: 89,
     category: "fashion",
     image:
-      "https://images.unsplash.com/photo-1520975922284-9d3c1e6e4b8a?auto=format&fit=crop&w=800&q=80",
-    description: "Minimal design with everyday comfort.",
+      "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Elevated essentials balancing comfort, simplicity, and refined style.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -124,8 +133,9 @@ const products = [
     price: 39,
     category: "fashion",
     image:
-      "https://images.unsplash.com/photo-1520975693411-3f3c1a7c9f4d?auto=format&fit=crop&w=800&q=80",
-    description: "Minimal design with everyday comfort.",
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Elevated essentials balancing comfort, simplicity, and refined style.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -135,7 +145,8 @@ const products = [
     category: "fashion",
     image:
       "https://images.unsplash.com/photo-1516822003754-cca485356ecb?auto=format&fit=crop&w=800&q=80",
-    description: "Minimal design with everyday comfort.",
+    description:
+      "Elevated essentials balancing comfort, simplicity, and refined style.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -145,7 +156,8 @@ const products = [
     category: "fashion",
     image:
       "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80",
-    description: "Minimal design with everyday comfort.",
+    description:
+      "Elevated essentials balancing comfort, simplicity, and refined style.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -154,8 +166,9 @@ const products = [
     price: 129,
     category: "fashion",
     image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-    description: "Minimal design with everyday comfort.",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Elevated essentials balancing comfort, simplicity, and refined style.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -167,7 +180,8 @@ const products = [
     category: "home",
     image:
       "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
-    description: "Designed to elevate your space.",
+    description:
+      "Thoughtfully designed objects that bring calm and sophistication to your space.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -177,7 +191,8 @@ const products = [
     category: "home",
     image:
       "https://images.unsplash.com/photo-1582582429416-8a1c1d9a6f8f?auto=format&fit=crop&w=800&q=80",
-    description: "Designed to elevate your space.",
+    description:
+      "Thoughtfully designed objects that bring calm and sophistication to your space.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -187,7 +202,8 @@ const products = [
     category: "home",
     image:
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
-    description: "Designed to elevate your space.",
+    description:
+      "Thoughtfully designed objects that bring calm and sophistication to your space.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -197,7 +213,8 @@ const products = [
     category: "home",
     image:
       "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80",
-    description: "Designed to elevate your space.",
+    description:
+      "Thoughtfully designed objects that bring calm and sophistication to your space.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -207,7 +224,8 @@ const products = [
     category: "home",
     image:
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
-    description: "Designed to elevate your space.",
+    description:
+      "Thoughtfully designed objects that bring calm and sophistication to your space.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -219,7 +237,7 @@ const products = [
     category: "accessories",
     image:
       "https://images.unsplash.com/photo-1514474959185-1472d4c4e0b3?auto=format&fit=crop&w=800&q=80",
-    description: "Refined essentials for modern life.",
+    description: "Premium accessories crafted for seamless modern living.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -229,7 +247,7 @@ const products = [
     category: "accessories",
     image:
       "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=800&q=80",
-    description: "Refined essentials for modern life.",
+    description: "Premium accessories crafted for seamless modern living.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -238,8 +256,8 @@ const products = [
     price: 79,
     category: "accessories",
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-    description: "Refined essentials for modern life.",
+      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=80",
+    description: "Premium accessories crafted for seamless modern living.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -248,8 +266,8 @@ const products = [
     price: 39,
     category: "accessories",
     image:
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
-    description: "Refined essentials for modern life.",
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
+    description: "Premium accessories crafted for seamless modern living.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -258,8 +276,8 @@ const products = [
     price: 119,
     category: "accessories",
     image:
-      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80",
-    description: "Refined essentials for modern life.",
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=80",
+    description: "Premium accessories crafted for seamless modern living.",
     brand: "Velora",
     rating: 4.6,
   },
@@ -272,9 +290,15 @@ async function seed() {
     const batch = db.batch();
 
     products.forEach((product) => {
+      const slug = product.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
       const ref = db.collection("products").doc();
       batch.set(ref, {
         ...product,
+        slug,
         stock: 10,
         createdAt: Date.now(),
         updatedAt: Date.now(),
