@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="mt-24 bg-black text-white relative overflow-hidden">
+    <footer className="relative mt-32 overflow-hidden bg-black text-white">
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-neutral-900/90 to-black" />
       {/* TOP TRUST BAR */}
       <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-xs text-white/60 tracking-wide">
+        <div className="container-modern py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-xs text-white/60 tracking-wide">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>Free shipping over $75</span>
@@ -27,35 +27,35 @@ export function Footer() {
       </div>
 
       {/* MAIN FOOTER */}
-      <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="container-modern grid grid-cols-1 gap-14 py-20 md:grid-cols-4">
         {/* Brand */}
         <div className="space-y-5">
           <h3 className="text-2xl font-black tracking-tight flex items-center gap-1">
-            <span>Vento</span>
+            <span>Velora</span>
             <span className="text-white/80">Shop</span>
           </h3>
 
-          <p className="text-white/60 text-sm leading-relaxed max-w-sm">
-            Modern essentials crafted for everyday life. Designed with clarity,
-            simplicity and premium quality in mind.
+          <p className="max-w-sm text-sm leading-relaxed text-white/60">
+            Curated technology, minimalist fashion, and premium essentials
+            designed for modern living.
           </p>
 
           {/* Social */}
           <div className="flex gap-4 text-white/60 text-sm">
             <a
-              href="#"
+              href="https://instagram.com"
               className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Instagram
             </a>
             <a
-              href="#"
+              href="https://x.com"
               className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Twitter
             </a>
             <a
-              href="#"
+              href="https://facebook.com"
               className="hover:text-white transition duration-300 hover:opacity-80"
             >
               Facebook
@@ -70,34 +70,37 @@ export function Footer() {
             <li>
               <Link
                 href="/products"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 All Products
               </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/products"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 New Arrivals
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/products"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 Best Sellers
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/products"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
-                Sale
-              </a>
+                Featured Collection
+              </Link>
             </li>
           </ul>
         </div>
@@ -109,36 +112,39 @@ export function Footer() {
           </h4>
           <ul className="space-y-3 text-sm text-white/60">
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/help-center"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 Help Center
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/returns"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 Returns
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/shipping"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 Shipping
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="hover:text-white transition duration-300 hover:opacity-80"
+              <Link
+                href="/contact"
+                className="transition duration-300 hover:text-white hover:opacity-80"
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -181,25 +187,25 @@ export function Footer() {
 
       {/* BOTTOM */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-xs text-white/50 gap-6 tracking-wide">
-          <p>© {new Date().getFullYear()} VentoShop. Crafted with precision.</p>
+        <div className="container-modern flex flex-col items-center justify-between gap-6 py-6 text-xs tracking-wide text-white/50 md:flex-row">
+          <p>© {new Date().getFullYear()} Velora. Crafted with precision.</p>
 
           <div className="flex gap-6">
             <Link
-              href="#"
-              className="hover:text-white transition duration-300 hover:opacity-80"
+              href="/privacy"
+              className="transition duration-300 hover:text-white hover:opacity-80"
             >
               Privacy
             </Link>
             <Link
-              href="#"
-              className="hover:text-white transition duration-300 hover:opacity-80"
+              href="/terms"
+              className="transition duration-300 hover:text-white hover:opacity-80"
             >
               Terms
             </Link>
             <Link
-              href="#"
-              className="hover:text-white transition duration-300 hover:opacity-80"
+              href="/cookies"
+              className="transition duration-300 hover:text-white hover:opacity-80"
             >
               Cookies
             </Link>
